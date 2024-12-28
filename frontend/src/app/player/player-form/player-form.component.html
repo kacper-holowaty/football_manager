@@ -1,0 +1,122 @@
+<div>
+  <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
+    <div class="">
+      <label for="firstName">Imię</label>
+      <input id="firstName" formControlName="firstName" />
+      @if (playerForm.get('firstName')?.invalid && playerForm.get('firstName')?.touched) {
+        @if (playerForm.get('firstName')?.errors?.['required']) {
+          <small>Imię jest wymagane.</small>
+        }
+        @if (playerForm.get('firstName')?.errors?.['minlength']) {
+          <small>Imię jest zbyt krótkie.</small>
+        }
+        @if (playerForm.get('firstName')?.errors?.['maxlength']) {
+          <small>Imię jest zbyt długie.</small>
+        }
+      }
+    </div>
+
+    <div class="">
+      <label for="lastName">Nazwisko</label>
+      <input id="lastName" formControlName="lastName" />
+      @if (playerForm.get('lastName')?.invalid && playerForm.get('lastName')?.touched) {
+        @if (playerForm.get('lastName')?.errors?.['required']) {
+          <small>Nazwisko jest wymagane.</small>
+        }
+        @if (playerForm.get('lastName')?.errors?.['minlength']) {
+          <small>Nazwisko jest zbyt krótkie.</small>
+        }
+        @if (playerForm.get('lastName')?.errors?.['maxlength']) {
+          <small>Nazwisko jest zbyt długie.</small>
+        }
+      }
+    </div>
+
+    <div class="">
+      <label for="birthDate">Data urodzenia</label>
+      <input id="birthDate" formControlName="birthDate" type="date" [min]="'1900-01-01'" [max]="todayDate()"/>
+      @if (playerForm.get('birthDate')?.invalid && playerForm.get('birthDate')?.touched) {
+        <div>
+          <small>Nieprawidłowa data urodzenia.</small>
+        </div>
+      }
+    </div>
+
+    <div class="">
+      <label for="nationality">Narodowość</label>
+      <select id="nationality" formControlName="nationality" class="">
+        <option value="" disabled selected>Wybierz narodowość</option>
+        @for (option of nationalityOptions; track option) {
+          <option [value]="option.value">
+            {{ option.label }}
+          </option>
+        }
+      </select>
+    </div>
+    
+    
+    <div class="">
+      <label for="position">Pozycja</label>
+      <select id="position" formControlName="position" class="">
+        <option value="" disabled selected>Wybierz pozycję</option>
+        @for (option of positionOptions; track option) {
+          <option [value]="option.value">
+            {{ option.label }}
+          </option>
+        }
+      </select>
+      @if (playerForm.get('position')?.invalid && playerForm.get('position')?.touched) {
+        <small>Pozycja jest wymagana.</small>
+      }
+    </div>
+    
+    <div class="">
+      <label for="shirtNumber">Numer na koszulce</label>
+      <input id="shirtNumber" formControlName="shirtNumber" type="number" />
+      @if (playerForm.get('shirtNumber')?.invalid && playerForm.get('shirtNumber')?.touched) {
+        @if (playerForm.get('shirtNumber')?.errors?.['required']) {
+          <small>Numer na koszulce jest wymagany.</small>
+        }
+        @if (playerForm.get('shirtNumber')?.errors?.['min']) {
+          <small>Numer na koszulce musi być liczbą dodatnią.</small>
+        }
+        @if (playerForm.get('shirtNumber')?.errors?.['max']) {
+          <small>Numer na koszulce nie może być większy niż 99.</small>
+        }
+      }
+    </div>
+
+    <div class="">
+      <label for="contractUntil">Kontrakt do</label>
+      <input id="contractUntil" formControlName="contractUntil" type="date" [min]="todayDate()"/>
+      @if (playerForm.get('contractUntil')?.invalid && playerForm.get('contractUntil')?.touched) {
+        <small>Data ważności kontraktu jest nieprawidłowa.</small>
+      }
+    </div>
+
+    <div class="">
+      <label for="salary">Pensja tygodniowa</label>
+      <input id="salary" formControlName="salary" type="number" />
+      @if (playerForm.get('salary')?.invalid && playerForm.get('salary')?.touched) {
+        @if (playerForm.get('salary')?.errors?.['required']) {
+          <small>Pensja tygodniowa jest wymagana.</small>
+        }
+        @if (playerForm.get('salary')?.errors?.['min']) {
+          <small>Pensja tygodniowa nie może być ujemna.</small>
+        }
+        @if (playerForm.get('salary')?.errors?.['max']) {
+          <small>Pensja tygodniowa jest zbyt wysoka.</small>
+        } 
+      }
+    </div>
+
+    <div class="">
+      <label for="photo">Zdjęcie</label>
+      <input id="photo" type="file" (change)="onFileSelected($event)" />
+    </div>
+
+    <button type="submit" class="" [disabled]="playerForm.invalid">
+      {{ editing ? 'Update Player' : 'Add Player' }}
+    </button>
+  </form>
+</div>
