@@ -55,14 +55,16 @@
           </option>
         }
       </select>
+      @if (playerForm.get('nationality')?.value) {
+        <div>
+          <span class="fi" [class]="'fi-' + playerForm.get('nationality')?.value"></span>
+        </div>
+      }
+      @if (playerForm.get('nationality')?.invalid && playerForm.get('nationality')?.touched) {
+        <small>Narodowość jest wymagana.</small>
+      }
     </div>
     
-    <!-- @for (country of countries; track country) {
-      <div>
-        <span class="fi" [class]="'fi-'+ country.code"></span><span>{{ country.country }}</span>
-      </div>
-    }  -->
-
     <div class="">
       <label for="position">Pozycja</label>
       <select id="position" formControlName="position" class="">
@@ -118,9 +120,20 @@
       }
     </div>
 
-    <div class="">
+    <div class="photo-loader">
       <label for="photo">Zdjęcie</label>
-      <input id="photo" type="file" (change)="onFileSelected($event)" />
+      <input
+        type="file"
+        id="photo"
+        (change)="onPhotoSelected($event)"
+        accept="image/*"
+      />
+      @if (photoPreviewUrl) {
+        <div>
+          <p>Podgląd zdjęcia:</p>
+        <img [src]="photoPreviewUrl" alt="Podgląd zdjęcia" style="max-width: 200px;" />
+        </div>
+      }
     </div>
 
     <button type="submit" class="" [disabled]="playerForm.invalid">

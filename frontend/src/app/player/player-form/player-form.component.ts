@@ -7,11 +7,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { DateValidators } from './date-validators';
 import { CountryService } from '../../services/country.service';
 import { Country } from '../../models/country.model';
-import { NgSelectComponent } from '@ng-select/ng-select';
+
 @Component({
   selector: 'app-player-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgSelectComponent],
+  imports: [ReactiveFormsModule],
   templateUrl: './player-form.component.html',
   styleUrl: './player-form.component.scss'
 })
@@ -99,14 +99,34 @@ export class PlayerFormComponent {
     });
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.playerForm.patchValue({ photo: reader.result });
-      };
-      reader.readAsDataURL(file);
+  photoPreviewUrl: string | null = null;
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+  
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      console.log('Selected file:', file);
+  
+      if (file.type.startsWith('image/')) {
+        if (this.photoPreviewUrl) {
+          URL.revokeObjectURL(this.photoPreviewUrl);
+        }
+        this.photoPreviewUrl = URL.createObjectURL(file);
+  
+        this.playerForm.get('photo')?.setValue(file);
+      } else {
+        console.error('Selected file is not an image.');
+      }
+    } else {
+      console.log('No file selected.');
+    }
+  }
+  
+
+  ngOnDestroy(): void {
+    if (this.photoPreviewUrl) {
+      URL.revokeObjectURL(this.photoPreviewUrl);
     }
   }
 
