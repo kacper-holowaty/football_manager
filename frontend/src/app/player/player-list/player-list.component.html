@@ -1,1 +1,17 @@
-<p>player-list works!</p>
+<div class="player-list">
+    <h2>Lista Zawodników</h2>
+    <ul>
+        @for (player of players; track $index) {
+            <li (click)="viewPlayerDetails(player.id)">
+                <div class="player-item">
+                    <div>{{player.photo}}</div>
+                    <img [src]="getPhotoUrl(player.photo)" alt="{{ player.firstName }} {{ player.lastName }}" class="player-photo">
+                    <h3>{{ player.firstName }} {{ player.lastName }}</h3>
+                    <p>{{ player.position }}</p>
+                    <p>Wiek: {{ player.birthDate | calculateAge }} lat</p>
+                </div>
+            </li>
+        }
+    </ul>
+    <button (click)="addPlayer()">Dodaj Zawodnika</button>
+</div>
