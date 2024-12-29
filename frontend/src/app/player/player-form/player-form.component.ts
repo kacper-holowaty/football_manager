@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, NgSelectOption, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Player } from '../../models/player.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayerService } from '../../services/player.service';
 import { v4 as uuidv4 } from 'uuid';
 import { DateValidators } from './date-validators';
-
+import { CountryService } from '../../services/country.service';
+import { Country } from '../../models/country.model';
+import { NgSelectComponent } from '@ng-select/ng-select';
 @Component({
   selector: 'app-player-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgSelectComponent],
   templateUrl: './player-form.component.html',
   styleUrl: './player-form.component.scss'
 })
@@ -17,21 +19,13 @@ export class PlayerFormComponent {
   playerForm: FormGroup;
   player?: Player;
   editing: boolean = false;
-
-  nationalityOptions = [
-    { label: 'Polska', value: 'PL' },
-    { label: 'Niemcy', value: 'DE' },
-    { label: 'Francja', value: 'FR' },
-    { label: 'Wielka Brytania', value: 'GB' },
-    // dodaj inne opcje narodowości
-  ];
-
+  countries: Country[] = []; 
 
   positionOptions = [
-    { label: 'Napastnik', value: 'forward' },
-    { label: 'Pomocnik', value: 'midfielder' },
-    { label: 'Obrońca', value: 'defender' },
-    { label: 'Bramkarz', value: 'goalkeeper' },
+    { label: 'Forward', value: 'forward' },
+    { label: 'Midfielder', value: 'midfielder' },
+    { label: 'Defender', value: 'defender' },
+    { label: 'Goalkeeper', value: 'goalkeeper' },
   ];
 
   todayDate(): string {
@@ -43,7 +37,7 @@ export class PlayerFormComponent {
     return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
   }
 
-  constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router) {
+  constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService) {
     this.playerForm = new FormGroup({
       photo: new FormControl(null),
       firstName: new FormControl('', [
@@ -98,6 +92,11 @@ export class PlayerFormComponent {
         });
       });
     }
+
+
+    this.countryService.getCountries().subscribe(countries => {
+      this.countries = countries;
+    });
   }
 
   onFileSelected(event: any) {

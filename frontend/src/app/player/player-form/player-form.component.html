@@ -1,3 +1,5 @@
+<h2>Formularz!</h2>
+
 <div>
   <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
     <div class="">
@@ -41,20 +43,26 @@
         </div>
       }
     </div>
-
+    
     <div class="">
       <label for="nationality">Narodowość</label>
       <select id="nationality" formControlName="nationality" class="">
         <option value="" disabled selected>Wybierz narodowość</option>
-        @for (option of nationalityOptions; track option) {
-          <option [value]="option.value">
-            {{ option.label }}
+        @for (country of countries; track country) {
+          <option [value]="country.code">
+            <span class="fi" [class]="'fi-' + country.code"></span>
+          {{ country.country }}
           </option>
         }
       </select>
     </div>
     
-    
+    <!-- @for (country of countries; track country) {
+      <div>
+        <span class="fi" [class]="'fi-'+ country.code"></span><span>{{ country.country }}</span>
+      </div>
+    }  -->
+
     <div class="">
       <label for="position">Pozycja</label>
       <select id="position" formControlName="position" class="">
