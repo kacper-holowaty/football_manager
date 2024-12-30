@@ -41,11 +41,11 @@ export class PlayerService {
     const formData = new FormData();
     formData.append("id", player.id);
     formData.append("name", player.name);
-    formData.append("birthDate", player.birthDate.toISOString());
+    formData.append("birthDate", new Date(player.birthDate).toISOString());
     formData.append("nationality", player.nationality);
     formData.append("position", player.position);
     formData.append("shirtNumber", player.shirtNumber.toString());
-    formData.append("contractUntil", player.contractUntil.toISOString());
+    formData.append("contractUntil", new Date(player.contractUntil).toISOString());
     formData.append("salary", player.salary.toString());
   
     if (player.photo) {

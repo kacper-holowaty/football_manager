@@ -87,7 +87,6 @@ export class PlayerFormComponent {
       });
     }
 
-
     this.countryService.getCountries().subscribe(countries => {
       this.countries = countries;
     });
@@ -160,6 +159,5 @@ export class PlayerFormComponent {
       }
     }
   }
-
 }
 

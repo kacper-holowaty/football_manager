@@ -1,1 +1,21 @@
-<p>player-details works!</p>
+@if (player) {
+    <div class="player-details">
+        <h2>Szczegóły Zawodnika</h2>
+        <div class="photo-box">
+            <img [src]="getPhotoUrl(player.photo)" alt="{{ player.name }}" class="player-photo">
+        </div>
+        <div class="content">
+            <div class="name-and-flag">
+                <span class="fi" [class]="'fi-'+ player.nationality"></span>
+                <h3>{{ player.name }}</h3>
+            </div>
+            <p>Pozycja: {{ player.position }}</p>
+            <p>Wiek: {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})</p>
+            <p>Numer na koszulce: {{ player.shirtNumber }}.</p>
+            <P>{{ player.contractUntil | contractLeft }}</P>
+            <p>Tygodniowa pensja: {{player.salary | numberWithSpaces}}$</p>
+        </div>
+        <button (click)="editPlayer(player.id)">Edytuj</button>
+        <button (click)="deletePlayer(player.id)">Usuń</button>
+    </div>
+}

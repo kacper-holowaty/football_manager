@@ -24,8 +24,6 @@ export class PlayerListComponent {
       this.players = players;
     });
   }
-
-  
   
   getPhotoUrl(photo?: File): string {
     // photo jest typu string, wymaga poprawki albo zmiany typu photo w interfejsie Player
@@ -37,20 +35,6 @@ export class PlayerListComponent {
       return this.defaultPhotoUrl;
     }
   }
-
-
-  // deletePlayer(id: string): void {
-  //   if (confirm('Are you sure you want to delete this player?')) {
-  //     this.playerService.deletePlayer(id).subscribe(() => {
-  //       this.players = this.players.filter(player => player.id !== id);
-  //       console.log('Player deleted successfully');
-  //     });
-  //   }
-  // }
-
-  // editPlayer(id: string): void {
-  //   this.router.navigate([`/player/${id}/form`]);
-  // }
 
   viewPlayerDetails(id: string): void {
     this.router.navigate([`/player/${id}/details`]);
