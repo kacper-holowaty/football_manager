@@ -1,16 +1,21 @@
 <div class="player-list">
     <h2>Lista Zawodników</h2>
-    <ul>
-        @for (player of players; track $index) {
-            <li (click)="viewPlayerDetails(player.id)">
-                <div class="player-item">
-                    <img [src]="getPhotoUrl(player.photo)" alt="{{ player.name }}" class="player-photo">
+    @for (player of players; track $index) {
+        <div (click)="viewPlayerDetails(player.id)" class="player-item">
+            <div class="photo-box">
+                <img [src]="getPhotoUrl(player.photo)" alt="{{ player.name }}" class="player-photo">
+            </div>
+            <div class="content">
+                <div class="name-and-flag">
+                    <span class="fi" [class]="'fi-'+ player.nationality"></span>
                     <h3>{{ player.name }}</h3>
-                    <p>{{ player.position }}</p>
-                    <p>Wiek: {{ player.birthDate | calculateAge }} lat</p>
                 </div>
-            </li>
-        }
-    </ul>
+                <p>Pozycja: {{ player.position }}</p>
+                <p>Wiek: {{ player.birthDate | calculateAge }}</p>
+                <p>Numer na koszulce: {{ player.shirtNumber }}.</p>
+                <P>{{ player.contractUntil | contractLeft }}</P>
+            </div>
+        </div>    
+    }
     <button (click)="addPlayer()">Dodaj Zawodnika</button>
 </div>

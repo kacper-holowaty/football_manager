@@ -1,0 +1,72 @@
+.player-list {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.player-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    user-select: none;
+}
+
+.photo-box {
+    width: 120px;
+    height: 120px;
+    margin-right: 20px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.player-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: calc(100% - 120px);
+}
+
+.name-and-flag {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h3 {
+    font-size: 18px;
+    margin: 0;
+}
+
+p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.fi {
+    font-size: 32px;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
