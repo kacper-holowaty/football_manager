@@ -14,6 +14,7 @@ import { CalculateAgePipe } from '../../pipes/calculate-age.pipe';
 export class PlayerListComponent {
   players: Player[] = [];
   defaultPhotoUrl: string = 'assets/no_photo.png';
+  apiUrl: string = "http://localhost:3000"
 
   constructor(private playerService: PlayerService, private router: Router) {}
 
@@ -25,32 +26,17 @@ export class PlayerListComponent {
 
   
   
-  // getPhotoUrl(photo?: File): string {
-  //   if (photo) {
-  //     return URL.createObjectURL(photo);
-  //   } else {
-  //     return this.defaultPhotoUrl;
-  //   }
-  // }
-
   getPhotoUrl(photo?: File): string {
-
-    console.log(photo);
-    console.log("Photo type:" + typeof photo);
-    
-    if (photo instanceof File) {
-      try {
-        console.log("It works!");
-                
-
-        return URL.createObjectURL(photo);
-      } catch (error) {
-        console.error("Error creating object URL:", error);
-        return this.defaultPhotoUrl;
-      }
+    // photo jest typu string, wymaga poprawki albo zmiany typu photo w interfejsie Player
+    if (photo) {
+      // return URL.createObjectURL(photo);
+      const photoPath = `${this.apiUrl}${photo}`
+      return photoPath;
+    } else {
+      return this.defaultPhotoUrl;
     }
-    return this.defaultPhotoUrl;
   }
+
 
   // deletePlayer(id: string): void {
   //   if (confirm('Are you sure you want to delete this player?')) {

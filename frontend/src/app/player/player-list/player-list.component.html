@@ -4,9 +4,8 @@
         @for (player of players; track $index) {
             <li (click)="viewPlayerDetails(player.id)">
                 <div class="player-item">
-                    <div>{{player.photo}}</div>
-                    <img [src]="getPhotoUrl(player.photo)" alt="{{ player.firstName }} {{ player.lastName }}" class="player-photo">
-                    <h3>{{ player.firstName }} {{ player.lastName }}</h3>
+                    <img [src]="getPhotoUrl(player.photo)" alt="{{ player.name }}" class="player-photo">
+                    <h3>{{ player.name }}</h3>
                     <p>{{ player.position }}</p>
                     <p>Wiek: {{ player.birthDate | calculateAge }} lat</p>
                 </div>

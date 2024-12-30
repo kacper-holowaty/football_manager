@@ -20,96 +20,42 @@ export class PlayerService {
   }
 
   addPlayer(player: Player): Observable<Player> {
-    return this.http.post<Player>(this.apiUrl, player);
+    const formData = new FormData();
+    formData.append("id", player.id);
+    formData.append("name", player.name);
+    formData.append("birthDate", new Date(player.birthDate).toISOString());
+    formData.append("nationality", player.nationality);
+    formData.append("position", player.position);
+    formData.append("shirtNumber", player.shirtNumber.toString());
+    formData.append("contractUntil", new Date(player.contractUntil).toISOString());
+    formData.append("salary", player.salary.toString());
+  
+    if (player.photo) {
+      formData.append("photo", player.photo);
+    }
+  
+    return this.http.post<Player>(this.apiUrl, formData);
   }
 
   updatePlayer(player: Player): Observable<Player> {
-    return this.http.put<Player>(`${this.apiUrl}/${player.id}`, player);
+    const formData = new FormData();
+    formData.append("id", player.id);
+    formData.append("name", player.name);
+    formData.append("birthDate", player.birthDate.toISOString());
+    formData.append("nationality", player.nationality);
+    formData.append("position", player.position);
+    formData.append("shirtNumber", player.shirtNumber.toString());
+    formData.append("contractUntil", player.contractUntil.toISOString());
+    formData.append("salary", player.salary.toString());
+  
+    if (player.photo) {
+      formData.append("photo", player.photo);
+    }
+  
+    return this.http.put<Player>(`${this.apiUrl}/${player.id}`, formData);
   }
-
   
   deletePlayer(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   private storageKey = 'players';
-
-//   private playersSubject: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-//   players$: Observable<Player[]> = this.playersSubject.asObservable();
-
-//   constructor() {
-//     this.loadPlayers();
-//   }
-
-//   private loadPlayers(): void {
-//     const storedPlayers = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
-//     this.playersSubject.next(storedPlayers);
-//   }
-
-//   private savePlayers(): void {
-//     localStorage.setItem(this.storageKey, JSON.stringify(this.playersSubject.value));
-//   }
-
-//   getPlayers(): Observable<Player[]> {
-//     return this.players$;
-//   }
-
-//   getPlayerById(id: string): Observable<Player> {
-//     const player = this.playersSubject.value.find(p => p.id === id);
-//     return new Observable<Player>(observer => {
-//       if (player) {
-//         observer.next(player);
-//         observer.complete();
-//       } else {
-//         observer.error('Player not found');
-//       }
-//     });
-//   }
-
-//   addPlayer(player: Player): Observable<void> {
-//     const updatedPlayers = [...this.playersSubject.value, player];
-//     this.playersSubject.next(updatedPlayers);
-//     this.savePlayers();
-//     return new Observable<void>(observer => {
-//       observer.next();
-//       observer.complete();
-//     });
-//   }
-
-//   updatePlayer(updatedPlayer: Player): Observable<void> {
-//     const updatedPlayers = this.playersSubject.value.map(player =>
-//       player.id === updatedPlayer.id ? updatedPlayer : player
-//     );
-//     this.playersSubject.next(updatedPlayers);
-//     this.savePlayers();
-//     return new Observable<void>(observer => {
-//       observer.next();
-//       observer.complete();
-//     });
-//   }
-
-//   deletePlayer(id: string): Observable<void> {
-//     const updatedPlayers = this.playersSubject.value.filter(player => player.id !== id);
-//     this.playersSubject.next(updatedPlayers);
-//     this.savePlayers();
-//     return new Observable<void>(observer => {
-//       observer.next();
-//       observer.complete();
-//     });
-//   }
-
 }

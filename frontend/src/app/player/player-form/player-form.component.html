@@ -3,33 +3,17 @@
 <div>
   <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
     <div class="">
-      <label for="firstName">Imię</label>
-      <input id="firstName" formControlName="firstName" />
-      @if (playerForm.get('firstName')?.invalid && playerForm.get('firstName')?.touched) {
-        @if (playerForm.get('firstName')?.errors?.['required']) {
-          <small>Imię jest wymagane.</small>
+      <label for="name">Imię i nazwisko</label>
+      <input id="name" formControlName="name" />
+      @if (playerForm.get('name')?.invalid && playerForm.get('name')?.touched) {
+        @if (playerForm.get('name')?.errors?.['required']) {
+          <small>Imię i nazwisko jest wymagane.</small>
         }
-        @if (playerForm.get('firstName')?.errors?.['minlength']) {
-          <small>Imię jest zbyt krótkie.</small>
+        @if (playerForm.get('name')?.errors?.['minlength']) {
+          <small>Imię i nazwisko są zbyt krótkie.</small>
         }
-        @if (playerForm.get('firstName')?.errors?.['maxlength']) {
-          <small>Imię jest zbyt długie.</small>
-        }
-      }
-    </div>
-
-    <div class="">
-      <label for="lastName">Nazwisko</label>
-      <input id="lastName" formControlName="lastName" />
-      @if (playerForm.get('lastName')?.invalid && playerForm.get('lastName')?.touched) {
-        @if (playerForm.get('lastName')?.errors?.['required']) {
-          <small>Nazwisko jest wymagane.</small>
-        }
-        @if (playerForm.get('lastName')?.errors?.['minlength']) {
-          <small>Nazwisko jest zbyt krótkie.</small>
-        }
-        @if (playerForm.get('lastName')?.errors?.['maxlength']) {
-          <small>Nazwisko jest zbyt długie.</small>
+        @if (playerForm.get('name')?.errors?.['maxlength']) {
+          <small>Imię i nazwisko są zbyt długie.</small>
         }
       }
     </div>
@@ -131,7 +115,8 @@
       @if (photoPreviewUrl) {
         <div>
           <p>Podgląd zdjęcia:</p>
-        <img [src]="photoPreviewUrl" alt="Podgląd zdjęcia" style="max-width: 200px;" />
+          <img [src]="photoPreviewUrl" alt="Podgląd zdjęcia" style="max-width: 200px;" />
+          <button type="button" (click)="removePhoto()">Usuń zdjęcie</button>
         </div>
       }
     </div>

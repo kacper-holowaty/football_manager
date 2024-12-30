@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, NgSelectOption, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Player } from '../../models/player.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayerService } from '../../services/player.service';
@@ -40,15 +40,10 @@ export class PlayerFormComponent {
   constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService) {
     this.playerForm = new FormGroup({
       photo: new FormControl(null),
-      firstName: new FormControl('', [
+      name: new FormControl('', [
         Validators.required,
         Validators.minLength(2),
-        Validators.maxLength(32),
-      ]),
-      lastName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(32),
+        Validators.maxLength(45),
       ]),
       birthDate: new FormControl('', [
         Validators.required,
@@ -81,12 +76,11 @@ export class PlayerFormComponent {
         this.player = player;
         this.playerForm.patchValue({
           photo: player.photo,
+          name: player.name,
           birthDate: player.birthDate,
           nationality: player.nationality,
           position: player.position,
           shirtNumber: player.shirtNumber,
-          firstName: player.firstName,
-          lastName: player.lastName,
           contractUntil: player.contractUntil,
           salary: player.salary,
         });
@@ -123,6 +117,14 @@ export class PlayerFormComponent {
     }
   }
   
+  removePhoto(): void {
+    this.photoPreviewUrl = null;
+    this.playerForm.get('photo')?.setValue(null);
+    const inputFile = document.getElementById('photo') as HTMLInputElement;
+    if (inputFile) {
+      inputFile.value = '';
+    }
+  }
 
   ngOnDestroy(): void {
     if (this.photoPreviewUrl) {
@@ -136,12 +138,11 @@ export class PlayerFormComponent {
       const player: Player = {
         id: this.player ? this.player.id : uuidv4(),
         photo: formValue.photo,
+        name: formValue.name,
         birthDate: formValue.birthDate,
         nationality: formValue.nationality,
         position: formValue.position,
         shirtNumber: formValue.shirtNumber,
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
         contractUntil: formValue.contractUntil,
         salary: formValue.salary,
       };
