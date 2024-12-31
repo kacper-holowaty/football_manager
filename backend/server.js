@@ -4,10 +4,19 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require('path');
 const fs = require('fs-extra');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const app = express();
 const port = 3000;
+const SECRET_KEY = 'my_secret_key';
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:4200",
+    credentials: true,
+  })
+);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -26,6 +35,91 @@ const countries = require('./data/countries.json');
 app.get('/api/countries', (req, res) => {
     res.json(countries);
 });
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+
+// oczywiście tutaj będzie baza stworzona
+
+const users = [{ id: '8336ee9b-f866-4cd5-8863-6924f474e523', firstName: 'John', lastName: 'Doe', email: 'test@test.pl', password: 'password' }];
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  const user = users.find((u) => u.email === email && u.password === password);
+  if (!user) {
+    return res.status(401).json({ message: 'Invalid credentials' });
+  }
+
+  const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
+  
+  // Send token in HTTP-only cookie
+  res.cookie('authToken', token, {
+    httpOnly: true,
+    secure: false, // Set to true in production with HTTPS
+    sameSite: 'strict',
+  });
+
+  res.json({ message: 'Logged in successfully' });
+});
+
+app.post('/register', (req, res) => {
+  const { id, firstName, lastName, email, password } = req.body;
+
+  // Sprawdź, czy użytkownik już istnieje
+  const existingUser = users.find((u) => u.email === email);
+  if (existingUser) {
+    return res.status(400).json({ message: 'User already exists' });
+  }
+
+  // Tworzenie nowego użytkownika
+  const newUser = {
+    id,
+    firstName,
+    lastName,
+    email,
+    password, // W realnej aplikacji hasło powinno być hashowane np. bcrypt
+  };
+  users.push(newUser);
+
+  // Generowanie tokenu JWT
+  const token = jwt.sign({ id: newUser.id, email: newUser.email }, SECRET_KEY, { expiresIn: '1h' });
+
+  // Wysyłanie tokenu w ciasteczku HTTP-only
+  res.cookie('authToken', token, {
+    httpOnly: true,
+    secure: false, // Ustaw na true w produkcji
+    sameSite: 'strict',
+  });
+
+  res.json({ message: 'User registered and logged in successfully' });
+});
+
+// Middleware to authenticate token
+const authenticateToken = (req, res, next) => {
+  const token = req.cookies.authToken;
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+};
+
+// Protected route
+app.get('/protected', authenticateToken, (req, res) => {
+  res.json({ message: 'This is protected data', user: req.user });
+});
+
+// Logout route
+app.post('/logout', (req, res) => {
+  res.clearCookie('authToken');
+  res.json({ message: 'Logged out successfully' });
+});
+
+
+// ---------------------------------------------------------------------------------------------------------------------------
 
 
 let players = [];

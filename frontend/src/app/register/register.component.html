@@ -1,1 +1,67 @@
-<p>register works!</p>
+<div class="register-container">
+    <h2>Register</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="firstName">Imię</label>
+        <input id="firstName" type="text" formControlName="firstName" class="form-control">
+        @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
+            @if (registerForm.get('firstName')?.errors?.['required']) {
+              <small>Imię jest wymagane.</small>
+            }
+            @if (registerForm.get('firstName')?.errors?.['minlength']) {
+              <small>Imię jest zbyt krótkie.</small>
+            }
+            @if (registerForm.get('firstName')?.errors?.['maxlength']) {
+              <small>Imię jest zbyt długie.</small>
+            }
+        }
+      </div>
+  
+      <div class="form-group">
+        <label for="lastName">Nazwisko</label>
+        <input id="lastName" type="text" formControlName="lastName" class="form-control">
+        @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
+            @if (registerForm.get('lastName')?.errors?.['required']) {
+              <small>Nazwisko jest wymagane.</small>
+            }
+            @if (registerForm.get('lastName')?.errors?.['minlength']) {
+              <small>Nazwisko jest zbyt krótkie.</small>
+            }
+            @if (registerForm.get('lastName')?.errors?.['maxlength']) {
+              <small>Nazwisko jest zbyt długie.</small>
+            }
+        }
+      </div>
+  
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" formControlName="email" class="form-control">
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            <div>
+              <small>Nieprawidłowy adres email.</small>
+            </div>
+        }
+      </div>
+  
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input id="password" type="password" formControlName="password" class="form-control">
+        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+            @if (registerForm.get('password')?.errors?.['password']) {
+              <small>Hasło jest wymagane.</small>
+            }
+            @if (registerForm.get('password')?.errors?.['minlength']) {
+              <small>Hasło jest zbyt krótkie.</small>
+            }
+            @if (registerForm.get('password')?.errors?.['maxlength']) {
+              <small>Hasło jest zbyt długie.</small>
+            }
+        }
+      </div>
+  
+      <button type="submit" class="" [disabled]="registerForm.invalid">Zarejestruj się</button>
+    </form>
+    @if (registrationFailed) {
+        <div>{{registrationFailed}}</div>
+    }
+  </div>
