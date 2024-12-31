@@ -60,9 +60,9 @@ app.get("/api/players", (req, res) => {
 });
 
 app.post("/api/players", upload.single("photo"), (req, res) => {
-  const { id, name, birthDate, nationality, position, shirtNumber, contractUntil, salary } = req.body;
+  const { id, name, birthDate, nationality, position, shirtNumber, contractUntil, salary, clubId } = req.body;
 
-  if (!id || !name || !birthDate || !nationality || !position || !shirtNumber || !contractUntil || !salary) {
+  if (!id || !name || !birthDate || !nationality || !position || !shirtNumber || !contractUntil || !salary || !clubId) {
     return res.status(400).json({ message: "Invalid player data" });
   }
 
@@ -76,14 +76,15 @@ app.post("/api/players", upload.single("photo"), (req, res) => {
     shirtNumber: parseInt(shirtNumber),
     contractUntil: new Date(contractUntil),
     salary: parseFloat(salary),
+    clubId
   };
 
   players.push(player);
   res.status(201).json(player);
 });
 
-app.get("/api/players/:id", (req, res) => {
-    const playerId = req.params.id;
+app.get("/api/players/:playerId", (req, res) => {
+    const playerId = req.params.playerId;
     const player = players.find(p => p.id === playerId);
   
     if (player) {
@@ -93,8 +94,8 @@ app.get("/api/players/:id", (req, res) => {
     }
 });
   
-app.put("/api/players/:id", upload.single("photo"), (req, res) => {
-  const playerId = req.params.id;
+app.put("/api/players/:playerId", upload.single("photo"), (req, res) => {
+  const playerId = req.params.playerId;
   const updatedPlayer = req.body;
 
   const playerIndex = players.findIndex((p) => p.id === playerId);
@@ -114,8 +115,8 @@ app.put("/api/players/:id", upload.single("photo"), (req, res) => {
   }
 });
   
-app.delete("/api/players/:id", (req, res) => {
-    const playerId = req.params.id;
+app.delete("/api/players/:playerId", (req, res) => {
+    const playerId = req.params.playerId;
     const playerIndex = players.findIndex(p => p.id === playerId);
   
     if (playerIndex !== -1) {

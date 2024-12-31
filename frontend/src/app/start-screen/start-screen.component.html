@@ -1,15 +1,16 @@
 <div class="start-container">
-    <div class="banner">
-      <img src="{{logoUrl}}">
-      <p>Twoje miejsce do zarządzania klubem piłkarskim. Stwórz własny klub lub śledź kluby innych użytkowników!</p>
-    </div>
-  
-    <div class="actions">
-      <button (click)="navigateToLogin()" class="btn btn-primary">Zaloguj się</button>
-      <button (click)="navigateToRegister()" class="btn btn-secondary">Zarejestruj się</button>
-    </div>
-  
-    <div class="guest-actions">
-      <button (click)="navigateToClubs()" class="btn btn-link">Przeglądaj kluby</button>
-    </div>
+  <div class="banner">
+    <img src="{{logoUrl}}">
+    <h3>{{ applicationName }}</h3>
+    <p>Twoje miejsce do zarządzania klubem piłkarskim. Stwórz własny klub lub śledź kluby innych użytkowników!</p>
   </div>
+  
+  <div class="actions">
+    <button (click)="navigateToLogin()" class="btn btn-primary">Zaloguj się</button>
+    <button (click)="navigateToRegister()" class="btn btn-secondary">Zarejestruj się</button>
+  </div>
+  
+  <div class="guest-actions">
+    <button (click)="navigateToClubs()" class="btn btn-link">Przeglądaj kluby</button>
+  </div>
+</div>

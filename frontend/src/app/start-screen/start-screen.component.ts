@@ -10,20 +10,20 @@ import { Router } from '@angular/router';
 })
 export class StartScreenComponent {
   
-  logoUrl: string = "assets/logo_fc_manager.png"
-  
-  constructor(private router: Router) {}
+  logoUrl: string = "assets/gold_logo.png"
+  applicationName: string = "FC Manager"
 
+  constructor(private router: Router) {}
   
   navigateToLogin() {
-    this.router.navigate(['/login']); // Przekierowanie na stronę logowania
+    this.router.navigate(['/login']);
   }
 
   navigateToRegister() {
-    this.router.navigate(['/register']); // Przekierowanie na stronę rejestracji
+    this.router.navigate(['/register']);
   }
 
   navigateToClubs() {
-    this.router.navigate(['/clubs']); // Przekierowanie na stronę klubów
+    this.router.navigate(['/club']);
   }
 }

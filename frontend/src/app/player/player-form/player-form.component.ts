@@ -69,7 +69,7 @@ export class PlayerFormComponent {
   }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('playerId');
     if (id) {
       this.editing = true;
       this.playerService.getPlayerById(id).subscribe((player: Player) => {
@@ -132,6 +132,7 @@ export class PlayerFormComponent {
   }
 
   onSubmit() {
+    const clubId = this.route.snapshot.paramMap.get('id');
     if (this.playerForm.valid) {
       const formValue = this.playerForm.value;
       const player: Player = {
@@ -144,17 +145,18 @@ export class PlayerFormComponent {
         shirtNumber: formValue.shirtNumber,
         contractUntil: formValue.contractUntil,
         salary: formValue.salary,
+        clubId: clubId || '',
       };
 
       if (this.editing) {
         this.playerService.updatePlayer(player).subscribe(() => {
           console.log("Player updated successfully!");
-          this.router.navigate(['/player/list']);
+          this.router.navigate([`/club/${clubId}/player/list`]);
         });
       } else {
         this.playerService.addPlayer(player).subscribe(() => {
           console.log("Player added succesfully!");
-          this.router.navigate(['/player/list']);
+          this.router.navigate([`/club/${clubId}/player/list`]);
         });
       }
     }

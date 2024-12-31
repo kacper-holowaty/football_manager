@@ -21,12 +21,12 @@ export const PLAYER_ROUTES: Routes = [
       title: 'Add Player Form'
     },
     {
-        path: ':id/form',
+        path: ':playerId/form',
         component: PlayerFormComponent,
         title: 'Edit Player Form',
       },
     {
-      path: ':id/details',
+      path: ':playerId/details',
       component: PlayerDetailsComponent,
       title: 'Player Details',
     },

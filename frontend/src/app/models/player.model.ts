@@ -8,6 +8,7 @@ export interface Player {
     readonly shirtNumber: number;
     readonly contractUntil: Date;
     readonly salary: number;
+    readonly clubId: string;
 }
 
 // pomysły jak to można rozbudować:
