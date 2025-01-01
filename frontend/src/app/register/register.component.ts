@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,6 +15,13 @@ import { AuthService } from '../services/auth.service';
 export class RegisterComponent {
   registerForm: FormGroup;
   registrationFailed?: string;
+  
+  passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  };
+
 
   constructor(private router: Router, private authService: AuthService) {
     this.registerForm = new FormGroup({
@@ -22,7 +29,8 @@ export class RegisterComponent {
       lastName: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(24)]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(40)]),
-    });
+      confirmPassword: new FormControl('', [Validators.required]),
+    }, { validators: this.passwordMatchValidator });
   }
 
   onSubmit() {
@@ -40,7 +48,7 @@ export class RegisterComponent {
       this.authService.register(user).subscribe({
         next: () => {
           console.log("User registered!");
-          this.router.navigate([`/club/main`]);
+          this.router.navigate([`/main`]);
         },
         error: (err) => {
           console.error("Registration error:", err);
