@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Player } from '../../models/player.model';
+import { Player } from '../../../models/player.model';
 import { Router } from '@angular/router';
-import { PlayerService } from '../../services/player.service';
-import { CalculateAgePipe } from '../../pipes/calculate-age.pipe';
-import { ContractLeftPipe } from '../../pipes/contract-left.pipe';
+import { PlayerService } from '../../../services/player.service';
+import { CalculateAgePipe } from '../../../pipes/calculate-age.pipe';
+import { ContractLeftPipe } from '../../../pipes/contract-left.pipe';
 
 @Component({
   selector: 'app-player-list',

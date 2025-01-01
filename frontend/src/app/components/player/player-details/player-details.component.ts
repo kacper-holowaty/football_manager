@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { PlayerService } from '../../services/player.service';
+import { PlayerService } from '../../../services/player.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Player } from '../../models/player.model';
-import { ContractLeftPipe } from '../../pipes/contract-left.pipe';
-import { CalculateAgePipe } from '../../pipes/calculate-age.pipe';
-import { FormatDatePipe } from '../../pipes/format-date.pipe';
-import { NumberWithSpacesPipe } from '../../pipes/number-with-spaces.pipe';
+import { Player } from '../../../models/player.model';
+import { ContractLeftPipe } from '../../../pipes/contract-left.pipe';
+import { CalculateAgePipe } from '../../../pipes/calculate-age.pipe';
+import { FormatDatePipe } from '../../../pipes/format-date.pipe';
+import { NumberWithSpacesPipe } from '../../../pipes/number-with-spaces.pipe';
 
 @Component({
   selector: 'app-player-details',

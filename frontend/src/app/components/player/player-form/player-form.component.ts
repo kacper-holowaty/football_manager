@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Player } from '../../models/player.model';
+import { Player } from '../../../models/player.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlayerService } from '../../services/player.service';
+import { PlayerService } from '../../../services/player.service';
 import { v4 as uuidv4 } from 'uuid';
 import { DateValidators } from './date-validators';
-import { CountryService } from '../../services/country.service';
-import { Country } from '../../models/country.model';
+import { CountryService } from '../../../services/country.service';
+import { Country } from '../../../models/country.model';
 
 @Component({
   selector: 'app-player-form',

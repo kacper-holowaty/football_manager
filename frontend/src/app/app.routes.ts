@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { StartScreenComponent } from './start-screen/start-screen.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { MainComponent } from './main/main.component';
+import { StartScreenComponent } from './components/start-screen/start-screen.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { MainComponent } from './components/main/main.component';
 import { AuthGuard } from './auth/auth.guard';
 
 export const routes: Routes = [{
@@ -31,7 +31,7 @@ export const routes: Routes = [{
   {
     path: 'club',
     loadChildren: () =>
-      import('./club/club.routes').then((r) => r.CLUB_ROUTES),
+      import('./components/club/club.routes').then((r) => r.CLUB_ROUTES),
   },
 {
     path: 'page-not-found',
