@@ -25,7 +25,7 @@ export class PlayerListComponent {
     });
   }
   
-  getPhotoUrl(photo?: File): string {
+  getPhotoUrl(photo: File | null): string {
     // photo jest typu string, wymaga poprawki albo zmiany typu photo w interfejsie Player
     if (photo) {
       // return URL.createObjectURL(photo);

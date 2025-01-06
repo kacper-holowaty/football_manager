@@ -1,0 +1,36 @@
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.square-button {
+  width: 150px;
+  height: 150px;
+  font-size: 44px;
+  background-color: gainsboro;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+.square-button:hover {
+  background-color: rgb(181, 181, 181);
+}
+
+.link-button {
+  color: #007bff;
+  text-decoration: underline;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  color: #0056b3;
+}/*# sourceMappingURL=main.component.css.map */

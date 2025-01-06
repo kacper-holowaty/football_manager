@@ -1,14 +1,28 @@
-import { Address } from "./address.model";
-
 export interface Club {
     id: string,
     name: string,
-    badge?: File,
+    badge: File | null,
     ownerId: string,
     foundedYear: number,
     stadiumName: string,
     stadiumCapacity: number,
     address: Address,
+    achievements: Achievement[],
+}
+
+export interface Address {
+    street: string,
+    houseNumber: string,
+    apartmentNumber?: string,
+    postalCode: string,
+    city: string,
+    country: string;
+}
+
+export interface Achievement {
+    name: string;
+    date: Date;
+    description: string;
 }
 
 

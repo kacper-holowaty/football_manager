@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
 export class MainComponent {
+
   // isUserLoggedIn: boolean = false;
   // currentUserId: string = '';
 
-  // constructor(private authService: AuthService) {}
+  // constructor(private authService: AuthService, private router: Router) {}
 
   // ngOnInit(): void {
   //   this.authService.isAuthenticated().subscribe(isAuthenticated => {
