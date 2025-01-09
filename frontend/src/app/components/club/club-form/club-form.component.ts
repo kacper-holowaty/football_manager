@@ -13,10 +13,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { ClubService } from '../../../services/club.service';
 
 export interface ClubForm {
   name: FormControl<string | null>;
-  badge: FormControl<File | null>;
+  badge: FormControl<Blob | null>;
   foundedYear: FormControl<number | null>;
   stadiumName: FormControl<string | null>;
   stadiumCapacity: FormControl<number | null>;
@@ -62,7 +63,7 @@ export class ClubFormComponent implements OnInit{
   countries: Country[] = [];
   filteredCountries: Observable<Country[]>;
   
-  constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router, private countryService: CountryService) {
+  constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService) {
     this.clubForm = new FormGroup<ClubForm>({
       name: new FormControl('', [Validators.required, 
         Validators.minLength(3), 
@@ -159,34 +160,34 @@ export class ClubFormComponent implements OnInit{
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editing = true;
-      // this.clubService.getClubById(id).subscribe((club: Club) => {
-      //   this.club = club;
-      //   this.clubForm.patchValue({
-      //     name: club.name,
-      //     badge: club.badge,
-      //     foundedYear: club.foundedYear,
-      //     stadiumName: club.stadiumName,
-      //     stadiumCapacity: club.stadiumCapacity,
-      //     address: {
-      //       street: club.address.street,
-      //       houseNumber: club.address.houseNumber,
-      //       apartmentNumber: club.address.apartmentNumber,
-      //       postalCode: club.address.postalCode,
-      //       city: club.address.city,
-      //       country: club.address.country,
-      //     },
-      //   });
+      this.clubService.getClubById(id).subscribe((club: Club) => {
+        this.club = club;
+        this.clubForm.patchValue({
+          name: club.name,
+          badge: club.badge,
+          foundedYear: club.foundedYear,
+          stadiumName: club.stadiumName,
+          stadiumCapacity: club.stadiumCapacity,
+          address: {
+            street: club.address.street,
+            houseNumber: club.address.houseNumber,
+            apartmentNumber: club.address.apartmentNumber,
+            postalCode: club.address.postalCode,
+            city: club.address.city,
+            country: club.address.country,
+          },
+        });
 
-      //   if (club.achievements && club.achievements.length > 0) {
-      //     club.achievements.forEach((achievement) => {
-      //       this.achievements.push(new FormGroup<AchievementForm>({
-      //         name: new FormControl(achievement.name, Validators.required),
-      //         date: new FormControl(achievement.date, Validators.required),
-      //         description: new FormControl(achievement.description, Validators.required),
-      //       }));
-      //     });
-      //   }
-      // });
+        if (club.achievements && club.achievements.length > 0) {
+          club.achievements.forEach((achievement) => {
+            this.achievements.push(new FormGroup<AchievementForm>({
+              name: new FormControl(achievement.name, Validators.required),
+              date: new FormControl(achievement.date, Validators.required),
+              description: new FormControl(achievement.description, Validators.required),
+            }));
+          });
+        }
+      });
     }    
 
     this.countryService.getCountries().subscribe({
@@ -265,7 +266,7 @@ export class ClubFormComponent implements OnInit{
     if (this.clubForm.valid) {
       const formValue = this.clubForm.value;
       const club: Club = {
-        id: this.club ? this.club.id : uuidv4(),
+        clubId: this.club ? this.club.clubId : uuidv4(),
         name: formValue.name ?? '',
         badge: formValue.badge || null,
         ownerId: this.currentUserId,
@@ -286,20 +287,17 @@ export class ClubFormComponent implements OnInit{
           description: achievementForm.description ?? '',
         })),
       };
-      console.log("Club added successfully!");
-      this.router.navigate([`/club/${club.id}/main`])
-      
-      // if (this.editing) {
-      //   this.clubService.updateClub(club).subscribe(() => {
-      //     console.log("Club updated successfully!");
-      //     this.router.navigate([`/club/${id}/`]);
-      //   });
-      // } else {
-      //   this.clubService.addClub(club).subscribe(() => {
-      //     console.log("Club added succesfully!");
-      //     this.router.navigate([`/club/${club.id}/main`]);
-      //   });
-      // }
+      if (this.editing) {
+        // this.clubService.updateClub(club).subscribe(() => {
+        //   console.log("Club updated successfully!");
+        //   this.router.navigate([`/club/${id}/main`]);
+        // });
+      } else {
+        this.clubService.addClub(club).subscribe(() => {
+          console.log("Club added succesfully!");
+          this.router.navigate([`/club/${club.clubId}/main`]);
+        });
+      }
     }
   }
 }

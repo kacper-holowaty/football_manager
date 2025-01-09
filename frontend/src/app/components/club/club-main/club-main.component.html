@@ -1,1 +1,35 @@
-<p>club-main works!</p>
+@if (club) {
+    <div>
+        <div>
+            <h3>Badge:</h3>
+            <img [src]="club.badge || defaultBadgeUrl" alt="Club Badge" />
+        </div>
+
+        <h2>{{ club.name }}</h2>
+        <p><strong>Founded Year:</strong> {{ club.foundedYear }}</p>
+        <p><strong>Stadium Name:</strong> {{ club.stadiumName }}</p>
+        <p><strong>Stadium Capacity:</strong> {{ club.stadiumCapacity }}</p>
+        
+        <div>
+            <h3>Address:</h3>
+            <p>{{ club.address.street }}, {{ club.address.houseNumber }}</p>
+            <p>{{ club.address.city }}, {{ club.address.country }}</p>
+            <p>{{ club.address.postalCode }}</p>
+        </div>
+        @if (club.achievements && club.achievements.length > 0) {
+            <div>
+                <h3>Achievements:</h3>
+                <ul>
+                @for (achievement of club.achievements; track $index) {
+                    <strong>{{ achievement.name }}</strong> ({{ achievement.date }}): {{ achievement.description }}
+                }
+                </ul>
+            </div>
+        }
+    
+    </div>
+}
+@else {
+    <div>Loading...</div>
+}
+  

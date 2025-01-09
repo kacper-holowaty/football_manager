@@ -1,28 +1,28 @@
 export interface Club {
-    id: string,
-    name: string,
-    badge: File | null,
-    ownerId: string,
-    foundedYear: number,
-    stadiumName: string,
-    stadiumCapacity: number,
-    address: Address,
-    achievements: Achievement[],
+    readonly clubId: string,
+    readonly name: string,
+    readonly badge: Blob | null,
+    readonly ownerId: string,
+    readonly foundedYear: number,
+    readonly stadiumName: string,
+    readonly stadiumCapacity: number,
+    readonly address: Address,
+    readonly achievements: Achievement[],
 }
 
 export interface Address {
-    street: string,
-    houseNumber: string,
-    apartmentNumber?: string,
-    postalCode: string,
-    city: string,
-    country: string;
+    readonly street: string,
+    readonly houseNumber: string,
+    readonly apartmentNumber?: string,
+    readonly postalCode: string,
+    readonly city: string,
+    readonly country: string;
 }
 
 export interface Achievement {
-    name: string;
-    date: Date;
-    description: string;
+    readonly name: string;
+    readonly date: Date;
+    readonly description: string;
 }
 
 

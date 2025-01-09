@@ -1,0 +1,127 @@
+const express = require("express");
+const clubRoutes = express.Router();
+const multer = require("multer");
+const dbo = require("../db/conn");
+const { ObjectId, GridFSBucket } = require("mongodb");
+
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 2 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const ext = file.mimetype.split("/")[1];
+    if (["jpeg", "jpg", "png"].includes(ext)) {
+      return cb(null, true);
+    }
+    cb(new Error("Only image files are allowed."));
+  },
+});
+
+clubRoutes.route("/clubs").post(upload.single("badge"), async (req, res) => {
+
+  const {
+    clubId,
+    name,
+    ownerId,
+    foundedYear,
+    stadiumName,
+    stadiumCapacity,
+    address,
+    achievements,
+  } = req.body;
+  
+  try {
+    const db = await dbo.getDb();
+
+    const existingClub = await db.collection("clubs").findOne({ name });
+    if (existingClub) {
+      return res.status(409).json({ success: false, message: "Club with this name already exists." });
+    }
+    const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+
+    let imageId = null;
+
+    if (req.file) {
+      const uploadStream = bucket.openUploadStream(`${Date.now()}-${req.file.originalname}`, {
+        contentType: req.file.mimetype,
+      });
+      uploadStream.end(req.file.buffer);
+
+      await new Promise((resolve, reject) => {
+        uploadStream.on("finish", (file) => {
+          imageId = file._id;
+          resolve();
+        });
+        uploadStream.on("error", (err) => reject(err));
+      });
+    }
+
+    const newClub = {
+      clubId,
+      name,
+      ownerId,
+      foundedYear: parseInt(foundedYear),
+      stadiumName,
+      stadiumCapacity: parseInt(stadiumCapacity),
+      address: address,
+      achievements: achievements,
+      badge: imageId,
+    };
+
+    const result = await db.collection("clubs").insertOne(newClub);
+    res.status(201).json({ success: true, message: "Club added successfully.", id: result.insertedId });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({ success: false, message: "Club with this ID already exists." });
+    }
+    console.error("Error while adding club:", error);
+    res.status(500).json({ success: false, message: "Error while adding the club." });
+  }
+});
+
+clubRoutes.route("/clubs/:id").get(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const db = await dbo.getDb();
+    const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+
+    const club = await db.collection("clubs").findOne({ clubId: id }, { projection: { _id: 0 }});
+
+    if (!club) {
+      return res.status(404).json({ success: false, message: "Club not found." });
+    }
+
+    if (club.badge) {
+      const files = await bucket.find({ _id: new ObjectId(club.badge) }).toArray();
+
+      if (files.length > 0) {
+        const fileStream = bucket.openDownloadStream(files[0]._id);
+        const chunks = [];
+
+        fileStream.on("data", (chunk) => chunks.push(chunk));
+        fileStream.on("end", () => {
+          const fileBuffer = Buffer.concat(chunks);
+          const fileBase64 = fileBuffer.toString("base64");
+
+          club.badge = `data:${files[0].contentType};base64,${fileBase64}`;
+          res.status(200).json(club);
+        });
+
+        fileStream.on("error", (error) => {
+          console.error("Error reading file from GridFS:", error);
+          res.status(500).json({ success: false, message: "Error retrieving badge image." });
+        });
+      } else {
+        res.status(404).json({ success: false, message: "Badge file not found." });
+      }
+    } else {
+      res.status(200).json(club);
+    }
+  } catch (error) {
+    console.error("Error while retrieving club:", error);
+    res.status(500).json({ success: false, message: "Error while retrieving the club." });
+  }
+});
+
+module.exports = clubRoutes;
