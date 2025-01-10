@@ -1,1 +1,11 @@
-<p>club-list works!</p>
+@if (clubs && clubs.length > 0) {
+    <div>
+      @for (club of clubs; track $index) {
+        <div (click)="viewClubDetails(club.clubId)">
+          <h3>{{ club.name }}</h3>
+          <p>Founded: {{ club.foundedYear }}</p>
+          <img [src]="club.badge || defaultBadgeUrl" alt="Club Badge" />
+        </div>
+      }
+    </div>
+}

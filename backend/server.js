@@ -43,8 +43,19 @@ app.use('/uploads', express.static(uploadsDir));
 
 const countries = require('./data/countries.json');
 
-app.get('/api/countries', (req, res) => {
+app.get('/countries', (req, res) => {
     res.json(countries);
+});
+
+app.get('/countries/:country', (req, res) => {
+  const countryName = req.params.country;
+  const country = countries.find(c => c.country.toLowerCase() === countryName.toLowerCase());
+
+  if (country) {
+      res.json({ code: country.code });
+  } else {
+      res.status(404).json({ error: 'Country not found' });
+  }
 });
 
 let players = [];

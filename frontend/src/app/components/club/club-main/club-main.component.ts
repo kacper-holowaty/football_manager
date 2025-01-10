@@ -13,7 +13,6 @@ import { Club } from '../../../models/club.model';
 export class ClubMainComponent {
   club?: Club;
   defaultBadgeUrl: string = 'assets/empty_badge.png';
-  apiUrl: string = "http://localhost:3000"
   
   constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router) {}
   

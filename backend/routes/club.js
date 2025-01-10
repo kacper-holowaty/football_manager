@@ -124,4 +124,51 @@ clubRoutes.route("/clubs/:id").get(async (req, res) => {
   }
 });
 
+clubRoutes.route("/clubs").get(async (req, res) => {
+
+  const userId = req.query.ownerId;
+
+  try {
+    const db = await dbo.getDb();
+    const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+
+    let clubs;
+
+    if (userId) {
+      clubs = await db.collection("clubs").find({ ownerId: userId }).toArray();
+    } else {
+      clubs = await db.collection("clubs").find({}).toArray();
+    }
+
+    const clubsWithImages = await Promise.all(
+      clubs.map(async (club) => {
+        if (club.badge) {
+          const files = await bucket.find({ _id: new ObjectId(club.badge) }).toArray();
+          if (files.length > 0) {
+            const fileStream = bucket.openDownloadStream(files[0]._id);
+            const chunks = [];
+
+            await new Promise((resolve, reject) => {
+              fileStream.on("data", (chunk) => chunks.push(chunk));
+              fileStream.on("end", () => {
+                const fileBuffer = Buffer.concat(chunks);
+                const fileBase64 = fileBuffer.toString("base64");
+                club.badge = `data:${files[0].contentType};base64,${fileBase64}`;
+                resolve();
+              });
+              fileStream.on("error", (error) => reject(error));
+            });
+          }
+        }
+        return club;
+      })
+    );
+
+    res.status(200).json(clubsWithImages);
+  } catch (error) {
+    console.error("Error fetching clubs:", error);
+    res.status(500).json({ success: false, message: "Error fetching clubs." });
+  }
+});
+
 module.exports = clubRoutes;

@@ -1,4 +1,17 @@
 <div class="button-container">
+    @if (clubs && clubs.length > 0) {
+      <div>
+        @for (club of clubs; track $index) {
+          <div (click)="viewClubDetails(club.clubId)">
+            <h3>{{ club.name }}</h3>
+            <!-- <p>{{ club.address.country }}</p> -->
+            <span class="fi" [class]="'fi-'+(getCountryCode(club.address.country) | async)"></span> 
+            <p>Founded: {{ club.foundedYear }}</p>
+            <img [src]="club.badge || defaultBadgeUrl" alt="Club Badge" />
+          </div>
+        }
+      </div>
+    }
     <button class="square-button" routerLink="/club/form">
       +
     </button>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Club } from '../models/club.model';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +50,16 @@ export class ClubService {
   }
 
   getClubById(clubId: string): Observable<Club> {
-    console.log(clubId);
     return this.httpClient.get<Club>(`${this.apiUrl}/${clubId}`);
+  }
+
+  getClubsByOwnerId(ownerId: string): Observable<Club[]> {
+    const params = new HttpParams().set('ownerId', ownerId);
+    console.log(`Sending request with ownerId: ${ownerId}`);
+    return this.httpClient.get<Club[]>(this.apiUrl, { params });
+  }
+
+  getAllClubs(): Observable<Club[]> {
+    return this.httpClient.get<Club[]>(this.apiUrl);
   }
 }
