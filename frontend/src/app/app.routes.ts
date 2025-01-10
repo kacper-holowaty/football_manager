@@ -10,11 +10,6 @@ export const routes: Routes = [{
     path: '',
     component: StartScreenComponent,
   },    
-// {
-//     path: 'player',
-//     loadChildren: () =>
-//       import('./player/player.routes').then((r) => r.PLAYER_ROUTES),
-// },
   {
     path: 'login',
     component: LoginComponent,

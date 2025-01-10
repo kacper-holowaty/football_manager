@@ -1,168 +1,168 @@
 <div class="club-form">
-  <h2>{{ editing ? 'Edytuj swój klub' : 'Stwórz klub' }}</h2>
+  <h2>{{ editing ? 'Edit your club' : 'Create a club' }}</h2>
   <form [formGroup]="clubForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="name">Nazwa klubu</label>
+      <label for="name">Club name</label>
       <input id="name" formControlName="name" type="text" class="form-control" />
       @if (clubForm.get('name')?.invalid && clubForm.get('name')?.touched) {
         @if (clubForm.get('name')?.errors?.['required']) {
-          <small>Nazwa klubu jest wymagana.</small>
+          <small>Club name is required.</small>
         }
         @if (clubForm.get('name')?.errors?.['minlength']) {
-          <small>Nazwa klubu jest zbyt krótka.</small>
+          <small>Club name is too short.</small>
         }
         @if (clubForm.get('name')?.errors?.['maxlength']) {
-          <small>Nazwa klubu jest zbyt długa.</small>
+          <small>Club name is too long.</small>
         }
         @if (clubForm.get('name')?.errors?.['pattern']) {
-          <small>Nazwa klubu jest nieprawidłowa.</small>
+          <small>Invalid club name.</small>
         }
       }
     </div>
 
     <div class="form-group">
-      <label for="badge">Herb</label>
+      <label for="badge">Badge</label>
       <input id="badge" type="file" (change)="onBadgeSelected($event)" accept="image/*" />
       @if (badgePreviewUrl) {
         <div>
-          <p>Wybrane logo:</p>
-          <img [src]="badgePreviewUrl" alt="Wybrane logo" style="max-width: 200px;" />
-          <button type="button" (click)="removePhoto()">Usuń logo</button>
+          <p>Selected badge:</p>
+          <img [src]="badgePreviewUrl" alt="Selected badge" style="max-width: 200px;" />
+          <button type="button" (click)="removePhoto()">Remove badge</button>
         </div>
       }
     </div>
 
     <div class="form-group">
-      <label for="foundedYear">Rok założenia</label>
+      <label for="foundedYear">Founded year</label>
       <input id="foundedYear" formControlName="foundedYear" type="number" class="form-control" />
       @if (clubForm.get('foundedYear')?.invalid && clubForm.get('foundedYear')?.touched) {
         @if (clubForm.get('foundedYear')?.errors?.['required']) {
-          <small>Rok założenia klubu jest wymagany.</small>
+          <small>Founded year is required.</small>
         }
         @if (clubForm.get('foundedYear')?.errors?.['min']) {
-          <small>Klub założono wcześniej niż wymyślono piłkę nożną? Nieźle, ale tak nie wolno.</small>
+          <small>The club was founded before football was invented? Nice, but that's not allowed.</small>
         }
         @if (clubForm.get('foundedYear')?.errors?.['max']) {
-          <small>Rok założenia nie może być późniejszy niż bieżący rok.</small>
+          <small>Founded year cannot be later than the current year.</small>
         }
       }      
     </div>
 
     <div class="form-group">
-      <label for="stadiumName">Nazwa stadionu</label>
+      <label for="stadiumName">Stadium name</label>
       <input id="stadiumName" formControlName="stadiumName" type="text" class="form-control" />
       @if (clubForm.get('stadiumName')?.invalid && clubForm.get('stadiumName')?.touched) {
         @if (clubForm.get('stadiumName')?.errors?.['required']) {
-          <small>Nazwa stadionu jest wymagana.</small>
+          <small>Stadium name is required.</small>
         }
         @if (clubForm.get('stadiumName')?.errors?.['minlength']) {
-          <small>Nazwa stadionu jest zbyt krótka.</small>
+          <small>Stadium name is too short.</small>
         }
         @if (clubForm.get('stadiumName')?.errors?.['maxlength']) {
-          <small>Nazwa stadionu jest zbyt długa.</small>
+          <small>Stadium name is too long.</small>
         }
         @if (clubForm.get('stadiumName')?.errors?.['pattern']) {
-          <small>Nieprawidłowa nazwa stadionu.</small>
+          <small>Invalid stadium name.</small>
         }
       }
     </div>
 
     <div class="form-group">
-      <label for="stadiumCapacity">Pojemność stadionu</label>
+      <label for="stadiumCapacity">Stadium capacity</label>
       <input id="stadiumCapacity" formControlName="stadiumCapacity" type="number" class="form-control" />
       @if (clubForm.get('stadiumCapacity')?.invalid && clubForm.get('stadiumCapacity')?.touched) {
         @if (clubForm.get('stadiumCapacity')?.errors?.['required']) {
-          <small>Pojemność stadionu jest wymagana.</small>
+          <small>Stadium capacity is required.</small>
         }
         @if (clubForm.get('stadiumCapacity')?.errors?.['min']) {
-          <small>Pojemność stadionu nie może być mniejsza niż 0.</small>
+          <small>Stadium capacity cannot be less than 0.</small>
         }
         @if (clubForm.get('stadiumCapacity')?.errors?.['max']) {
-          <small>Pojemność stadionu nie może przekroczyć 250 000.</small>
+          <small>Stadium capacity cannot exceed 250,000.</small>
         }
       }
     </div>
 
     <div class="address" formGroupName="address">
-      <h3>Adres</h3>
+      <h3>Address</h3>
       <div class="form-group">
-        <label for="street">Ulica</label>
+        <label for="street">Street</label>
         <input id="street" formControlName="street" type="text" class="form-control" />
         @if (clubForm.get('address.street')?.invalid && clubForm.get('address.street')?.touched) {
           @if (clubForm.get('address.street')?.errors?.['required']) {
-            <small>Nazwa ulicy jest wymagana.</small>
+            <small>Street name is required.</small>
           }
           @if (clubForm.get('address.street')?.errors?.['minlength']) {
-            <small>Nazwa ulica jest zbyt krótka.</small>
+            <small>Street name is too short.</small>
           }
           @if (clubForm.get('address.street')?.errors?.['maxlength']) {
-            <small>Nazwa ulicy jest zbyt długa.</small>
+            <small>Street name is too long.</small>
           }
           @if (clubForm.get('address.street')?.errors?.['pattern']) {
-            <small>Nazwa ulicy jest nieprawidłowa.</small>
+            <small>Invalid street name.</small>
           }
         }
       </div>
       <div class="form-group">
-        <label for="houseNumber">Numer budynku</label>
+        <label for="houseNumber">House number</label>
         <input id="houseNumber" formControlName="houseNumber" type="text" class="form-control" />
         @if (clubForm.get('address.houseNumber')?.invalid && clubForm.get('address.houseNumber')?.touched) {
-          <small>Numer budynku jest nieprawidłowy.</small>
+          <small>Invalid house number.</small>
         }
       </div>
       <div class="form-group">
-        <label for="apartmentNumber">Numer mieszkania</label>
+        <label for="apartmentNumber">Apartment number</label>
         <input id="apartmentNumber" formControlName="apartmentNumber" type="text" class="form-control" />
         @if (clubForm.get('address.apartmentNumber')?.invalid && clubForm.get('address.apartmentNumber')?.touched) {
-          <small>Numer mieszkania jest nieprawidłowy.</small>
+          <small>Apartment number is invalid.</small>
         }
       </div>
       <div class="form-group">
-        <label for="postalCode">Kod pocztowy</label>
+        <label for="postalCode">Postal code</label>
         <input id="postalCode" formControlName="postalCode" type="text" class="form-control" />
         @if (clubForm.get('address.postalCode')?.invalid && clubForm.get('address.postalCode')?.touched) {
           @if (clubForm.get('address.postalCode')?.errors?.['required']) {
-            <small>Kod pocztowy jest wymagany.</small>
+            <small>Postal code is required.</small>
           }
           @if (clubForm.get('address.postalCode')?.errors?.['minlength']) {
-            <small>Kod pocztowy musi zawierać co najmniej 4 znaki.</small>
+            <small>Postal code must be at least 4 characters long.</small>
           }
           @if (clubForm.get('address.postalCode')?.errors?.['maxlength']) {
-            <small>Kod pocztowy nie może przekroczyć 6 znaków.</small>
+            <small>Postal code cannot exceed 6 characters.</small>
           }
           @if (clubForm.get('address.postalCode')?.errors?.['pattern']) {
-            <small>nieprawidłowy format kodu pocztowego.</small>
+            <small>Invalid postal code format.</small>
           }
         }
       </div>
       <div class="form-group">
-        <label for="city">Miasto</label>
+        <label for="city">City</label>
         <input id="city" formControlName="city" type="text" class="form-control" />
         @if (clubForm.get('address.city')?.invalid && clubForm.get('address.city')?.touched) {
           @if (clubForm.get('address.city')?.errors?.['required']) {
-            <small>Nazwa miasta jest wymagane.</small>
+            <small>City name is required.</small>
           }
           @if (clubForm.get('address.city')?.errors?.['minlength']) {
-            <small>Nazwa miasta jest zbyt krótka.</small>
+            <small>City name is too short.</small>
           }
           @if (clubForm.get('address.city')?.errors?.['maxlength']) {
-            <small>Nazwa miasta jest zbyt długa.</small>
+            <small>City name is too long.</small>
           }
           @if (clubForm.get('address.city')?.errors?.['pattern']) {
-            <small>Nazwa miasta jest nieprawidłowa.</small>
+            <small>Invalid city name.</small>
           }
         }
       </div>
       <div>
-        <label for="country">Kraj</label>
+        <label for="country">Country</label>
         <mat-form-field appearance="fill">
-          <mat-label>Wybierz kraj</mat-label>
+          <mat-label>Select country</mat-label>
           <input 
             type="text" 
             matInput 
             formControlName="country" 
             [matAutocomplete]="auto" 
-            placeholder="Wpisz kraj">
+            placeholder="Enter country name">
           <mat-autocomplete #auto="matAutocomplete">
             @for (countryElem of filteredCountries | async; track $index) {
               <mat-option  
@@ -182,10 +182,10 @@
       
         @if (clubForm.get('address.country')?.invalid && clubForm.get('address.country')?.touched) {
           @if (clubForm.get('address.country')?.errors?.['required']) {
-            <small>Kraj jest wymagany.</small>
+            <small>Country is required.</small>
           }
           @if (clubForm.get('address.country')?.errors?.['invalidCountry']) {
-            <small>Nieprawidłowa nazwa kraju.</small>
+            <small>Please select a valid country.</small>
           }
         }
       </div>
@@ -197,43 +197,43 @@
         @for (achievement of achievements.controls; track $index) {
           <div [formGroupName]="$index" class="achievement-group">
               <div class="form-group">
-                <label for="achievementName-{{ $index }}">Name:</label>
+                <label for="achievementName-{{ $index }}">Name</label>
                 <input id="achievementName-{{ $index }}" formControlName="name" type="text" class="form-control" />
                 @if (clubForm.controls.achievements.controls[$index].get('name')?.invalid && clubForm.controls.achievements.controls[$index].get('name')?.touched) {
                   @if (clubForm.controls.achievements.controls[$index].get('name')?.errors?.['required']) {
-                    <small>Nazwa osiągnięcia jest wymagana.</small>
+                    <small>Achievement name is required.</small>
                   }
                   @if (clubForm.controls.achievements.controls[$index].get('name')?.errors?.['pattern']) {
-                    <small>Nazwa osiągnięcia jest nieprawidłowa.</small>
+                    <small>Invalid achievement name.</small>
                   }
                 }
               </div>
         
               <div class="form-group">
-                <label for="achievementDate-{{ $index }}">Date:</label>
+                <label for="achievementDate-{{ $index }}">Date</label>
                 <input id="achievementDate-{{ $index }}" formControlName="date" type="date" class="form-control" />
                 @if (clubForm.controls.achievements.controls[$index].get('date')?.invalid && clubForm.controls.achievements.controls[$index].get('date')?.touched) {
                   @if (clubForm.controls.achievements.controls[$index].get('date')?.errors?.['required']) {
-                    <small>Data osiągnięcia jest wymagana.</small>
+                    <small>The achievement date is required.</small>
                   }
                   @if (clubForm.controls.achievements.controls[$index].get('date')?.errors?.['minDate']) {
-                    <small>Data uzyskania osiągnięcia nie może być wcześniejsza niż rok założenia klubu.</small>
+                    <small>The achievement date cannot be earlier than the year the club was founded.</small>
                   }
                   @if (clubForm.controls.achievements.controls[$index].get('date')?.errors?.['maxDate']) {
-                    <small>Data nie może być późniejsza niż dzisiejszy dzień.</small>
+                    <small>The achievement date cannot be later than today.</small>
                   }
                 }
               </div>
         
               <div class="form-group">
-                <label for="achievementDescription-{{ $index }}">Opis</label>
+                <label for="achievementDescription-{{ $index }}">Description</label>
                 <textarea id="achievementDescription-{{ $index }}" formControlName="description" class="form-control"></textarea>
                 @if (clubForm.controls.achievements.controls[$index].get('description')?.invalid && clubForm.controls.achievements.controls[$index].get('description')?.touched) {
                   @if (clubForm.controls.achievements.controls[$index].get('description')?.errors?.['required']) {
-                    <small>Opis osiągnięcia jest wymagany.</small>
+                    <small>Description is required.</small>
                   }
                   @if (clubForm.controls.achievements.controls[$index].get('description')?.errors?.['maxlength']) {
-                    <small>Opis nie może przekroczyć 500 znaków.</small>
+                    <small>The description cannot exceed 500 characters.</small>
                   }
                 }
               </div>
@@ -247,7 +247,7 @@
 
 
     <button type="submit" class="btn btn-primary" [disabled]="clubForm.invalid">
-      {{ editing ? 'Zaktualizuj informacje o klubie' : 'Stwórz klub' }}
-    </button>
+      {{ editing ? 'Update club information' : 'Create club' }}
+    </button>  
   </form>
 </div>

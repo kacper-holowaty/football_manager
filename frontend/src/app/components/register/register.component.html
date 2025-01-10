@@ -2,33 +2,33 @@
     <h2>Register</h2>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="firstName">Imię</label>
+        <label for="firstName">First name</label>
         <input id="firstName" type="text" formControlName="firstName" class="form-control">
         @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
             @if (registerForm.get('firstName')?.errors?.['required']) {
-              <small>Imię jest wymagane.</small>
+              <small>First name is required.</small>
             }
             @if (registerForm.get('firstName')?.errors?.['minlength']) {
-              <small>Imię jest zbyt krótkie.</small>
+              <small>First name is too short.</small>
             }
             @if (registerForm.get('firstName')?.errors?.['maxlength']) {
-              <small>Imię jest zbyt długie.</small>
+              <small>First name is too long.</small>
             }
         }
       </div>
   
       <div class="form-group">
-        <label for="lastName">Nazwisko</label>
+        <label for="lastName">Last name</label>
         <input id="lastName" type="text" formControlName="lastName" class="form-control">
         @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
             @if (registerForm.get('lastName')?.errors?.['required']) {
-              <small>Nazwisko jest wymagane.</small>
+              <small>Last name is required.</small>
             }
             @if (registerForm.get('lastName')?.errors?.['minlength']) {
-              <small>Nazwisko jest zbyt krótkie.</small>
+              <small>Last name is too short.</small>
             }
             @if (registerForm.get('lastName')?.errors?.['maxlength']) {
-              <small>Nazwisko jest zbyt długie.</small>
+              <small>Last name is too long.</small>
             }
         }
       </div>
@@ -38,36 +38,36 @@
         <input id="email" type="email" formControlName="email" class="form-control">
         @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
             <div>
-              <small>Nieprawidłowy adres email.</small>
+              <small>Invalid email address.</small>
             </div>
         }
       </div>
   
       <div class="form-group">
-        <label for="password">Hasło</label>
+        <label for="password">Password</label>
         <input id="password" type="password" formControlName="password" class="form-control">
         @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-            @if (registerForm.get('password')?.errors?.['password']) {
-              <small>Hasło jest wymagane.</small>
+            @if (registerForm.get('password')?.errors?.['required']) {
+              <small>Password is required.</small>
             }
             @if (registerForm.get('password')?.errors?.['minlength']) {
-              <small>Hasło jest zbyt krótkie.</small>
+              <small>Password is too short.</small>
             }
             @if (registerForm.get('password')?.errors?.['maxlength']) {
-              <small>Hasło jest zbyt długie.</small>
+              <small>Password is too long.</small>
             }
         }
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword">Potwierdź hasło</label>
+        <label for="confirmPassword">Confirm password</label>
         <input id="confirmPassword" type="password" formControlName="confirmPassword" class="form-control">
         @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
-          <small>Hasła muszą być takie same!</small>
+          <small>Passwords must match!</small>
         }
       </div>
   
-      <button type="submit" class="" [disabled]="registerForm.invalid">Zarejestruj się</button>
+      <button type="submit" class="" [disabled]="registerForm.invalid">Register</button>
     </form>
     @if (registrationFailed) {
         <div>{{registrationFailed}}</div>
