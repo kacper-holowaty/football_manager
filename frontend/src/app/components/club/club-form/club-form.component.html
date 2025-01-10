@@ -45,8 +45,7 @@
         @if (clubForm.get('foundedYear')?.errors?.['max']) {
           <small>Rok założenia nie może być późniejszy niż bieżący rok.</small>
         }
-      }
-      
+      }      
     </div>
 
     <div class="form-group">
@@ -154,15 +153,6 @@
           }
         }
       </div>
-      <!-- <div class="form-group">
-        <label for="country">Kraj</label>
-        <input id="country" formControlName="country" type="text" class="form-control" />
-        @if (clubForm.get('address.country')?.invalid && clubForm.get('address.country')?.touched) {
-          @if (clubForm.get('address.country')?.errors?.['required']) {
-            <small>Kraj jest wymagany.</small>
-          }
-        }
-      </div> -->
       <div>
         <label for="country">Kraj</label>
         <mat-form-field appearance="fill">

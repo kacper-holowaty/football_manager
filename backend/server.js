@@ -58,6 +58,21 @@ app.get('/countries/:country', (req, res) => {
   }
 });
 
+app.post('/countries/codes', (req, res) => {
+  const { countries: countryNames } = req.body; // Tablica nazw krajów przesłana w body
+
+  if (!countryNames || !Array.isArray(countryNames)) {
+      return res.status(400).json({ error: 'Invalid request format. Provide an array of country names.' });
+  }
+
+  const result = countryNames.map(countryName => {
+      const country = countries.find(c => c.country.toLowerCase() === countryName.toLowerCase());
+      return country ? { country: countryName, code: country.code } : { country: countryName, code: 'unknown' };
+  });
+
+  res.json(result);
+});
+
 let players = [];
 
 const storage = multer.diskStorage({

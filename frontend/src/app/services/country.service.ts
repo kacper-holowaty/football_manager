@@ -15,7 +15,11 @@ export class CountryService {
     return this.httpClient.get<Country[]>(this.apiUrl);
   }
 
-  getCountryCode(country: string): Observable<{ code: string }> {
-    return this.httpClient.get<{ code: string }>(`${this.apiUrl}/${country}`);
+  // getCountryCode(country: string): Observable<{ code: string }> {
+  //   return this.httpClient.get<{ code: string }>(`${this.apiUrl}/${country}`);
+  // }
+  getCountryCodes(countries: string[]): Observable<{ country: string, code: string }[]> {
+    return this.httpClient.post<{ country: string, code: string }[]>(`${this.apiUrl}/codes`, { countries });
   }
+  
 }
