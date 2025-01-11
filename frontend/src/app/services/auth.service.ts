@@ -4,6 +4,11 @@ import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
+interface AuthResponse {
+  token: string;
+  user: User;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,29 +16,29 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:3000';
 
-  constructor(private httpClient: HttpClient, private router: Router) {}
+  public constructor(private httpClient: HttpClient, private router: Router) {}
 
-  login(email: string, password: string) {
-    return this.httpClient.post(`${this.apiUrl}/login`, { email, password }, { withCredentials: true });
+  public login(email: string, password: string): Observable<AuthResponse> {
+    return this.httpClient.post<AuthResponse>(`${this.apiUrl}/login`, { email, password }, { withCredentials: true });
   }
 
-  logout() {
+  public logout(): void {
     this.httpClient.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe(() => {
       this.router.navigate(['/']);
     });
   }
 
-  register(user: User) {
-    return this.httpClient.post(`${this.apiUrl}/register`, user, { withCredentials: true });
+  public register(user: User): Observable<AuthResponse> {
+    return this.httpClient.post<AuthResponse>(`${this.apiUrl}/register`, user, { withCredentials: true });
   }
 
-  isAuthenticated(): Observable<boolean> {
+  public isAuthenticated(): Observable<boolean> {
     return this.httpClient.get<{ isAuthenticated: boolean }>(`${this.apiUrl}/is-authenticated`, {withCredentials: true})
-      .pipe(map(response => response.isAuthenticated));
+      .pipe(map((response) => response.isAuthenticated));
   }
 
-  getAuthenticatedUserId(): Observable<string> {
+  public getAuthenticatedUserId(): Observable<string> {
     return this.httpClient.get<{userId: string}>(`${this.apiUrl}/is-authenticated`, {withCredentials: true})
-      .pipe(map(response => response.userId))
+      .pipe(map((response) => response.userId));
   }
 }

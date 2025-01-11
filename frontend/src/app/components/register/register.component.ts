@@ -5,6 +5,21 @@ import { User } from '../../models/user.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from '../../services/auth.service';
 
+interface RegisterForm {
+  firstName: FormControl<string | null>;
+  lastName: FormControl<string | null>;
+  email: FormControl<string | null>;
+  password: FormControl<string | null>;
+  confirmPassword: FormControl<string | null>;
+}
+
+interface ApiError {
+  error: {
+    message: string;
+  };
+  status: number;
+}
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -13,18 +28,18 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  registerForm: FormGroup;
-  registrationFailed?: string;
+  protected registerForm: FormGroup<RegisterForm>;
+  protected registrationFailed?: string;
   
-  passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const password = control.get('password')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { passwordMismatch: true };
+  protected passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const password = control.get('password') as FormControl<string | null>;
+    const confirmPassword = control.get('confirmPassword') as FormControl<string | null>;
+
+    return password.value === confirmPassword.value ? null : { passwordMismatch: true };
   };
 
-
-  constructor(private router: Router, private authService: AuthService) {
-    this.registerForm = new FormGroup({
+  public constructor(private router: Router, private authService: AuthService) {
+    this.registerForm = new FormGroup<RegisterForm>({
       firstName: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(24)]),
       lastName: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(24)]),
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -33,26 +48,28 @@ export class RegisterComponent {
     }, { validators: this.passwordMatchValidator });
   }
 
-  onSubmit() {
+  protected onSubmit(): void {
     if (this.registerForm.valid) {
       const formValue = this.registerForm.value;
       const user: User = {
         id: uuidv4(),
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        email: formValue.email,
-        password: formValue.password,
+        firstName: formValue.firstName ?? '',
+        lastName: formValue.lastName ?? '',
+        email: formValue.email ?? '',
+        password: formValue.password ?? '',
       };
-
       
       this.authService.register(user).subscribe({
         next: () => {
           console.log("User registered!");
           this.router.navigate([`/main`]);
         },
-        error: (err) => {
-          console.error("Registration error:", err);
-          this.registrationFailed = this.registrationFailed = err.error?.message || 'An error occurred. Please try again later.';
+        error: (err: ApiError) => {
+          if (typeof err.error.message === 'string') {
+            this.registrationFailed = err.error.message;
+          } else {
+            this.registrationFailed = 'An error occurred. Please try again later.';
+          }
         }
       });
     }

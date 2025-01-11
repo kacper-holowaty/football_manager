@@ -12,22 +12,22 @@ import { CountryService } from '../../services/country.service';
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
 
-  isUserLoggedIn: boolean = false;
-  currentUserId: string = '';
-  defaultBadgeUrl: string = 'assets/empty_badge.png';
-  clubs?: Club[];
-  countryCodes: { [country: string]: string } = {};
+  protected isUserLoggedIn: boolean = false;
+  protected currentUserId: string = '';
+  protected defaultBadgeUrl: string = 'assets/empty_badge.png';
+  protected clubs?: Club[];
+  protected countryCodes: Record<string, string> = {};
 
-  constructor(private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService) {}
+  public constructor(private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService) {}
 
-  ngOnInit(): void {
-    this.authService.isAuthenticated().subscribe(isAuthenticated => {
+  public ngOnInit(): void {
+    this.authService.isAuthenticated().subscribe((isAuthenticated) => {
       this.isUserLoggedIn = isAuthenticated;
 
       if (this.isUserLoggedIn) {
-        this.authService.getAuthenticatedUserId().subscribe(userId => {
+        this.authService.getAuthenticatedUserId().subscribe((userId) => {
           this.currentUserId = userId;
 
           this.loadUserClubs();
@@ -52,11 +52,11 @@ export class MainComponent {
     }
   }
 
-  loadCountryFlags(clubs: Club[]) {
-    const countries = clubs.map(club => club.address.country);
+  private loadCountryFlags(clubs: Club[]): void {
+    const countries = clubs.map((club) => club.address.country);
     this.countryService.getCountryCodes(countries).subscribe({
       next: (codes) => {
-        codes.forEach(code => {
+        codes.forEach((code) => {
           this.countryCodes[code.country] = code.code;
         });
       },
@@ -66,11 +66,11 @@ export class MainComponent {
     });
   }
 
-  getCountryCode(country: string): string {
+  protected getCountryCode(country: string): string {
     return this.countryCodes[country] || '';
   }
 
-  viewClubDetails(id: string): void {
+  protected viewClubDetails(id: string): void {
     this.router.navigate([`/club/${id}/main`]);
   }
 }

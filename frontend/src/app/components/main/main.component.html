@@ -2,7 +2,7 @@
     @if (clubs && clubs.length > 0) {
       <div>
         @for (club of clubs; track $index) {
-          <div (click)="viewClubDetails(club.clubId)">
+          <div (click)="viewClubDetails(club.clubId)" (keydown)="viewClubDetails(club.clubId)" tabindex="0">
             <h3>{{ club.name }}</h3>
             <span class="fi" [class]="'fi-'+getCountryCode(club.address.country)"></span> 
             <p>Founded: {{ club.foundedYear }}</p>

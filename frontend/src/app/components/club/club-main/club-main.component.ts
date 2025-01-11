@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ClubService } from '../../../services/club.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Club } from '../../../models/club.model';
@@ -10,13 +10,13 @@ import { Club } from '../../../models/club.model';
   templateUrl: './club-main.component.html',
   styleUrl: './club-main.component.scss'
 })
-export class ClubMainComponent {
-  club?: Club;
-  defaultBadgeUrl: string = 'assets/empty_badge.png';
+export class ClubMainComponent implements OnInit {
+  protected club?: Club;
+  protected defaultBadgeUrl: string = 'assets/empty_badge.png';
   
-  constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router) {}
+  public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router) {}
   
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.clubService.getClubById(id).subscribe({

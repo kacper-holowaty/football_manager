@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ClubService } from '../../../services/club.service';
 import { Router } from '@angular/router';
 import { Club } from '../../../models/club.model';
@@ -11,15 +11,14 @@ import { CountryService } from '../../../services/country.service';
   templateUrl: './club-list.component.html',
   styleUrl: './club-list.component.scss'
 })
-export class ClubListComponent {
+export class ClubListComponent implements OnInit {
+  protected clubs?: Club[];
+  protected defaultBadgeUrl: string = "assets/empty_badge.png";
+  protected countryCodes: Record<string, string> = {};
 
-  clubs?: Club[];
-  defaultBadgeUrl: string = "assets/empty_badge.png"
-  countryCodes: { [country: string]: string } = {};
+  public constructor(private router: Router, private clubService: ClubService, private countryService: CountryService) {}
 
-  constructor(private router: Router, private clubService: ClubService, private countryService: CountryService) {}
-
-  ngOnInit() {
+  public ngOnInit(): void {
     this.clubService.getAllClubs().subscribe({
       next: (clubs: Club[]) => {
         this.clubs = clubs;
@@ -33,11 +32,11 @@ export class ClubListComponent {
     });
   }
 
-  loadCountryFlags(clubs: Club[]) {
-    const countries = clubs.map(club => club.address.country);
+  private loadCountryFlags(clubs: Club[]): void {
+    const countries = clubs.map((club) => club.address.country);
     this.countryService.getCountryCodes(countries).subscribe({
       next: (codes) => {
-        codes.forEach(code => {
+        codes.forEach((code) => {
           this.countryCodes[code.country] = code.code;
         });
       },
@@ -47,11 +46,11 @@ export class ClubListComponent {
     });
   }
 
-  getCountryCode(country: string): string {
+  protected getCountryCode(country: string): string {
     return this.countryCodes[country] || '';
   }
 
-  viewClubDetails(id: string): void {
+  protected viewClubDetails(id: string): void {
     this.router.navigate([`/club/${id}/main`]);
   }
 }

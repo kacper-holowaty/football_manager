@@ -30,8 +30,9 @@ export function allowedCountriesAsyncValidator(countryService: CountryService): 
 
     return countryService.getCountries().pipe(
       debounceTime(300),
-      switchMap(countries => {
-        const isValidCountry = countries.some(country => country.country === control.value);
+      switchMap((countries) => {
+        const isValidCountry = countries.some((country) => country.country === control.value);
+        
         return of(isValidCountry ? null : { invalidCountry: true });
       }),
       catchError(() => of({ invalidCountry: true }))

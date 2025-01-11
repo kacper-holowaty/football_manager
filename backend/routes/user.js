@@ -14,13 +14,13 @@ userRoutes.route("/login").post(async (req, res) => {
       const user = await db.collection("users").findOne({ email });
   
       if (!user) {
-        return res.status(401).json({ message: 'Invalid email.' });
+        return res.status(401).json({ message: 'Invalid email or password.' });
       }
   
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Invalid password.' });
+        return res.status(401).json({ message: 'Invalid email or password.' });
       }
 
       const token = jwt.sign({ id: user.userId }, SECRET_KEY, { expiresIn: '1h' });

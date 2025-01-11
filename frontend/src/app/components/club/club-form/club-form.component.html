@@ -250,4 +250,9 @@
       {{ editing ? 'Update club information' : 'Create club' }}
     </button>  
   </form>
+  @if (errorMessage) {
+    <div>
+      {{errorMessage}}
+    </div>
+  }
 </div>

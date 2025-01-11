@@ -1,6 +1,6 @@
 @if (player) {
     <div class="player-details">
-        <h2>Szczegóły Zawodnika</h2>
+        <h2>Player details</h2>
         <div class="photo-box">
             <img [src]="getPhotoUrl(player.photo)" alt="{{ player.name }}" class="player-photo">
         </div>
@@ -9,13 +9,13 @@
                 <span class="fi" [class]="'fi-'+ player.nationality"></span>
                 <h3>{{ player.name }}</h3>
             </div>
-            <p>Pozycja: {{ player.position }}</p>
-            <p>Wiek: {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})</p>
-            <p>Numer na koszulce: {{ player.shirtNumber }}.</p>
-            <P>{{ player.contractUntil | contractLeft }}</P>
-            <p>Tygodniowa pensja: {{player.salary | numberWithSpaces}}$</p>
+            <p>Position: {{ player.position }}</p>
+            <p>Age: {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})</p>
+            <p>Shirt number: {{ player.shirtNumber }}.</p>
+            <P>{{ player.contractUntil}}</P>
+            <p>Salary (per week): {{player.salary | numberWithSpaces}}$</p>
         </div>
-        <button (click)="editPlayer(player.id)">Edytuj</button>
-        <button (click)="deletePlayer(player.id)">Usuń</button>
+        <button (click)="editPlayer(player.playerId)">Edit</button>
+        <button (click)="deletePlayer(player.playerId)">Delete</button>
     </div>
 }

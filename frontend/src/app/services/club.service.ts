@@ -7,11 +7,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ClubService {
-  private apiUrl = "http://localhost:3000/clubs"
+  private apiUrl = "http://localhost:3000/clubs";
 
-  constructor(private httpClient: HttpClient) {}
+  public constructor(private httpClient: HttpClient) {}
 
-  addClub(club: Club): Observable<Club> {
+  public addClub(club: Club): Observable<Club> {
     const formData = new FormData();
 
     formData.append("clubId", club.clubId);
@@ -49,17 +49,17 @@ export class ClubService {
     return this.httpClient.post<Club>(this.apiUrl, formData);
   }
 
-  getClubById(clubId: string): Observable<Club> {
+  public getClubById(clubId: string): Observable<Club> {
     return this.httpClient.get<Club>(`${this.apiUrl}/${clubId}`);
   }
 
-  getClubsByOwnerId(ownerId: string): Observable<Club[]> {
+  public getClubsByOwnerId(ownerId: string): Observable<Club[]> {
     const params = new HttpParams().set('ownerId', ownerId);
-    console.log(`Sending request with ownerId: ${ownerId}`);
+
     return this.httpClient.get<Club[]>(this.apiUrl, { params });
   }
 
-  getAllClubs(): Observable<Club[]> {
+  public getAllClubs(): Observable<Club[]> {
     return this.httpClient.get<Club[]>(this.apiUrl);
   }
 }

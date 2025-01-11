@@ -9,21 +9,20 @@ import { Router } from '@angular/router';
   styleUrl: './start-screen.component.scss'
 })
 export class StartScreenComponent {
-  
-  logoUrl: string = "assets/gold_logo.png"
-  applicationName: string = "FC Manager"
+  protected logoUrl: string = "assets/gold_logo.png";
+  protected applicationName: string = "FC Manager";
 
-  constructor(private router: Router) {}
+  public constructor(private router: Router) {}
   
-  navigateToLogin() {
+  protected navigateToLogin(): void {
     this.router.navigate(['/login']);
   }
 
-  navigateToRegister() {
+  protected navigateToRegister(): void {
     this.router.navigate(['/register']);
   }
 
-  navigateToClubs() {
+  protected navigateToClubs(): void {
     this.router.navigate(['/club']);
   }
 }

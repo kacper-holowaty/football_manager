@@ -1,6 +1,6 @@
 export interface Player {
-    readonly id: string;
-    readonly photo: File | null;
+    readonly playerId: string;
+    readonly photo: Blob | null;
     readonly name: string;
     readonly birthDate: Date;
     readonly nationality: string;

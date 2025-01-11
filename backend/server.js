@@ -59,7 +59,7 @@ app.get('/countries/:country', (req, res) => {
 });
 
 app.post('/countries/codes', (req, res) => {
-  const { countries: countryNames } = req.body; // Tablica nazw krajów przesłana w body
+  const { countries: countryNames } = req.body;
 
   if (!countryNames || !Array.isArray(countryNames)) {
       return res.status(400).json({ error: 'Invalid request format. Provide an array of country names.' });

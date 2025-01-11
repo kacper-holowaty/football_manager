@@ -1,7 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class DateValidators {
-  static birthDateValidator(): ValidatorFn {
+  public static birthDateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
 
@@ -17,7 +17,7 @@ export class DateValidators {
     };
   }
 
-  static contractDateValidator(): ValidatorFn {
+  public static contractDateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
 

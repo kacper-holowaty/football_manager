@@ -27,7 +27,7 @@ export interface Achievement {
 
 
 // bardzoo opcjonalne (jak będą chęci)
-    // trophies (lista trofeów, każde trofeum jako obiekt z polami: name, year
-    // budget: number,
-    // income,    //będzie można rozważyć formularze mini do dodawania nowego wydatku czy przychodu.
-    // expenses
+// trophies (lista trofeów, każde trofeum jako obiekt z polami: name, year
+// budget: number,
+// income,    //będzie można rozważyć formularze mini do dodawania nowego wydatku czy przychodu.
+// expenses

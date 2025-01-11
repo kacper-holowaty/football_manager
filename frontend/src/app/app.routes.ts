@@ -6,7 +6,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { MainComponent } from './components/main/main.component';
 import { AuthGuard } from './auth/auth.guard';
 
-export const routes: Routes = [{
+export const routes: Routes = [
+  {
     path: '',
     component: StartScreenComponent,
   },    
@@ -28,11 +29,12 @@ export const routes: Routes = [{
     loadChildren: () =>
       import('./components/club/club.routes').then((r) => r.CLUB_ROUTES),
   },
-{
+  {
     path: 'page-not-found',
     component: PageNotFoundComponent,
-},
-{ 
+  },
+  { 
     path: '**',
     redirectTo: 'page-not-found',
-}];
+  }
+];

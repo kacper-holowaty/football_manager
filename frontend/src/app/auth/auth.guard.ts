@@ -7,20 +7,21 @@ import { catchError, map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  public constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(): Observable<boolean> {
+  public canActivate(): Observable<boolean> {
     return this.authService.isAuthenticated().pipe(
-      map(isAuthenticated => {
+      map((isAuthenticated) => {
         if (isAuthenticated) {
           return true;
-        } else {
-          this.router.navigate(['/login']);
-          return false;
-        }
+        } 
+        this.router.navigate(['/login']);
+
+        return false;
       }),
       catchError(() => {
         this.router.navigate(['/login']);
+
         return [false];
       })
     );
