@@ -91,19 +91,43 @@ userRoutes.route("/register").post(async (req, res) => {
   }
 });
 
-const authenticateToken = (req, res, next) => {
-    const token = req.cookies.authToken;
-    if (!token) return res.status(401).json({ message: 'Unauthorized. Token is missing.' });
+// const authenticateToken = (req, res, next) => {
+//     const token = req.cookies.authToken;
+//     if (!token) return res.status(401).json({ message: 'Unauthorized. Token is missing.' });
   
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-      if (err) return res.status(403).json({ message: 'Invalid token. Access denied.' });
+//     jwt.verify(token, SECRET_KEY, (err, user) => {
+//       if (err) return res.status(403).json({ message: 'Invalid token. Access denied.' });
+//       req.user = user;
+//       next();
+//     });
+// };
+  
+// userRoutes.route('/is-authenticated').get(authenticateToken, (req, res) => {
+//     res.json({ isAuthenticated: true, userId: req.user.id });
+// });
+
+const authenticateToken = (req, res, next) => {
+  const token = req.cookies.authToken;
+  if (!token) {
+      req.user = null;
+      return next();
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+      if (err) {
+          req.user = null;
+          return next();
+      }
       req.user = user;
       next();
-    });
+  });
 };
-  
+
 userRoutes.route('/is-authenticated').get(authenticateToken, (req, res) => {
-    res.json({ isAuthenticated: true, userId: req.user.id });
+  if (!req.user) {
+      return res.json({ isAuthenticated: false, userId: '' });
+  }
+  res.json({ isAuthenticated: true, userId: req.user.id });
 });
   
 userRoutes.route('/logout').post((req, res) => {

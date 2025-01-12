@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 
 interface AuthResponse {
   token: string;
@@ -34,11 +34,20 @@ export class AuthService {
 
   public isAuthenticated(): Observable<boolean> {
     return this.httpClient.get<{ isAuthenticated: boolean }>(`${this.apiUrl}/is-authenticated`, {withCredentials: true})
-      .pipe(map((response) => response.isAuthenticated));
+      .pipe(
+        map((response) => response.isAuthenticated), 
+        catchError(() => {
+          return of(false);
+        })
+      );
   }
 
   public getAuthenticatedUserId(): Observable<string> {
     return this.httpClient.get<{userId: string}>(`${this.apiUrl}/is-authenticated`, {withCredentials: true})
-      .pipe(map((response) => response.userId));
+      .pipe(map((response) => response.userId),
+        catchError(() => {
+          return of('');
+        })
+      );
   }
 }

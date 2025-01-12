@@ -26,7 +26,12 @@
                 </ul>
             </div>
         }
-    
+        @if (isUserLoggedIn && currentUserId === club.ownerId) {
+            <div>
+                <button (click)="editClub(club.clubId)">Edit Club</button>
+                <button (click)="deleteClub(club.clubId)">Delete Club</button>
+            </div>
+        }
     </div>
 }
 @else {

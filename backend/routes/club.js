@@ -64,7 +64,7 @@ clubRoutes.route("/clubs").post(upload.single("badge"), async (req, res) => {
       stadiumName,
       stadiumCapacity: parseInt(stadiumCapacity),
       address: address,
-      achievements: achievements,
+      achievements: achievements || [],
       badge: imageId,
     };
 
@@ -124,6 +124,60 @@ clubRoutes.route("/clubs/:id").get(async (req, res) => {
   }
 });
 
+clubRoutes.route("/clubs/:id").put(upload.single("badge"), async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    ownerId,
+    foundedYear,
+    stadiumName,
+    stadiumCapacity,
+    address,
+    achievements,
+  } = req.body;
+  
+  try {
+    const db = await dbo.getDb();
+    const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+
+    const updateData = {
+      name,
+      ownerId,
+      foundedYear: parseInt(foundedYear),
+      stadiumName,
+      stadiumCapacity: parseInt(stadiumCapacity),
+      address: address,
+      achievements: achievements || [],
+    };
+
+    if (req.file) {
+      const uploadStream = bucket.openUploadStream(`${Date.now()}-${req.file.originalname}`, {
+        contentType: req.file.mimetype,
+      });
+      uploadStream.end(req.file.buffer);
+
+      await new Promise((resolve, reject) => {
+        uploadStream.on("finish", (file) => {
+          updateData.badge = file._id;
+          resolve();
+        });
+        uploadStream.on("error", (err) => reject(err));
+      });
+    }
+
+    const result = await db.collection("clubs").updateOne({ clubId: id }, { $set: updateData });
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ success: false, message: "Club not found." });
+    }
+
+    res.status(200).json({ success: true, message: "Club updated successfully." });
+  } catch (error) {
+    console.error("Error while updating club:", error);
+    res.status(500).json({ success: false, message: "Error while updating the club." });
+  }
+});
+
 clubRoutes.route("/clubs").get(async (req, res) => {
 
   const userId = req.query.ownerId;
@@ -168,6 +222,35 @@ clubRoutes.route("/clubs").get(async (req, res) => {
   } catch (error) {
     console.error("Error fetching clubs:", error);
     res.status(500).json({ success: false, message: "Error fetching clubs." });
+  }
+});
+
+clubRoutes.route("/clubs/:id").delete(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const db = await dbo.getDb();
+    const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+
+    const club = await db.collection("clubs").findOne({ clubId: id });
+
+    if (!club) {
+      return res.status(404).json({ success: false, message: "Club not found." });
+    }
+
+    if (club.badge) {
+      await bucket.delete(new ObjectId(club.badge));
+    }
+
+    const result = await db.collection("clubs").deleteOne({ clubId: id });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ success: false, message: "Club not found." });
+    }
+
+    res.status(200).json({ success: true, message: "Club and its badge deleted successfully." });
+  } catch (error) {
+    console.error("Error while deleting club:", error);
+    res.status(500).json({ success: false, message: "Error while deleting the club." });
   }
 });
 

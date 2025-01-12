@@ -340,7 +340,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     const club = this.createClub(formValue);
   
     if (this.editing) {
-      // this.updateClub(club);
+      this.updateClub(club);
     } else {
       this.addClub(club);
     }
@@ -401,10 +401,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   }
   
   private addClub(club: Club): void {
-    // this.clubService.addClub(club).subscribe(() => {
-    //   console.log("Club added successfully!");
-    //   this.router.navigate([`/club/${club.clubId}/main`]);
-    // });
     this.clubService.addClub(club).subscribe({
       next: () => {
         console.log("Club added successfully!");
@@ -416,6 +412,23 @@ export class ClubFormComponent implements OnInit, OnDestroy {
         } else {
           console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while adding the club. Please try again.";
+        }
+      },
+    });
+  }
+
+  private updateClub(club: Club): void {
+    this.clubService.updateClub(club).subscribe({
+      next: () => {
+        console.log("Club updated successfully!");
+        this.router.navigate([`/club/${club.clubId}/main`]);
+      },
+      error: (error: ApiError) => {
+        if (error.status === 404) {
+          this.errorMessage = error.error.message || "Club not found.";
+        } else {
+          console.error("An error occurred:", error);
+          this.errorMessage = "An error occurred while updating the club. Please try again.";
         }
       },
     });
