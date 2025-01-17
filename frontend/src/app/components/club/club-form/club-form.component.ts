@@ -36,7 +36,7 @@ export interface AddressForm {
 
 export interface AchievementForm {
   name: FormControl<string | null>;
-  date: FormControl<Date | null>;
+  date: FormControl<string | null>;
   description: FormControl<string | null>;
 }
 
@@ -154,6 +154,21 @@ export class ClubFormComponent implements OnInit, OnDestroy {
         ]),
       })
     );
+    this.initializeAchievementDateValidator();
+  }
+
+  protected initializeAchievementDateValidator(): void {
+    const foundedYear = this.clubForm.get('foundedYear')?.value ?? null;
+
+    const achievementsArray = this.clubForm.get('achievements') as FormArray<FormGroup<AchievementForm>>;
+
+    achievementsArray.controls.forEach((achievementGroup) => {
+      const dateControl = achievementGroup.get('date');
+      if (dateControl) {
+        dateControl.setValidators([achievementsDateValidator(foundedYear)]);
+        dateControl.updateValueAndValidity({ emitEvent: false });
+      }
+    });
   }
 
   protected deleteAchievement(index: number): void {
@@ -188,9 +203,10 @@ export class ClubFormComponent implements OnInit, OnDestroy {
 
         if (club.achievements.length > 0) {
           club.achievements.forEach((achievement) => {
+            const formattedDate = new Date(achievement.date).toISOString().split('T')[0];
             this.achievements.push(new FormGroup<AchievementForm>({
               name: new FormControl(achievement.name, Validators.required),
-              date: new FormControl(achievement.date, Validators.required),
+              date: new FormControl(formattedDate, Validators.required),
               description: new FormControl(achievement.description, Validators.required),
             }));
           });
@@ -212,7 +228,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     });
 
     this.clubForm.get('foundedYear')?.valueChanges.subscribe((foundedYear) => {
-      const achievementsArray = this.clubForm.get('achievements') as FormArray;
+      const achievementsArray = this.clubForm.get('achievements') as FormArray<FormGroup<AchievementForm>>;
       achievementsArray.controls.forEach((achievementGroup) => {
         const dateControl = achievementGroup.get('date');
         dateControl?.setValidators([achievementsDateValidator(foundedYear)]);
@@ -251,7 +267,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  private handleImageFile(file: File): void {
+  private handleImageFile(file: Blob): void {
     if (this.badgePreviewUrl) {
       URL.revokeObjectURL(this.badgePreviewUrl);
     }
@@ -260,6 +276,9 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   }
   
   protected removePhoto(): void {
+    if (this.badgePreviewUrl) {
+      URL.revokeObjectURL(this.badgePreviewUrl);
+    }
     this.badgePreviewUrl = null;
     this.clubForm.get('badge')?.setValue(null);
     const inputFile = document.getElementById('badge') as HTMLInputElement;
@@ -327,10 +346,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   // }
 
 
-
-
-  // ES LINT BŁĄD POPRAWKA
-
   protected onSubmit(): void {
     if (!this.clubForm.valid) {
       return;
@@ -394,7 +409,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   
       return {
         name: achievementFormValue.name ?? '',
-        date: achievementFormValue.date ?? new Date(),
+        date: achievementFormValue.date ? new Date(achievementFormValue.date) : new Date(),
         description: achievementFormValue.description ?? '',
       };
     });

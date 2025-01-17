@@ -23,10 +23,10 @@
     <div class="form-group">
       <label for="badge">Badge</label>
       <input id="badge" type="file" (change)="onBadgeSelected($event)" accept="image/*" />
-      @if (badgePreviewUrl) {
+      @if (badgePreviewUrl || club?.badge) {
         <div>
           <p>Selected badge:</p>
-          <img [src]="badgePreviewUrl" alt="Selected badge" style="max-width: 200px;" />
+          <img [src]="badgePreviewUrl || club?.badge" alt="Selected badge" style="max-width: 200px;" />
           <button type="button" (click)="removePhoto()">Remove badge</button>
         </div>
       }

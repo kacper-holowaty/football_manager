@@ -150,7 +150,10 @@ clubRoutes.route("/clubs/:id").put(upload.single("badge"), async (req, res) => {
       achievements: achievements || [],
     };
 
-    if (req.file) {
+    if (!req.file) {
+      updateData.badge = null;
+    }
+    else if (req.file) {
       const uploadStream = bucket.openUploadStream(`${Date.now()}-${req.file.originalname}`, {
         contentType: req.file.mimetype,
       });
@@ -164,7 +167,7 @@ clubRoutes.route("/clubs/:id").put(upload.single("badge"), async (req, res) => {
         uploadStream.on("error", (err) => reject(err));
       });
     }
-
+    
     const result = await db.collection("clubs").updateOne({ clubId: id }, { $set: updateData });
 
     if (result.matchedCount === 0) {
