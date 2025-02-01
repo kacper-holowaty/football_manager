@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Club } from '../models/club.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
@@ -103,5 +103,12 @@ export class ClubService {
 
   public deleteClub(clubId: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.apiUrl}/${clubId}`);
+  }
+
+  public navbarClubIdSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public navbarClubId$ = this.navbarClubIdSubject.asObservable();
+  
+  public setClubId(id: string): void {
+    this.navbarClubIdSubject.next(id);
   }
 }
