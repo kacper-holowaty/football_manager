@@ -23,7 +23,7 @@
     <div class="form-group">
       <label for="badge">Badge</label>
       <input id="badge" type="file" (change)="onBadgeSelected($event)" accept="image/*" />
-      @if (badgePreviewUrl || club?.badge) {
+      @if (badgePreviewUrl || (club?.badge && !badgeRemoved)) {
         <div>
           <p>Selected badge:</p>
           <img [src]="badgePreviewUrl || club?.badge" alt="Selected badge" style="max-width: 200px;" />

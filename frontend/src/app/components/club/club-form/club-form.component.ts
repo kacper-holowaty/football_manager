@@ -249,6 +249,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   }
 
   protected badgePreviewUrl: string | null = null;
+  protected badgeRemoved = false;
 
   protected onBadgeSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -281,6 +282,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     }
     this.badgePreviewUrl = null;
     this.clubForm.get('badge')?.setValue(null);
+    this.badgeRemoved = true;
     const inputFile = document.getElementById('badge') as HTMLInputElement;
     inputFile.value = '';
     

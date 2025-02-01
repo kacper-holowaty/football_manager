@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { ClubFormComponent } from './club-form/club-form.component';
 import { ClubListComponent } from './club-list/club-list.component';
 import { ClubMainComponent } from './club-main/club-main.component';
-import { AuthGuard } from '../../auth/auth.guard';
+import { authGuard } from '../../auth/auth.guard';
 
 export const CLUB_ROUTES: Routes = [
   {
@@ -24,13 +24,13 @@ export const CLUB_ROUTES: Routes = [
     path: 'form',
     component: ClubFormComponent,
     title: 'Add Club Form',
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
   },
   {
     path: ':id/form',
     component: ClubFormComponent,
     title: 'Edit Club Form',
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
   },
   {
     path: ':id/player',
