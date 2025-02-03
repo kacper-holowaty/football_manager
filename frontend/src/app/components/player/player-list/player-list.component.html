@@ -1,21 +1,28 @@
 <div class="player-list">
-    <h2>List of players</h2>
-    @for (player of players; track $index) {
-        <div (click)="viewPlayerDetails(player.playerId)" (keydown)="viewPlayerDetails(player.playerId)" tabindex="0" class="player-item">
-            <div class="photo-box">
-                <img [src]="player.photo || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
-            </div>
-            <div class="content">
-                <div class="name-and-flag">
-                    <span class="fi" [class]="'fi-'+ getCountryCode(player.nationality)"></span>
-                    <h3>{{ player.name }}</h3>
+    @if (players.length > 0) {
+        <h2>List of players</h2>
+        @for (player of players; track $index) {
+            <div (click)="viewPlayerDetails(player.playerId)" (keydown)="viewPlayerDetails(player.playerId)" tabindex="0" class="player-item">
+                <div class="photo-box">
+                    <img [src]="player.photo || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
                 </div>
-                <p>Position: {{ player.position }}</p>
-                <p>Age: {{ player.birthDate | calculateAge }}</p>
-                <p>Shirt number: {{ player.shirtNumber }}.</p>
-                <P>{{ player.contractUntil | contractLeft}}</P>
-            </div>
-        </div>    
+                <div class="content">
+                    <div class="name-and-flag">
+                        <span class="fi" [class]="'fi-'+ getCountryCode(player.nationality)"></span>
+                        <h3>{{ player.name }}</h3>
+                    </div>
+                    <p>Position: {{ player.position }}</p>
+                    <p>Age: {{ player.birthDate | calculateAge }}</p>
+                    <p>Shirt number: {{ player.shirtNumber }}.</p>
+                    <P>{{ player.contractUntil | contractLeft}}</P>
+                </div>
+            </div>    
+        }
     }
-    <button (click)="addPlayer()">Add new player</button>
+    @else {
+        <div>This club doesn't have any players...</div>
+    }
+    @if (isCurrentUserOwner) {
+        <button (click)="addPlayer()">Add new player</button>
+    }
 </div>

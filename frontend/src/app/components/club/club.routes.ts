@@ -3,6 +3,7 @@ import { ClubFormComponent } from './club-form/club-form.component';
 import { ClubListComponent } from './club-list/club-list.component';
 import { ClubMainComponent } from './club-main/club-main.component';
 import { authGuard } from '../../auth/auth.guard';
+import { ownerGuard } from '../../auth/owner.guard';
 
 export const CLUB_ROUTES: Routes = [
   {
@@ -30,7 +31,7 @@ export const CLUB_ROUTES: Routes = [
     path: ':id/form',
     component: ClubFormComponent,
     title: 'Edit Club Form',
-    canActivate: [authGuard],
+    canActivate: [ownerGuard],
   },
   {
     path: ':id/player',

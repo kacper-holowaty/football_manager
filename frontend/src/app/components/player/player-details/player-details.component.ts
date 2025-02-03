@@ -8,6 +8,7 @@ import { FormatDatePipe } from '../../../pipes/format-date.pipe';
 import { NumberWithSpacesPipe } from '../../../pipes/number-with-spaces.pipe';
 import { CountryService } from '../../../services/country.service';
 import { ContractLeftPipe } from '../../../pipes/contract-left.pipe';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-player-details',
@@ -20,8 +21,10 @@ export class PlayerDetailsComponent implements OnInit {
   protected player?: Player;
   protected defaultPhotoUrl: string = 'assets/no_photo.png';
   protected countryCode: string = '';
+  protected currentUserId: string = '';
+  protected isUserLoggedIn: boolean = false;
 
-  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService) {}
+  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService) {}
 
   public ngOnInit(): void {
     const playerId = this.route.snapshot.paramMap.get('playerId');
@@ -33,6 +36,14 @@ export class PlayerDetailsComponent implements OnInit {
         });
       });
     }
+
+    this.authService.isAuthenticated().subscribe((isAuthenticated) => {
+      this.isUserLoggedIn = isAuthenticated;
+    });
+
+    this.authService.getAuthenticatedUserId().subscribe((userId) => {
+      this.currentUserId = userId;
+    });
   }
   
   protected deletePlayer(playerId: string): void {

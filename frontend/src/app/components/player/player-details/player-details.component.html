@@ -15,7 +15,12 @@
             <P>{{ player.contractUntil | contractLeft}}</P>
             <p>Salary (per week): {{player.salary | numberWithSpaces}}$</p>
         </div>
-        <button (click)="editPlayer(player.playerId)">Edit</button>
-        <button (click)="deletePlayer(player.playerId)">Delete</button>
+
+        @if (isUserLoggedIn && currentUserId === player.clubOwnerId) {
+            <div>
+                <button (click)="editPlayer(player.playerId)">Edit player</button>
+                <button (click)="deletePlayer(player.playerId)">Delete player</button>
+            </div>
+        }
     </div>
 }

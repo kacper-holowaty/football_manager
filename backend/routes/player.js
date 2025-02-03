@@ -243,12 +243,6 @@ playerRoutes.route("/players").post(upload.single("photo"), async (req, res) => 
   
       const players = await db.collection("players").find({ clubId }).toArray();
   
-      if (players.length === 0) {
-        return res
-          .status(404)
-          .json({ success: false, message: "No players found for the specified club." });
-      }
-  
       const playersWithPhotos = await Promise.all(
         players.map(async (player) => {
           if (player.photo) {

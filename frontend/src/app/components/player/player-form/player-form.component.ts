@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AsyncPipe } from '@angular/common';
 import { debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
+import { allowedCountriesAsyncValidator } from '../../club/club-form/validators';
 
 export interface PlayerForm {
   photo: FormControl<Blob | null>;
@@ -75,7 +76,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
         Validators.required,
         DateValidators.birthDateValidator(),
       ]),
-      nationality: new FormControl('', Validators.required),
+      nationality: new FormControl('', Validators.required, [allowedCountriesAsyncValidator(this.countryService)]),
       position: new FormControl('', Validators.required),
       shirtNumber: new FormControl(null, [
         Validators.required,

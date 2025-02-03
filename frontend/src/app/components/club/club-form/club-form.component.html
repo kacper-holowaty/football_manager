@@ -171,14 +171,8 @@
                 {{ countryElem.country }}
               </mat-option>
             }
-            
           </mat-autocomplete>
         </mat-form-field>
-        @if (clubForm.get('address.country')?.value) {
-          <div>
-             {{ clubForm.get('address.country')?.value }}
-          </div>
-        }
       
         @if (clubForm.get('address.country')?.invalid && clubForm.get('address.country')?.touched) {
           @if (clubForm.get('address.country')?.errors?.['required']) {
