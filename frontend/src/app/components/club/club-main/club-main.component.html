@@ -4,7 +4,7 @@
             <h3>Badge:</h3>
             <img [src]="club.badge || defaultBadgeUrl" alt="Club Badge" />
         </div>
-
+        <span class="fi" [class]="'fi-' + countryCode"></span>
         <h2>{{ club.name }}</h2>
         <p><strong>Founded Year:</strong> {{ club.foundedYear }}</p>
         <p><strong>Stadium Name:</strong> {{ club.stadiumName }}</p>

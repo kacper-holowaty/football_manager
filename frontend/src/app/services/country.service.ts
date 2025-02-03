@@ -19,4 +19,7 @@ export class CountryService {
     return this.httpClient.post<{ country: string, code: string }[]>(`${this.apiUrl}/codes`, { countries });
   }
   
+  public getCountryCode(country: string): Observable<{ code: string }> {
+    return this.httpClient.get<{ code: string }>(`${this.apiUrl}/${country}`);
+  }
 }

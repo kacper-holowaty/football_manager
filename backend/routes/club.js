@@ -135,10 +135,16 @@ clubRoutes.route("/clubs/:id").put(upload.single("badge"), async (req, res) => {
     address,
     achievements,
   } = req.body;
-  
+
   try {
     const db = await dbo.getDb();
     const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+
+    const existingClub = await db.collection("clubs").findOne({ clubId: id });
+
+    if (!existingClub) {
+      return res.status(404).json({ success: false, message: "Club not found." });
+    }
 
     const updateData = {
       name,
@@ -150,10 +156,15 @@ clubRoutes.route("/clubs/:id").put(upload.single("badge"), async (req, res) => {
       achievements: achievements || [],
     };
 
-    if (!req.file) {
-      updateData.badge = null;
-    }
-    else if (req.file) {
+    if (req.file) {
+      if (existingClub.badge) {
+        try {
+          await bucket.delete(new ObjectId(existingClub.badge));
+        } catch (error) {
+          console.error(`Error deleting old badge for club ${id}:`, error);
+        }
+      }
+
       const uploadStream = bucket.openUploadStream(`${Date.now()}-${req.file.originalname}`, {
         contentType: req.file.mimetype,
       });
@@ -167,7 +178,7 @@ clubRoutes.route("/clubs/:id").put(upload.single("badge"), async (req, res) => {
         uploadStream.on("error", (err) => reject(err));
       });
     }
-    
+
     const result = await db.collection("clubs").updateOne({ clubId: id }, { $set: updateData });
 
     if (result.matchedCount === 0) {
@@ -244,16 +255,30 @@ clubRoutes.route("/clubs/:id").delete(async (req, res) => {
       await bucket.delete(new ObjectId(club.badge));
     }
 
+    const players = await db.collection("players").find({ clubId: id }).toArray();
+
+    for (const player of players) {
+      if (player.photo) {
+        try {
+          await bucket.delete(new ObjectId(player.photo));
+        } catch (error) {
+          console.error(`Error deleting photo for player ${player.playerId}:`, error);
+        }
+      }
+    }
+
+    await db.collection("players").deleteMany({ clubId: id });
+
     const result = await db.collection("clubs").deleteOne({ clubId: id });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ success: false, message: "Club not found." });
     }
 
-    res.status(200).json({ success: true, message: "Club and its badge deleted successfully." });
+    res.status(200).json({ success: true, message: "Club, its badge, and associated players deleted successfully." });
   } catch (error) {
-    console.error("Error while deleting club:", error);
-    res.status(500).json({ success: false, message: "Error while deleting the club." });
+    console.error("Error while deleting club and players:", error);
+    res.status(500).json({ success: false, message: "Error while deleting the club and associated players." });
   }
 });
 

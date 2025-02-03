@@ -7,30 +7,45 @@ import { v4 as uuidv4 } from 'uuid';
 import { DateValidators } from './date-validators';
 import { CountryService } from '../../../services/country.service';
 import { Country } from '../../../models/country.model';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { AsyncPipe } from '@angular/common';
+import { debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 export interface PlayerForm {
   photo: FormControl<Blob | null>;
   name: FormControl<string | null>;
-  birthDate: FormControl<Date | null>;
+  birthDate: FormControl<string | null>;
   nationality: FormControl<string | null>;
   position: FormControl<string | null>;
   shirtNumber: FormControl<number | null>;
-  contractUntil: FormControl<Date | null>;
+  contractUntil: FormControl<string | null>;
   salary: FormControl<number | null>;
 }
 
 @Component({
   selector: 'app-player-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    AsyncPipe
+  ],
   templateUrl: './player-form.component.html',
   styleUrl: './player-form.component.scss'
 })
 export class PlayerFormComponent implements OnInit, OnDestroy {
+  protected isUserLoggedIn: boolean = false;
+  protected currentUserId: string = '';
   protected playerForm: FormGroup<PlayerForm>;
   protected player?: Player;
   protected editing: boolean = false;
-  protected countries: Country[] = []; 
+  protected countries: Country[] = [];
+  protected filteredCountries: Observable<Country[]>; 
 
   protected positionOptions = [
     { label: 'Forward', value: 'forward' },
@@ -48,7 +63,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
   }
 
-  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService) {
+  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService) {
     this.playerForm = new FormGroup<PlayerForm>({
       photo: new FormControl(null),
       name: new FormControl('', [
@@ -77,22 +92,43 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
         Validators.max(5000000)
       ]),
     });
+
+    this.filteredCountries = this.playerForm.get('nationality')!.valueChanges.pipe(
+      debounceTime(300),
+      startWith(''),
+      switchMap((value) => this.filterCountries(value ?? ''))
+    );
   }
+
+  protected filterCountries(value: string): Observable<Country[]> {
+    if (!value) {
+      return of(this.countries);
+    }
+    const filterValue = value.toLowerCase();
+  
+    return this.countryService.getCountries().pipe(
+      map((countries) => countries.filter((country) => country.country.toLowerCase().includes(filterValue)))
+    );
+  }
+  
 
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('playerId');
     if (id) {
       this.editing = true;
+      
       this.playerService.getPlayerById(id).subscribe((player: Player) => {
         this.player = player;
+        const formattedBirthDate = new Date(player.birthDate).toISOString().split('T')[0];
+        const formattedContractUntil = new Date(player.contractUntil).toISOString().split('T')[0];
         this.playerForm.patchValue({
           photo: player.photo,
           name: player.name,
-          birthDate: player.birthDate,
+          birthDate: formattedBirthDate,
           nationality: player.nationality,
           position: player.position,
           shirtNumber: player.shirtNumber,
-          contractUntil: player.contractUntil,
+          contractUntil: formattedContractUntil,
           salary: player.salary,
         });
       });
@@ -101,9 +137,18 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     this.countryService.getCountries().subscribe((countries) => {
       this.countries = countries;
     });
+
+    this.authService.isAuthenticated().subscribe((isAuthenticated) => {
+      this.isUserLoggedIn = isAuthenticated;
+    });
+
+    this.authService.getAuthenticatedUserId().subscribe((userId) => {
+      this.currentUserId = userId;
+    });
   }
 
   protected photoPreviewUrl: string | null = null;
+  protected photoRemoved = false;
 
   protected onPhotoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -121,19 +166,22 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
       console.log('No file selected.');
     }
   }
-  
-  private handleImageFile(file: File): void {
+
+  private handleImageFile(file: Blob): void {
     if (this.photoPreviewUrl) {
       URL.revokeObjectURL(this.photoPreviewUrl);
     }
     this.photoPreviewUrl = URL.createObjectURL(file);
-
     this.playerForm.get('photo')?.setValue(file);
   }
-
+  
   protected removePhoto(): void {
+    if (this.photoPreviewUrl) {
+      URL.revokeObjectURL(this.photoPreviewUrl);
+    }
     this.photoPreviewUrl = null;
     this.playerForm.get('photo')?.setValue(null);
+    this.photoRemoved = true;
     const inputFile = document.getElementById('photo') as HTMLInputElement;
     inputFile.value = '';
   }
@@ -143,36 +191,6 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
       URL.revokeObjectURL(this.photoPreviewUrl);
     }
   }
-
-  // protected onSubmit(): void {
-  //   const clubId = this.route.snapshot.paramMap.get('id');
-    
-  //   if (this.playerForm.valid && clubId) {
-  //     const player = this.createPlayerFromForm(clubId);
-  
-  //     if (this.editing) {
-  //       this.updatePlayer(player, clubId);
-  //     } else {
-  //       this.addPlayer(player, clubId);
-  //     }
-  //   }
-  // }
-  
-  // private createPlayerFromForm(clubId: string): Player {
-  //   const formValue = this.playerForm.value;
-  //   return {
-  //     id: this.player ? this.player.id : uuidv4(),
-  //     photo: formValue.photo ?? null,
-  //     name: formValue.name ?? '',
-  //     birthDate: formValue.birthDate ?? new Date(),
-  //     nationality: formValue.nationality ?? '',
-  //     position: formValue.position ?? '',
-  //     shirtNumber: formValue.shirtNumber ?? 0,
-  //     contractUntil: formValue.contractUntil ?? new Date(),
-  //     salary: formValue.salary ?? 0,
-  //     clubId: clubId,
-  //   };
-  // }
   
   protected onSubmit(): void {
     if (!this.playerForm.valid) {
@@ -193,11 +211,11 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     return {
       photo: this.playerForm.get('photo') as FormControl<Blob | null> | undefined,
       name: this.playerForm.get('name') as FormControl<string | null> | undefined,
-      birthDate: this.playerForm.get('birthDate') as FormControl<Date | null> | undefined,
+      birthDate: this.playerForm.get('birthDate') as FormControl<string | null> | undefined,
       nationality: this.playerForm.get('nationality') as FormControl<string | null> | undefined,
       position: this.playerForm.get('position') as FormControl<string | null> | undefined,
       shirtNumber: this.playerForm.get('shirtNumber') as FormControl<number | null> | undefined,
-      contractUntil: this.playerForm.get('contractUntil') as FormControl<Date | null> | undefined,
+      contractUntil: this.playerForm.get('contractUntil') as FormControl<string | null> | undefined,
       salary: this.playerForm.get('salary') as FormControl<number | null> | undefined,
     };
   }
@@ -209,20 +227,20 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
       playerId: this.player ? this.player.playerId : uuidv4(),
       photo: this.extractValue(formValue.photo, null),
       name: this.extractValue(formValue.name, ''),
-      birthDate: this.extractValue(formValue.birthDate, new Date()),
+      birthDate: formValue.birthDate?.value ? new Date(formValue.birthDate.value) : new Date(),
       nationality: this.extractValue(formValue.nationality, ''),
       position: this.extractValue(formValue.position, ''),
       shirtNumber: this.extractValue(formValue.shirtNumber, 0),
-      contractUntil: this.extractValue(formValue.contractUntil, new Date()),
+      contractUntil: formValue.contractUntil?.value ? new Date(formValue.contractUntil.value) : new Date(),
       salary: this.extractValue(formValue.salary, 0),
       clubId: clubId ?? '',
+      clubOwnerId: this.currentUserId,
     };
   }
   
   private extractValue<T>(control: FormControl<T | null> | undefined, defaultValue: T): T {
     return control?.value ?? defaultValue;
   }
-
   
   private updatePlayer(player: Player): void {
     this.playerService.updatePlayer(player).subscribe(() => {

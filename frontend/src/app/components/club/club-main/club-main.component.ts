@@ -3,6 +3,7 @@ import { ClubService } from '../../../services/club.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Club } from '../../../models/club.model';
 import { AuthService } from '../../../services/auth.service';
+import { CountryService } from '../../../services/country.service';
 
 @Component({
   selector: 'app-club-main',
@@ -16,8 +17,9 @@ export class ClubMainComponent implements OnInit {
   protected defaultBadgeUrl: string = 'assets/empty_badge.png';
   protected currentUserId: string = '';
   protected isUserLoggedIn: boolean = false;
+  protected countryCode: string = '';
   
-  public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router, private authService: AuthService) {}
+  public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router, private authService: AuthService, private countryService: CountryService) {}
   
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -25,6 +27,10 @@ export class ClubMainComponent implements OnInit {
       this.clubService.getClubById(id).subscribe({
         next: (club: Club) => {
           this.club = club;
+
+          this.countryService.getCountryCode(club.address.country).subscribe((result) => {
+            this.countryCode = result.code;
+          });
         },
         error: (error) => {
           console.error('Error fetching club data:', error);

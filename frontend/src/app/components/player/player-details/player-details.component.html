@@ -2,17 +2,17 @@
     <div class="player-details">
         <h2>Player details</h2>
         <div class="photo-box">
-            <img [src]="getPhotoUrl(player.photo)" alt="{{ player.name }}" class="player-photo">
+            <img [src]="player.photo || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
         </div>
         <div class="content">
             <div class="name-and-flag">
-                <span class="fi" [class]="'fi-'+ player.nationality"></span>
+                <span class="fi" [class]="'fi-'+ countryCode"></span>
                 <h3>{{ player.name }}</h3>
             </div>
             <p>Position: {{ player.position }}</p>
             <p>Age: {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})</p>
             <p>Shirt number: {{ player.shirtNumber }}.</p>
-            <P>{{ player.contractUntil}}</P>
+            <P>{{ player.contractUntil | contractLeft}}</P>
             <p>Salary (per week): {{player.salary | numberWithSpaces}}$</p>
         </div>
         <button (click)="editPlayer(player.playerId)">Edit</button>

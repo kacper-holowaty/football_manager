@@ -7,13 +7,13 @@
             </div>
             <div class="content">
                 <div class="name-and-flag">
-                    <span class="fi" [class]="'fi-'+ player.nationality"></span>
+                    <span class="fi" [class]="'fi-'+ getCountryCode(player.nationality)"></span>
                     <h3>{{ player.name }}</h3>
                 </div>
                 <p>Position: {{ player.position }}</p>
                 <p>Age: {{ player.birthDate | calculateAge }}</p>
                 <p>Shirt number: {{ player.shirtNumber }}.</p>
-                <P>{{ player.contractUntil }}</P>
+                <P>{{ player.contractUntil | contractLeft}}</P>
             </div>
         </div>    
     }

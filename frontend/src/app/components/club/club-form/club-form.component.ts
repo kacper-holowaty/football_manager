@@ -294,60 +294,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  // protected onSubmit(): void {
-  //   if (this.clubForm.valid) {
-  //     const formValue = this.clubForm.value;
-  //     const club: Club = {
-  //       clubId: this.club ? this.club.clubId : uuidv4(),
-  //       name: formValue.name ?? '',
-  //       badge: formValue.badge || null,
-  //       ownerId: this.currentUserId,
-  //       foundedYear: formValue.foundedYear ?? 0,
-  //       stadiumName: formValue.stadiumName ?? '',
-  //       stadiumCapacity: formValue.stadiumCapacity ?? 0,
-  //       address: {
-  //         street: formValue.address?.street ?? '',
-  //         houseNumber: formValue.address?.houseNumber ?? '',
-  //         apartmentNumber: formValue.address?.apartmentNumber ?? '',
-  //         postalCode: formValue.address?.postalCode ?? '',
-  //         city: formValue.address?.city ?? '',
-  //         country: formValue.address?.country ?? '',
-  //       },
-  //       achievements: (formValue.achievements ?? []).map((achievementForm) => ({
-  //         name: achievementForm.name ?? '',
-  //         date: achievementForm.date ?? new Date(),
-  //         description: achievementForm.description ?? '',
-  //       })),
-  //     };
-  //     if (this.editing) {
-  //       // this.clubService.updateClub(club).subscribe(() => {
-  //       //   console.log("Club updated successfully!");
-  //       //   this.router.navigate([`/club/${id}/main`]);
-  //       // });
-  //     } else {
-  //       // this.clubService.addClub(club).subscribe(() => {
-  //       //   console.log("Club added succesfully!");
-  //       //   this.router.navigate([`/club/${club.clubId}/main`]);
-  //       // });
-  //       this.clubService.addClub(club).subscribe({
-  //         next: () => {
-  //           console.log("Club added successfully!");
-  //           this.router.navigate([`/club/${club.clubId}/main`]);
-  //         },
-  //         error: (error) => {
-  //           if (error.status === 409) {
-  //             this.errorMessage = error.error.message;
-  //           } else {
-  //             console.error("An error occurred:", error);
-  //             this.errorMessage = "An error occurred while adding the club. Please try again.";
-  //           }
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
-
-
   protected onSubmit(): void {
     if (!this.clubForm.valid) {
       return;
