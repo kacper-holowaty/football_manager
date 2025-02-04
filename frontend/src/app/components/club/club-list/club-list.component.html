@@ -1,3 +1,8 @@
+<div>
+  <button (click)="goBack()">Go Back</button>
+  <button (click)="goHome()">Start screen</button>
+</div>
+
 @if (clubs && clubs.length > 0) {
     <div>
       @for (club of clubs; track $index) {
@@ -13,4 +18,7 @@
         </div>
       }
     </div>
+}
+@else {
+  <div>There is no football clubs... You can be the first to create one!</div>
 }

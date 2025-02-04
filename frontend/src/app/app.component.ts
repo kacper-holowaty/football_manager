@@ -3,11 +3,12 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { filter } from 'rxjs';
 import { ClubNavbarComponent } from './components/club-navbar/club-navbar.component';
 import { ClubService } from './services/club.service';
+import { FooterComponent } from "./components/footer/footer.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ClubNavbarComponent],
+  imports: [RouterOutlet, ClubNavbarComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

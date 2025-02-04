@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ interface ApiError {
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   protected loginForm: FormGroup<LoginForm>;
   protected loginFailed?: string;
 
@@ -31,6 +31,10 @@ export class LoginComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
     });
+  }
+
+  public ngOnInit(): void {
+    this.authService.logout();
   }
 
   protected login(): void {
@@ -50,5 +54,13 @@ export class LoginComponent {
         },
       });
     }
+  }
+
+  protected goToHome(): void {
+    this.router.navigate(['/']);
+  }
+
+  protected goToRegister(): void {
+    this.router.navigate(['/register']);
   }
 }

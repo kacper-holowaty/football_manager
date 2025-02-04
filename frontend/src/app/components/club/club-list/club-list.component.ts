@@ -3,6 +3,7 @@ import { ClubService } from '../../../services/club.service';
 import { Router } from '@angular/router';
 import { Club } from '../../../models/club.model';
 import { CountryService } from '../../../services/country.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-club-list',
@@ -16,7 +17,7 @@ export class ClubListComponent implements OnInit {
   protected defaultBadgeUrl: string = "assets/empty_badge.png";
   protected countryCodes: Record<string, string> = {};
 
-  public constructor(private router: Router, private clubService: ClubService, private countryService: CountryService) {}
+  public constructor(private router: Router, private clubService: ClubService, private countryService: CountryService, private location: Location) {}
 
   public ngOnInit(): void {
     this.clubService.getAllClubs().subscribe({
@@ -52,5 +53,13 @@ export class ClubListComponent implements OnInit {
 
   protected viewClubDetails(id: string): void {
     this.router.navigate([`/club/${id}/main`]);
+  }
+
+  protected goBack(): void {
+    this.location.back();
+  }
+
+  protected goHome(): void {
+    this.router.navigate(['/']);
   }
 }

@@ -91,21 +91,6 @@ userRoutes.route("/register").post(async (req, res) => {
   }
 });
 
-// const authenticateToken = (req, res, next) => {
-//     const token = req.cookies.authToken;
-//     if (!token) return res.status(401).json({ message: 'Unauthorized. Token is missing.' });
-  
-//     jwt.verify(token, SECRET_KEY, (err, user) => {
-//       if (err) return res.status(403).json({ message: 'Invalid token. Access denied.' });
-//       req.user = user;
-//       next();
-//     });
-// };
-  
-// userRoutes.route('/is-authenticated').get(authenticateToken, (req, res) => {
-//     res.json({ isAuthenticated: true, userId: req.user.id });
-// });
-
 const authenticateToken = (req, res, next) => {
   const token = req.cookies.authToken;
   if (!token) {

@@ -22,9 +22,23 @@ export class AuthService {
     return this.httpClient.post<AuthResponse>(`${this.apiUrl}/login`, { email, password }, { withCredentials: true });
   }
 
+  // public logout(): void {
+  //   this.httpClient.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe(() => {
+  //     this.router.navigate(['/']);
+  //   });
+  // }
   public logout(): void {
-    this.httpClient.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe(() => {
-      this.router.navigate(['/']);
+    this.isAuthenticated().subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.httpClient.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
+          next: () => {
+            console.log('User logged out');
+          },
+          error: (err) => {
+            console.error('Error during logout', err);
+          }
+        });
+      }
     });
   }
 

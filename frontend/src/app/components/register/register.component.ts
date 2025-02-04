@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
@@ -27,7 +27,7 @@ interface ApiError {
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit{
   protected registerForm: FormGroup<RegisterForm>;
   protected registrationFailed?: string;
   
@@ -46,6 +46,10 @@ export class RegisterComponent {
       password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(40)]),
       confirmPassword: new FormControl('', [Validators.required]),
     }, { validators: this.passwordMatchValidator });
+  }
+
+  public ngOnInit(): void {
+    this.authService.logout();
   }
 
   protected onSubmit(): void {
@@ -73,5 +77,13 @@ export class RegisterComponent {
         }
       });
     }
+  }
+
+  protected goToHome(): void {
+    this.router.navigate(['/']);
+  }
+
+  protected goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

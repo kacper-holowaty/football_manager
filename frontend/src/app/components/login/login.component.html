@@ -9,6 +9,10 @@
     </div>
     <button type="submit" [disabled]="loginForm.invalid">Log in</button>
 </form>
+<button (click)="goToHome()">Go back</button>
+
+<p>Don't have an account? Click here to sign up!<button (click)="goToRegister()">Sign up</button></p>
+
 @if (loginFailed) {
     <div>{{ loginFailed }}</div>
 }

@@ -69,7 +69,12 @@
   
       <button type="submit" class="" [disabled]="registerForm.invalid">Register</button>
     </form>
+    <div class="navigation-buttons">
+      <button (click)="goToHome()">Go back</button>
+      <p>Already have an account? Log in!<button (click)="goToLogin()">Log in</button></p>
+    </div>
+
     @if (registrationFailed) {
         <div>{{registrationFailed}}</div>
     }
-  </div>
+</div>
