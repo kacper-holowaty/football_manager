@@ -28,7 +28,7 @@
 
   @if (filteredClubs.length > 0) {
     <div>
-      @for (club of filteredClubs; track $index) {
+      @for (club of paginatedClubs; track $index) {
         <div 
           tabindex="0" 
           (click)="viewClubDetails(club.clubId)" 
@@ -41,7 +41,16 @@
         </div>
       }
     </div>
-  } @else {
+
+    <mat-paginator 
+      [length]="filteredClubs.length"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  }
+  @else {
     <div>No clubs match your filters.</div>
   }
 }

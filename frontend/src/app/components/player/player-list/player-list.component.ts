@@ -7,11 +7,13 @@ import { ContractLeftPipe } from '../../../pipes/contract-left.pipe';
 import { CountryService } from '../../../services/country.service';
 import { ClubService } from '../../../services/club.service';
 import { AuthService } from '../../../services/auth.service';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-player-list',
   standalone: true,
-  imports: [CalculateAgePipe, ContractLeftPipe],
+  imports: [CalculateAgePipe, ContractLeftPipe, MatButtonToggleModule, FormsModule],
   templateUrl: './player-list.component.html',
   styleUrl: './player-list.component.scss'
 })
@@ -25,6 +27,9 @@ export class PlayerListComponent implements OnInit {
   protected currentUserId: string = '';
   protected isCurrentUserOwner: boolean = false;
 
+  protected sortBy: 'contractUntil' | 'shirtNumber' | 'fullName' = 'shirtNumber';
+  protected sortAscending: boolean = true; 
+
   public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private clubService: ClubService, private authService: AuthService) {}
 
   public ngOnInit(): void {
@@ -36,6 +41,7 @@ export class PlayerListComponent implements OnInit {
           if (this.players.length > 0) {
             this.loadCountryFlags(this.players);
           }
+          this.sortPlayers();
         },
         error: (error) => {
           console.error("Error while fetching players:", error);
@@ -83,5 +89,43 @@ export class PlayerListComponent implements OnInit {
   
   protected getCountryCode(country: string): string {
     return this.countryCodes[country] || '';
+  }
+
+  protected sortPlayers(): void {
+    this.players.sort((a, b) => {
+      let valueA: string | number, valueB:  string | number;
+      
+      switch (this.sortBy) {
+      case 'contractUntil':
+        valueA = new Date(a.contractUntil).getTime();
+        valueB = new Date(b.contractUntil).getTime();
+        break;
+      case 'fullName':
+        valueA = a.name.toLowerCase();
+        valueB = b.name.toLowerCase();
+        break;
+      case 'shirtNumber':
+      default:
+        valueA = a.shirtNumber;
+        valueB = b.shirtNumber;
+        break;
+      }
+
+      if (typeof valueA === "string" && typeof valueB === "string") {
+        return this.sortAscending ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+      }
+  
+      return this.sortAscending ? (valueA as number) - (valueB as number) : (valueB as number) - (valueA as number);
+    });
+  }
+
+  protected changeSortOrder(sortBy: 'contractUntil' | 'shirtNumber' | 'fullName'): void {
+    if (this.sortBy === sortBy) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortBy = sortBy;
+      this.sortAscending = true;
+    }
+    this.sortPlayers();
   }
 }

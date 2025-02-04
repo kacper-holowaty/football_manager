@@ -1,6 +1,18 @@
 <div class="player-list">
     @if (players.length > 0) {
         <h2>List of players</h2>
+        <div>
+            <mat-button-toggle-group [(ngModel)]="sortBy" (change)="sortPlayers()">
+              <mat-button-toggle value="shirtNumber">Shirt Number</mat-button-toggle>
+              <mat-button-toggle value="fullName">Full Name</mat-button-toggle>
+              <mat-button-toggle value="contractUntil">Remaining Contract</mat-button-toggle>
+            </mat-button-toggle-group>
+          
+            <mat-button-toggle-group [(ngModel)]="sortAscending" (change)="sortPlayers()">
+              <mat-button-toggle [value]="true">Ascending</mat-button-toggle>
+              <mat-button-toggle [value]="false">Descending</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
         @for (player of players; track $index) {
             <div (click)="viewPlayerDetails(player.playerId)" (keydown)="viewPlayerDetails(player.playerId)" tabindex="0" class="player-item">
                 <div class="photo-box">

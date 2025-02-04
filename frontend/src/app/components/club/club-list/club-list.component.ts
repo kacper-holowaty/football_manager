@@ -7,17 +7,19 @@ import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-club-list',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, MatSelectModule],
+  imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatPaginatorModule],
   templateUrl: './club-list.component.html',
   styleUrl: './club-list.component.scss'
 })
 export class ClubListComponent implements OnInit {
   protected clubs?: Club[];
   protected filteredClubs: Club[] = [];
+  protected paginatedClubs: Club[] = [];
   protected defaultBadgeUrl: string = "assets/empty_badge.png";
   protected countryCodes: Record<string, string> = {};
   protected availableCountries: string[] = [];
@@ -25,6 +27,10 @@ export class ClubListComponent implements OnInit {
   protected searchName: string = '';
   protected selectedCountry: string = '';
   protected onlyWithBadge: boolean = false;
+
+  protected pageSize = 5;
+  protected pageIndex = 0;
+  protected pageSizeOptions: number[] = [5, 10, 20];
 
   public constructor(private router: Router, private clubService: ClubService, private countryService: CountryService, private location: Location) {}
 
@@ -38,6 +44,8 @@ export class ClubListComponent implements OnInit {
           this.loadCountryFlags(this.clubs);
           this.availableCountries = [...new Set(this.clubs.map((club) => club.address.country))];
         }
+
+        this.updatePaginatedClubs();
       },
       error: (error) => {
         console.error('Error fetching clubs:', error);
@@ -76,10 +84,26 @@ export class ClubListComponent implements OnInit {
   }
 
   protected filterClubs(): void {
-    this.filteredClubs = this.clubs?.filter((club) =>
+    const filtered = this.clubs?.filter((club) =>
       club.name.toLowerCase().includes(this.searchName.toLowerCase()) &&
       (this.selectedCountry ? club.address.country === this.selectedCountry : true) &&
       (!this.onlyWithBadge || club.badge !== null)
     ) || [];
+
+    this.filteredClubs = filtered;
+    this.pageIndex = 0;
+    this.updatePaginatedClubs();
+  }
+
+  protected updatePaginatedClubs(): void {
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedClubs = this.filteredClubs.slice(startIndex, endIndex);
+  }
+
+  protected onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedClubs();
   }
 }
