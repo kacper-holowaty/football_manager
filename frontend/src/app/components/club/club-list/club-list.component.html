@@ -4,13 +4,36 @@
 </div>
 
 @if (clubs && clubs.length > 0) {
+  <div>
+    <input type="text" [(ngModel)]="searchName" (input)="filterClubs()" placeholder="Search by name..." />
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select country</mat-label>
+      <mat-select [(ngModel)]="selectedCountry" (selectionChange)="filterClubs()">
+        <mat-option value="">All countries</mat-option>
+        @for (country of availableCountries; track $index) {
+          <mat-option [value]="country">
+            <span class="fi" [class]="'fi-' + getCountryCode(country)"></span>
+            {{ country }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <label>
+      <input type="checkbox" [(ngModel)]="onlyWithBadge" (change)="filterClubs()" />
+      Only clubs with badge
+    </label>
+  </div>
+
+  @if (filteredClubs.length > 0) {
     <div>
-      @for (club of clubs; track $index) {
+      @for (club of filteredClubs; track $index) {
         <div 
-        tabindex="0" 
-        (click)="viewClubDetails(club.clubId)" 
-        (keydown.enter)="viewClubDetails(club.clubId)" 
-        (keydown.space)="viewClubDetails(club.clubId)">
+          tabindex="0" 
+          (click)="viewClubDetails(club.clubId)" 
+          (keydown.enter)="viewClubDetails(club.clubId)" 
+          (keydown.space)="viewClubDetails(club.clubId)">
           <h3>{{ club.name }}</h3>
           <span class="fi" [class]="'fi-'+getCountryCode(club.address.country)"></span> 
           <p>Founded: {{ club.foundedYear }}</p>
@@ -18,6 +41,9 @@
         </div>
       }
     </div>
+  } @else {
+    <div>No clubs match your filters.</div>
+  }
 }
 @else {
   <div>There is no football clubs... You can be the first to create one!</div>
