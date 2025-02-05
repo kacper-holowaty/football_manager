@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
 
   protected isUserLoggedIn: boolean = false;
   protected currentUserId: string = '';
-  protected defaultBadgeUrl: string = 'assets/empty_badge.png';
+  protected defaultBadgeUrl: string = 'assets/images/empty_badge.png';
   protected clubs: Club[] = [];
   protected countryCodes: Record<string, string> = {};
 

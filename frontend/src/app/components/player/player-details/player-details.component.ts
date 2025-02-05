@@ -19,7 +19,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class PlayerDetailsComponent implements OnInit {
   protected player?: Player;
-  protected defaultPhotoUrl: string = 'assets/no_photo.png';
+  protected defaultPhotoUrl: string = 'assets/images/no_photo.png';
   protected countryCode: string = '';
   protected currentUserId: string = '';
   protected isUserLoggedIn: boolean = false;

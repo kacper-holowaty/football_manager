@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-start-screen',
   standalone: true,
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './start-screen.component.html',
   styleUrl: './start-screen.component.scss'
 })
 export class StartScreenComponent implements OnInit {
-  protected logoUrl: string = "assets/gold_logo.png";
+  protected logoUrl: string = "assets/images/gold_logo.png";
   protected applicationName: string = "FC Manager";
 
   public constructor(private router: Router, private authService: AuthService) {}

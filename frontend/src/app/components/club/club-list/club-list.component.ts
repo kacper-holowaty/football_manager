@@ -20,7 +20,7 @@ export class ClubListComponent implements OnInit {
   protected clubs?: Club[];
   protected filteredClubs: Club[] = [];
   protected paginatedClubs: Club[] = [];
-  protected defaultBadgeUrl: string = "assets/empty_badge.png";
+  protected defaultBadgeUrl: string = "assets/images/empty_badge.png";
   protected countryCodes: Record<string, string> = {};
   protected availableCountries: string[] = [];
   

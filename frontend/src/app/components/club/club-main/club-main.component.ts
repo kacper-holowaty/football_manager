@@ -14,7 +14,7 @@ import { CountryService } from '../../../services/country.service';
 })
 export class ClubMainComponent implements OnInit {
   protected club?: Club;
-  protected defaultBadgeUrl: string = 'assets/empty_badge.png';
+  protected defaultBadgeUrl: string = 'assets/images/empty_badge.png';
   protected currentUserId: string = '';
   protected isUserLoggedIn: boolean = false;
   protected countryCode: string = '';

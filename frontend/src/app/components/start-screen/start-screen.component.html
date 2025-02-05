@@ -1,4 +1,4 @@
-<div class="start-container">
+<!-- <div class="start-container">
   <div class="banner">
     <img src="{{logoUrl}}" alt="FC Manager">
     <h3>{{ applicationName }}</h3>
@@ -12,5 +12,22 @@
   
   <div class="guest-actions">
     <button (click)="navigateToClubs()" class="btn btn-link">Browse other users clubs</button>
+  </div>
+</div> -->
+
+<div class="start-container">
+  <div class="banner">
+    <img [src]="logoUrl" alt="FC Manager" class="logo">
+    <h3>{{ applicationName }}</h3>
+    <p class="description">The ultimate platform for football fans and club managers alike!</p>
+  </div>
+
+  <div class="actions">
+    <button mat-raised-button (click)="navigateToLogin()">Log in</button>
+    <button mat-raised-button (click)="navigateToRegister()">Sign up</button>
+  </div>
+
+  <div class="guest-actions">
+    <button mat-button (click)="navigateToClubs()">Browse other users clubs</button>
   </div>
 </div>
