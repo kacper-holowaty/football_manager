@@ -1,80 +1,89 @@
+<button class="btn" (click)="goToHome()">Go back</button>
+
 <div class="register-container">
     <h2>Register</h2>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="firstName">First name</label>
-        <input id="firstName" type="text" formControlName="firstName" class="form-control">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>First name</mat-label>
+          <input matInput id="firstName" type="text" formControlName="firstName">
+        </mat-form-field>
         @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
             @if (registerForm.get('firstName')?.errors?.['required']) {
-              <small>First name is required.</small>
+              <div class="error-msg-form">First name is required.</div>
             }
             @if (registerForm.get('firstName')?.errors?.['minlength']) {
-              <small>First name is too short.</small>
+              <div class="error-msg-form">First name is too short.</div>
             }
             @if (registerForm.get('firstName')?.errors?.['maxlength']) {
-              <small>First name is too long.</small>
+              <div class="error-msg-form">First name is too long.</div>
             }
         }
       </div>
   
-      <div class="form-group">
-        <label for="lastName">Last name</label>
-        <input id="lastName" type="text" formControlName="lastName" class="form-control">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Last name</mat-label>
+          <input matInput id="lastName" type="text" formControlName="lastName">
+        </mat-form-field>
         @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
             @if (registerForm.get('lastName')?.errors?.['required']) {
-              <small>Last name is required.</small>
+              <div class="error-msg-form">Last name is required.</div>
             }
             @if (registerForm.get('lastName')?.errors?.['minlength']) {
-              <small>Last name is too short.</small>
+              <div class="error-msg-form">Last name is too short.</div>
             }
             @if (registerForm.get('lastName')?.errors?.['maxlength']) {
-              <small>Last name is too long.</small>
+              <div class="error-msg-form">Last name is too long.</div>
             }
         }
       </div>
   
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <input id="email" type="email" formControlName="email" class="form-control">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput id="email" type="email" formControlName="email">
+        </mat-form-field>
         @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-            <div>
-              <small>Invalid email address.</small>
-            </div>
+          <div class="error-msg-form">Invalid email address.</div>
+            
         }
       </div>
   
       <div class="form-group">
-        <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" class="form-control">
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput id="password" type="password" formControlName="password">
+        </mat-form-field>
         @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
             @if (registerForm.get('password')?.errors?.['required']) {
-              <small>Password is required.</small>
+              <div class="error-msg-form">Password is required.</div>
             }
             @if (registerForm.get('password')?.errors?.['minlength']) {
-              <small>Password is too short.</small>
+              <div class="error-msg-form">Password is too short.</div>
             }
             @if (registerForm.get('password')?.errors?.['maxlength']) {
-              <small>Password is too long.</small>
+              <div class="error-msg-form">Password is too long.</div>
             }
         }
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword">Confirm password</label>
-        <input id="confirmPassword" type="password" formControlName="confirmPassword" class="form-control">
+        <mat-form-field appearance="fill">
+          <mat-label>Confirm password</mat-label>
+          <input matInput id="confirmPassword" type="password" formControlName="confirmPassword">
+        </mat-form-field>
         @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
-          <small>Passwords must match!</small>
+          <div class="error-msg-form">Passwords must match!</div>
         }
       </div>
   
-      <button type="submit" class="" [disabled]="registerForm.invalid">Register</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">Sign up</button>
     </form>
-    <div class="navigation-buttons">
-      <button (click)="goToHome()">Go back</button>
-      <p>Already have an account? Log in!<button (click)="goToLogin()">Log in</button></p>
-    </div>
+    <p>Already have an account? Log in!</p>
+    <button mat-raised-button (click)="goToLogin()">Log in</button>
 
     @if (registrationFailed) {
-        <div>{{registrationFailed}}</div>
+        <div class="error-message">{{registrationFailed}}</div>
     }
 </div>

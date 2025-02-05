@@ -1,20 +1,25 @@
+<button class="btn" routerLink="/">Log out</button>
 <div class="button-container">
-    @if (clubs.length > 0) {
-      <div>
-        @for (club of clubs; track $index) {
-          <div (click)="viewClubDetails(club.clubId)" (keydown)="viewClubDetails(club.clubId)" tabindex="0">
+  <h2>{{currentUserNameAndEmail}} clubs</h2>
+  @if (clubs.length > 0) {
+    <div class="club-list">
+      @for (club of clubs; track $index) {
+        <div (click)="viewClubDetails(club.clubId)" (keydown)="viewClubDetails(club.clubId)" tabindex="0" class="club-item">
+          <div class="club-info">
             <h3>{{ club.name }}</h3>
             <span class="fi" [class]="'fi-'+getCountryCode(club.address.country)"></span> 
-            <p>Founded: {{ club.foundedYear }}</p>
-            <img [src]="club.badge || defaultBadgeUrl" alt="Club Badge" />
           </div>
-        }
-      </div>
-    }
-    @if (clubs.length < 4) {
-      <button class="square-button" routerLink="/club/form">
-        +
-      </button>
-    }
-    <a class="link-button" routerLink="/club">Browse other users clubs</a>
-  </div>
+          <div class="club-badge-wrapper">
+            <img [src]="club.badge || defaultBadgeUrl" [alt]="club.name + 'Badge'" class="club-badge"/>
+          </div>
+          <p class="club-founded">Founded: {{ club.foundedYear }}</p>
+        </div>
+      }
+    </div>
+  }
+  @if (clubs.length < 4) {
+    <button class="square-button" routerLink="/club/form">
+      +
+    </button>
+  }
+</div>

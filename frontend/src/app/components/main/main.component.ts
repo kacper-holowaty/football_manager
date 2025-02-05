@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { ClubService } from '../../services/club.service';
 import { Club } from '../../models/club.model';
 import { CountryService } from '../../services/country.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-main',
@@ -19,6 +20,7 @@ export class MainComponent implements OnInit {
   protected defaultBadgeUrl: string = 'assets/images/empty_badge.png';
   protected clubs: Club[] = [];
   protected countryCodes: Record<string, string> = {};
+  protected currentUserNameAndEmail: string = '';
 
   public constructor(private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService) {}
 
@@ -29,8 +31,11 @@ export class MainComponent implements OnInit {
       if (this.isUserLoggedIn) {
         this.authService.getAuthenticatedUserId().subscribe((userId) => {
           this.currentUserId = userId;
-
           this.loadUserClubs();
+          this.authService.getUserById(this.currentUserId).subscribe({
+            next: (user: User) => (this.currentUserNameAndEmail = `${user.firstName} ${user.lastName} (${user.email})`),
+            error: (err) => console.error('Error fetching user:', err),
+          });
         });
       }
     });

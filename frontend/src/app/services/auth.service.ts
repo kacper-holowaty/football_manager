@@ -22,11 +22,6 @@ export class AuthService {
     return this.httpClient.post<AuthResponse>(`${this.apiUrl}/login`, { email, password }, { withCredentials: true });
   }
 
-  // public logout(): void {
-  //   this.httpClient.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe(() => {
-  //     this.router.navigate(['/']);
-  //   });
-  // }
   public logout(): void {
     this.isAuthenticated().subscribe((isAuthenticated) => {
       if (isAuthenticated) {
@@ -63,5 +58,9 @@ export class AuthService {
           return of('');
         })
       );
+  }
+
+  public getUserById(userId: string): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}/user/${userId}`);
   }
 }

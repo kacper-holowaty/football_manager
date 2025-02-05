@@ -4,6 +4,10 @@ import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from '../../services/auth.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { ToastService } from '../../services/toast.service';
 
 interface RegisterForm {
   firstName: FormControl<string | null>;
@@ -23,7 +27,7 @@ interface ApiError {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -38,7 +42,7 @@ export class RegisterComponent implements OnInit{
     return password.value === confirmPassword.value ? null : { passwordMismatch: true };
   };
 
-  public constructor(private router: Router, private authService: AuthService) {
+  public constructor(private router: Router, private authService: AuthService, private toastService: ToastService) {
     this.registerForm = new FormGroup<RegisterForm>({
       firstName: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(24)]),
       lastName: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(24)]),
@@ -66,13 +70,16 @@ export class RegisterComponent implements OnInit{
       this.authService.register(user).subscribe({
         next: () => {
           console.log("User registered!");
+          this.toastService.showToast(`Successfully registered as ${user.email}`);
           this.router.navigate([`/main`]);
         },
         error: (err: ApiError) => {
           if (typeof err.error.message === 'string') {
             this.registrationFailed = err.error.message;
+            this.toastService.showToast(`${err.error.message}`);
           } else {
             this.registrationFailed = 'An error occurred. Please try again later.';
+            this.toastService.showToast('An error occurred. Please try again later.');
           }
         }
       });
