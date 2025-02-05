@@ -34,7 +34,7 @@
     @else {
         <div>This club doesn't have any players...</div>
     }
-    @if (isCurrentUserOwner) {
+    @if (isCurrentUserOwner && players.length < 30) {
         <button (click)="addPlayer()">Add new player</button>
     }
 </div>

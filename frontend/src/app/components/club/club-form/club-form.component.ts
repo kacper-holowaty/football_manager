@@ -370,8 +370,11 @@ export class ClubFormComponent implements OnInit, OnDestroy {
         this.router.navigate([`/club/${club.clubId}/main`]);
       },
       error: (error: ApiError) => {
-        if (error.status === 409) {
-          this.errorMessage = error.error.message || "Conflict occurred.";
+        if (error.status === 400) {
+          this.errorMessage = error.error.message || "Single user must have maximum 4 clubs.";
+        } 
+        else if (error.status === 409) {
+          this.errorMessage = error.error.message || "Club name exists in database.";
         } else {
           console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while adding the club. Please try again.";
@@ -387,9 +390,14 @@ export class ClubFormComponent implements OnInit, OnDestroy {
         this.router.navigate([`/club/${club.clubId}/main`]);
       },
       error: (error: ApiError) => {
+
         if (error.status === 404) {
           this.errorMessage = error.error.message || "Club not found.";
-        } else {
+        } 
+        else if (error.status === 409) {
+          this.errorMessage = error.error.message || "Club name exists in database.";
+        }
+        else {
           console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while updating the club. Please try again.";
         }

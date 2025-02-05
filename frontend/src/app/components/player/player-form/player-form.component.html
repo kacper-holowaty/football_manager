@@ -132,5 +132,10 @@
     <button type="submit" class="" [disabled]="playerForm.invalid">
       {{ editing ? 'Update Player' : 'Add Player' }}
     </button>
+    @if (errorMessage) {
+      <div class="error-message">
+        <p>{{ errorMessage }}</p>
+      </div>
+    }
   </form>
 </div>

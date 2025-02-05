@@ -26,6 +26,14 @@ export interface PlayerForm {
   salary: FormControl<number | null>;
 }
 
+interface ApiError {
+  status: number;
+  error: {
+    success: boolean;
+    message: string;
+  };
+}
+
 @Component({
   selector: 'app-player-form',
   standalone: true,
@@ -47,6 +55,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
   protected editing: boolean = false;
   protected countries: Country[] = [];
   protected filteredCountries: Observable<Country[]>; 
+  protected errorMessage: string = '';
 
   protected positionOptions = [
     { label: 'Forward', value: 'forward' },
@@ -243,17 +252,50 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     return control?.value ?? defaultValue;
   }
   
+  // private updatePlayer(player: Player): void {
+  //   this.playerService.updatePlayer(player).subscribe(() => {
+  //     console.log("Player updated successfully!");
+  //     this.router.navigate([`/club/${player.clubId}/player/list`]);
+  //   });
+  // }
+  
+  // private addPlayer(player: Player): void {
+  //   this.playerService.addPlayer(player).subscribe(() => {
+  //     console.log("Player added successfully!");
+  //     this.router.navigate([`/club/${player.clubId}/player/list`]);
+  //   });
+  // }
   private updatePlayer(player: Player): void {
-    this.playerService.updatePlayer(player).subscribe(() => {
-      console.log("Player updated successfully!");
-      this.router.navigate([`/club/${player.clubId}/player/list`]);
+    this.playerService.updatePlayer(player).subscribe({
+      next: () => {
+        console.log("Player updated successfully!");
+        this.router.navigate([`/club/${player.clubId}/player/list`]);
+      },
+      error: (error: ApiError) => {
+        if (error.status === 400) {
+          this.errorMessage = error.error.message || "Conflict occurred.";
+        } else {
+          console.error("An error occurred:", error);
+          this.errorMessage = "An error occurred while updating the player. Please try again.";
+        }
+      },
     });
   }
-  
+
   private addPlayer(player: Player): void {
-    this.playerService.addPlayer(player).subscribe(() => {
-      console.log("Player added successfully!");
-      this.router.navigate([`/club/${player.clubId}/player/list`]);
+    this.playerService.addPlayer(player).subscribe({
+      next: () => {
+        console.log("Player added successfully!");
+        this.router.navigate([`/club/${player.clubId}/player/list`]);
+      },
+      error: (error: ApiError) => {
+        if (error.status === 400) {
+          this.errorMessage = error.error.message || "Conflict occurred.";
+        } else {
+          console.error("An error occurred:", error);
+          this.errorMessage = "An error occurred while adding the player. Please try again.";
+        }
+      },
     });
   }
 }

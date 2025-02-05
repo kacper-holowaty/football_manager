@@ -1,5 +1,5 @@
 <div class="button-container">
-    @if (clubs && clubs.length > 0) {
+    @if (clubs.length > 0) {
       <div>
         @for (club of clubs; track $index) {
           <div (click)="viewClubDetails(club.clubId)" (keydown)="viewClubDetails(club.clubId)" tabindex="0">
@@ -11,8 +11,10 @@
         }
       </div>
     }
-    <button class="square-button" routerLink="/club/form">
-      +
-    </button>
+    @if (clubs.length < 4) {
+      <button class="square-button" routerLink="/club/form">
+        +
+      </button>
+    }
     <a class="link-button" routerLink="/club">Browse other users clubs</a>
   </div>

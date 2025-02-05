@@ -41,6 +41,16 @@ playerRoutes.route("/players").post(upload.single("photo"), async (req, res) => 
       if (existingPlayer) {
         return res.status(409).json({ success: false, message: "Player with this ID already exists." });
       }
+
+      const clubPlayerCount = await db.collection("players").countDocuments({ clubId });
+      if (clubPlayerCount >= 30) {
+        return res.status(400).json({ success: false, message: "Club already has 30 players. Cannot add more." });
+      }
+
+      const existingShirtNumber = await db.collection("players").findOne({ clubId, shirtNumber: parseInt(shirtNumber) });
+      if (existingShirtNumber) {
+        return res.status(400).json({ success: false, message: `Shirt number ${shirtNumber} is already taken.` });
+      }
   
       const bucket = new GridFSBucket(db, { bucketName: "uploads" });
   
@@ -154,6 +164,13 @@ playerRoutes.route("/players").post(upload.single("photo"), async (req, res) => 
 
       if (!existingPlayer) {
         return res.status(404).json({ success: false, message: "Player not found." });
+      }
+
+      if (shirtNumber && existingPlayer.shirtNumber !== parseInt(shirtNumber)) {
+        const existingShirtNumber = await db.collection("players").findOne({ clubId, shirtNumber: parseInt(shirtNumber) });
+        if (existingShirtNumber) {
+          return res.status(400).json({ success: false, message: `Shirt number ${shirtNumber} is already taken.` });
+        }
       }
 
       const updateData = {

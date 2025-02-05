@@ -33,6 +33,14 @@ clubRoutes.route("/clubs").post(upload.single("badge"), async (req, res) => {
   try {
     const db = await dbo.getDb();
 
+    const clubCount = await db.collection("clubs").countDocuments({ ownerId });
+    if (clubCount >= 4) {
+      return res.status(400).json({
+        success: false,
+        message: "Owner already has 4 clubs, cannot add more.",
+      });
+    }
+
     const existingClub = await db.collection("clubs").findOne({ name });
     if (existingClub) {
       return res.status(409).json({ success: false, message: "Club with this name already exists." });
@@ -144,6 +152,11 @@ clubRoutes.route("/clubs/:id").put(upload.single("badge"), async (req, res) => {
 
     if (!existingClub) {
       return res.status(404).json({ success: false, message: "Club not found." });
+    }
+
+    const clubWithSameName = await db.collection("clubs").findOne({ name });
+    if (clubWithSameName && clubWithSameName.clubId !== id) {
+      return res.status(409).json({ success: false, message: "Club with this name already exists." });
     }
 
     const updateData = {
