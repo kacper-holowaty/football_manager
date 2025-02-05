@@ -8,11 +8,13 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-club-list',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatPaginatorModule],
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatPaginatorModule, MatCheckboxModule],
   templateUrl: './club-list.component.html',
   styleUrl: './club-list.component.scss'
 })

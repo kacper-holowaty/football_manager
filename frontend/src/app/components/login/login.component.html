@@ -1,18 +1,33 @@
-<form [formGroup]="loginForm" (ngSubmit)="login()">
-    <div>
-        <label for="email">E-mail</label>
-        <input id="email" type="email" formControlName="email" class="form-control">
-    </div>
-    <div>
-        <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" class="form-control">
-    </div>
-    <button type="submit" [disabled]="loginForm.invalid">Log in</button>
-</form>
-<button (click)="goToHome()">Go back</button>
+<button (click)="goToHome()" class="btn">Go back</button>
 
-<p>Don't have an account? Click here to sign up!<button (click)="goToRegister()">Sign up</button></p>
-
-@if (loginFailed) {
-    <div>{{ loginFailed }}</div>
-}
+<div class="login-form-container">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>E-mail</mat-label>
+          <input matInput id="email" type="email" formControlName="email">
+        </mat-form-field>
+      </div>
+      @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+        <div class="error-msg-form">Invalid email address.</div>
+      }
+  
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput id="password" type="password" formControlName="password">
+        </mat-form-field>
+      </div>
+      @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+        <div class="error-msg-form">Password is required.</div>  
+      }
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Log in</button>
+    </form>
+  
+    <p>Don't have an account? Click here to sign up!</p>
+    <button mat-raised-button (click)="goToRegister()">Sign up</button>
+    @if (loginFailed) {
+        <div class="error-message">{{ loginFailed }}</div>
+    }
+  </div>

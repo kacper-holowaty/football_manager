@@ -1,59 +1,70 @@
-<div>
-  <button (click)="goBack()">Go Back</button>
-  <button (click)="goHome()">Start screen</button>
-</div>
-
-@if (clubs && clubs.length > 0) {
-  <div>
-    <input type="text" [(ngModel)]="searchName" (input)="filterClubs()" placeholder="Search by name..." />
-
-    <mat-form-field appearance="fill">
-      <mat-label>Select country</mat-label>
-      <mat-select [(ngModel)]="selectedCountry" (selectionChange)="filterClubs()">
-        <mat-option value="">All countries</mat-option>
-        @for (country of availableCountries; track $index) {
-          <mat-option [value]="country">
-            <span class="fi" [class]="'fi-' + getCountryCode(country)"></span>
-            {{ country }}
-          </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <label>
-      <input type="checkbox" [(ngModel)]="onlyWithBadge" (change)="filterClubs()" />
-      Only clubs with badge
-    </label>
+<div class="club-list-container">
+  <div class="actions-container">
+    <button (click)="goBack()" class="btn">Go Back</button>
+    <button (click)="goHome()" class="btn">Start screen</button>
   </div>
-
-  @if (filteredClubs.length > 0) {
-    <div>
-      @for (club of paginatedClubs; track $index) {
-        <div 
-          tabindex="0" 
-          (click)="viewClubDetails(club.clubId)" 
-          (keydown.enter)="viewClubDetails(club.clubId)" 
-          (keydown.space)="viewClubDetails(club.clubId)">
-          <h3>{{ club.name }}</h3>
-          <span class="fi" [class]="'fi-'+getCountryCode(club.address.country)"></span> 
-          <p>Founded: {{ club.foundedYear }}</p>
-          <img [src]="club.badge || defaultBadgeUrl" alt="Club Badge" />
-        </div>
-      }
+  
+  @if (clubs && clubs.length > 0) {
+    <div class="filter-section">
+      <mat-form-field class="search-input" appearance="fill">
+        <mat-label>Search by name</mat-label>
+        <input matInput [(ngModel)]="searchName" (input)="filterClubs()" placeholder="Search by name..." />
+      </mat-form-field>
+    
+      <mat-form-field appearance="fill">
+        <mat-label>Select country</mat-label>
+        <mat-select [(ngModel)]="selectedCountry" (selectionChange)="filterClubs()">
+          <mat-option value="">All countries</mat-option>
+          @for (country of availableCountries; track $index) {
+            <mat-option [value]="country">
+              <span class="fi" [class]="'fi-' + getCountryCode(country)"></span>
+              {{ country }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    
+      <mat-checkbox color="primary" class="badge-checkbox" [(ngModel)]="onlyWithBadge" (change)="filterClubs()">
+        Only clubs with badge
+      </mat-checkbox>
     </div>
+  
+    @if (filteredClubs.length > 0) {
+      <mat-paginator 
+        [length]="filteredClubs.length"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChange($event)"
+        class="paginator">
+      </mat-paginator>
 
-    <mat-paginator 
-      [length]="filteredClubs.length"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [pageSizeOptions]="pageSizeOptions"
-      (page)="onPageChange($event)">
-    </mat-paginator>
+      <div class="club-list">
+        @for (club of paginatedClubs; track $index) {
+          <div 
+            class="club-item"
+            tabindex="0" 
+            (click)="viewClubDetails(club.clubId)"
+            (keydown.enter)="viewClubDetails(club.clubId)" 
+            (keydown.space)="viewClubDetails(club.clubId)"
+            >
+            <div class="club-info">
+              <h3>{{ club.name }}</h3>
+              <span class="fi" [class]="'fi-'+getCountryCode(club.address.country)"></span> 
+            </div>
+            <div class="club-badge-wrapper">
+              <img [src]="club.badge || defaultBadgeUrl" [alt]="club.name + 'Badge'" class="club-badge"/>
+            </div>
+            <p class="club-founded">Founded: {{ club.foundedYear }}</p>
+          </div>
+        }
+      </div>
+    }
+    @else {
+      <div class="no-clubs-message">No clubs match your filters.</div>
+    }
   }
   @else {
-    <div>No clubs match your filters.</div>
+    <div class="no-clubs-message">There is no football clubs... You can be the first to create one!</div>
   }
-}
-@else {
-  <div>There is no football clubs... You can be the first to create one!</div>
-}
+</div>
