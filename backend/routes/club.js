@@ -41,10 +41,14 @@ clubRoutes.route("/clubs").post(upload.single("badge"), async (req, res) => {
       });
     }
 
-    const existingClub = await db.collection("clubs").findOne({ name });
+    const existingClub = await db.collection("clubs").findOne({
+      name: { $regex: `^${name}$`, $options: "i" }
+    });
+
     if (existingClub) {
       return res.status(409).json({ success: false, message: "Club with this name already exists." });
     }
+
     const bucket = new GridFSBucket(db, { bucketName: "uploads" });
 
     let imageId = null;
@@ -154,7 +158,9 @@ clubRoutes.route("/clubs/:id").put(upload.single("badge"), async (req, res) => {
       return res.status(404).json({ success: false, message: "Club not found." });
     }
 
-    const clubWithSameName = await db.collection("clubs").findOne({ name });
+    const clubWithSameName = await db.collection("clubs").findOne({
+      name: { $regex: `^${name}$`, $options: "i" }
+    });
     if (clubWithSameName && clubWithSameName.clubId !== id) {
       return res.status(409).json({ success: false, message: "Club with this name already exists." });
     }

@@ -14,6 +14,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ClubService } from '../../../services/club.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { Location } from '@angular/common';
+import { ToastService } from '../../../services/toast.service';
 
 export interface ClubForm {
   name: FormControl<string | null>;
@@ -55,7 +60,10 @@ interface ApiError {
     ReactiveFormsModule, 
     MatInputModule,
     MatAutocompleteModule,
+    MatDatepickerModule,
     MatFormFieldModule,
+    MatButtonModule,
+    MatIconModule,
     AsyncPipe
   ],
   templateUrl: './club-form.component.html',
@@ -72,7 +80,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   protected filteredCountries: Observable<Country[]>;
   protected errorMessage: string | null = null;
   
-  public constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService) {
+  public constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService, private location: Location, private toastService: ToastService) {
     this.clubForm = new FormGroup<ClubForm>({
       name: new FormControl('', [Validators.required, 
         Validators.minLength(3), 
@@ -366,18 +374,21 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   private addClub(club: Club): void {
     this.clubService.addClub(club).subscribe({
       next: () => {
-        console.log("Club added successfully!");
+        this.toastService.showToast("Club added successfully!");
         this.router.navigate([`/club/${club.clubId}/main`]);
       },
       error: (error: ApiError) => {
         if (error.status === 400) {
           this.errorMessage = error.error.message || "Single user must have maximum 4 clubs.";
+          this.toastService.showToast(this.errorMessage);
         } 
         else if (error.status === 409) {
           this.errorMessage = error.error.message || "Club name exists in database.";
+          this.toastService.showToast(this.errorMessage);
         } else {
           console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while adding the club. Please try again.";
+          this.toastService.showToast(this.errorMessage);
         }
       },
     });
@@ -386,22 +397,28 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   private updateClub(club: Club): void {
     this.clubService.updateClub(club).subscribe({
       next: () => {
-        console.log("Club updated successfully!");
+        this.toastService.showToast("Club updated successfully!");
         this.router.navigate([`/club/${club.clubId}/main`]);
       },
       error: (error: ApiError) => {
-
         if (error.status === 404) {
           this.errorMessage = error.error.message || "Club not found.";
+          this.toastService.showToast(this.errorMessage);
         } 
         else if (error.status === 409) {
           this.errorMessage = error.error.message || "Club name exists in database.";
+          this.toastService.showToast(this.errorMessage);
         }
         else {
           console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while updating the club. Please try again.";
+          this.toastService.showToast(this.errorMessage);
         }
       },
     });
+  }
+
+  protected goBack(): void {
+    this.location.back();
   }
 }
