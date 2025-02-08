@@ -1,10 +1,13 @@
-<nav>
-    <a 
-      [routerLink]="['/club', clubId, 'main']" 
-      routerLinkActive="active">Main
-    </a>
-    <a 
-      [routerLink]="['/club', clubId, 'player']" 
-      routerLinkActive="active">Players
-    </a>
-  </nav>
+<mat-toolbar color="primary" class="navbar">
+  <div class="left-container">
+    <div class="logo-container" [routerLink]="'/'">
+      <img [src]="logoUrl" alt="Logo" class="logo" />
+      <span>{{ applicationName }}</span>
+    </div>
+    <button class="back-button" (click)="goBack()">{{isOwner ? 'My clubs' : 'All clubs'}}</button>
+  </div>   
+  <div class="nav-links">
+    <a [routerLink]="['/club', clubId, 'main']" routerLinkActive="active">Main</a>
+    <a [routerLink]="['/club', clubId, 'player']" routerLinkActive="active">Players</a>
+  </div>
+</mat-toolbar>
