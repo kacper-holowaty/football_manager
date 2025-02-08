@@ -1,1 +1,129 @@
-/*# sourceMappingURL=club-main.component.css.map */
+.club-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.club-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+.club-header h1 {
+  font-size: 2rem;
+  text-align: center;
+}
+.club-header .fi {
+  font-size: 36px;
+}
+
+.club-content {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.club-badge {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.club-badge img {
+  width: 300px;
+  background-color: #fff;
+  height: auto;
+  border-radius: 8px;
+  border: 3px solid #fff;
+}
+
+.club-info {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+}
+.club-info p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+}
+
+.club-achievements {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+}
+.club-achievements h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.achievement-details {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  max-width: 90%;
+}
+
+.achievements-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.achievement-card {
+  display: flex;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.trophy-icon {
+  color: gold;
+}
+
+.achievement-name {
+  margin-top: -13px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.club-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.achievements-paginator {
+  display: flex;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0);
+}
+
+@media (max-width: 768px) {
+  .club-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .club-info {
+    width: 100%;
+  }
+}/*# sourceMappingURL=club-main.component.css.map */

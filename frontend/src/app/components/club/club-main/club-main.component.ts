@@ -1,14 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ClubService } from '../../../services/club.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Club } from '../../../models/club.model';
+import { Achievement, Club } from '../../../models/club.model';
 import { AuthService } from '../../../services/auth.service';
 import { CountryService } from '../../../services/country.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { FormatDatePipe } from '../../../pipes/format-date.pipe';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DeleteClubDialogComponent } from './delete-club-dialog/delete-club-dialog.component';
 
 @Component({
   selector: 'app-club-main',
   standalone: true,
-  imports: [],
+  imports: [MatIconModule, MatButtonModule, FormatDatePipe, MatPaginatorModule, MatDialogModule],
   templateUrl: './club-main.component.html',
   styleUrl: './club-main.component.scss'
 })
@@ -19,7 +25,12 @@ export class ClubMainComponent implements OnInit {
   protected isUserLoggedIn: boolean = false;
   protected countryCode: string = '';
   
-  public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router, private authService: AuthService, private countryService: CountryService) {}
+  protected sortedAchievements: Achievement[] = [];
+  protected paginatedAchievements: Achievement[] = [];
+  protected pageSize: number = 2;
+  protected currentPage: number = 0;
+
+  public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router, private authService: AuthService, private countryService: CountryService, private dialog: MatDialog) {}
   
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -27,6 +38,11 @@ export class ClubMainComponent implements OnInit {
       this.clubService.getClubById(id).subscribe({
         next: (club: Club) => {
           this.club = club;
+
+          this.sortedAchievements = [...club.achievements].sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
+          this.updatePaginatedAchievements();
 
           this.countryService.getCountryCode(club.address.country).subscribe((result) => {
             this.countryCode = result.code;
@@ -45,7 +61,30 @@ export class ClubMainComponent implements OnInit {
     this.authService.getAuthenticatedUserId().subscribe((userId) => {
       this.currentUserId = userId;
     });
+  }
 
+  private updatePaginatedAchievements(): void {
+    const startIndex = this.currentPage * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedAchievements = this.sortedAchievements.slice(startIndex, endIndex);
+  }
+
+  public changePage(event: PageEvent): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedAchievements();
+  }
+
+  public openDeleteClubConfirmationDialog(clubId: string): void {
+    const dialogRef = this.dialog.open(DeleteClubDialogComponent, {
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.deleteClub(clubId);
+      }
+    });
   }
 
   public editClub(id: string): void {
@@ -53,16 +92,14 @@ export class ClubMainComponent implements OnInit {
   }
 
   public deleteClub(id: string): void {
-    if (confirm('Are you sure you want to delete your club?')) {
-      this.clubService.deleteClub(id).subscribe({
-        next: () => {
-          console.log('Club deleted successfully');
-          this.router.navigate(['/main']);
-        },
-        error: (error) => {
-          console.error('Error deleting club:', error);
-        }
-      });
-    }
+    this.clubService.deleteClub(id).subscribe({
+      next: () => {
+        console.log('Club deleted successfully');
+        this.router.navigate(['/main']);
+      },
+      error: (error) => {
+        console.error('Error deleting club:', error);
+      }
+    });
   }
 }

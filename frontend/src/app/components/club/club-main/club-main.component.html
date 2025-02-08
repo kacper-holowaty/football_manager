@@ -1,40 +1,70 @@
 @if (club) {
-    <div>
-        <div>
-            <h3>Badge:</h3>
-            <img [src]="club.badge || defaultBadgeUrl" alt="Club Badge" />
-        </div>
-        <span class="fi" [class]="'fi-' + countryCode"></span>
-        <h2>{{ club.name }}</h2>
-        <p><strong>Founded Year:</strong> {{ club.foundedYear }}</p>
-        <p><strong>Stadium Name:</strong> {{ club.stadiumName }}</p>
-        <p><strong>Stadium Capacity:</strong> {{ club.stadiumCapacity }}</p>
-        
-        <div>
-            <h3>Address:</h3>
-            <p>{{ club.address.street }}, {{ club.address.houseNumber }}</p>
-            <p>{{ club.address.city }}, {{ club.address.country }}</p>
-            <p>{{ club.address.postalCode }}</p>
-        </div>
-        @if (club.achievements && club.achievements.length > 0) {
-            <div>
-                <h3>Achievements:</h3>
-                <ul>
-                @for (achievement of club.achievements; track $index) {
-                    <strong>{{ achievement.name }}</strong> ({{ achievement.date }}): {{ achievement.description }}
-                }
-                </ul>
-            </div>
-        }
-        @if (isUserLoggedIn && currentUserId === club.ownerId) {
-            <div>
-                <button (click)="editClub(club.clubId)">Edit Club</button>
-                <button (click)="deleteClub(club.clubId)">Delete Club</button>
-            </div>
-        }
+<div class="club-container">
+    <div class="club-header">
+    <h1>{{ club.name }}</h1>
+    <span class="big-flag fi" [class]="'fi-' + countryCode"></span>
     </div>
+
+    <div class="club-content">
+    <div class="club-badge">
+        <img [src]="club.badge || defaultBadgeUrl" alt="Club Badge" />
+    </div>
+
+    <div class="club-info">
+        <p><mat-icon>calendar_month</mat-icon> <strong>Founded:</strong> {{ club.foundedYear }}</p>
+        <p><mat-icon>stadium</mat-icon> <strong>Stadium:</strong> {{ club.stadiumName }}</p>
+        <p><mat-icon>people_alt</mat-icon> <strong>Stadium capacity:</strong> {{ club.stadiumCapacity }}</p>
+
+        <div class="club-address">
+        <h3>Address:</h3>
+        <p><mat-icon>signpost</mat-icon> {{ club.address.street }} {{ club.address.houseNumber }}{{ club.address.apartmentNumber ? '/' + club.address.apartmentNumber : '' }}</p>
+        <p><mat-icon>location_city</mat-icon> {{ club.address.postalCode }}, {{ club.address.city }}</p>
+        <p><span class="fi" [class]="'fi-' + countryCode"></span> {{ club.address.country }}</p>
+        </div>
+    </div>
+    </div>
+
+    @if (club.achievements && club.achievements.length > 0) {
+    <div class="club-achievements">
+        <h3><mat-icon>emoji_events</mat-icon> Achievements:</h3>
+        <mat-paginator 
+          [length]="club.achievements.length"
+          [pageSize]="pageSize"
+          [pageIndex]="currentPage"
+          (page)="changePage($event)"
+          class="achievements-paginator">
+        </mat-paginator>
+        <div class="achievements-list">
+        @for (achievement of paginatedAchievements; track $index) {
+            <div class="achievement-card">
+            <mat-icon class="trophy-icon">emoji_events</mat-icon>
+            <div class="achievement-details">
+                <p>{{ achievement.date | formatDate }}</p>
+                <p class="achievement-name">{{ achievement.name }}</p>
+                <p>{{ achievement.description }}</p>
+            </div>
+            </div>
+        }
+        </div>
+    </div>
+    }
+
+    @if (isUserLoggedIn && currentUserId === club.ownerId) {
+        <div class="club-actions">
+            <button mat-raised-button color="primary" (click)="editClub(club.clubId)">
+            <mat-icon>edit</mat-icon> Edit Club
+            </button>
+            <button mat-raised-button color="warn" 
+            (click)="openDeleteClubConfirmationDialog(club.clubId)"
+            >
+            <mat-icon>delete</mat-icon> Delete Club
+            </button>
+        </div>
+    }
+</div>
 }
 @else {
-    <div>Loading...</div>
+<div class="loading">
+    <p>Loading...</p>
+</div>
 }
-  

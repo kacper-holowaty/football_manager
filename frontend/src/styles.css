@@ -5,13 +5,15 @@
 html, body {
   margin: 0;
   font-family: "Roboto", sans-serif;
-}
-
-html, body {
   height: 100%;
 }
 
 body {
+  background-image: url("assets/images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }/*# sourceMappingURL=styles.css.map */

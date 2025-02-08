@@ -1,36 +1,121 @@
+.btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  margin-top: 1.2rem;
+  margin-left: 1.2rem;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+h2 {
+  color: white;
+  max-width: 600px;
+}
+
 .button-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 2rem;
 }
 
-.square-button {
+.club-list {
+  width: 80vw;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, max(250px, 15%)));
+  gap: 1rem;
+  padding: 1rem;
+  justify-content: center;
+  margin: auto;
+}
+
+.club-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(145deg, #222a35, #1a2028);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+.club-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.club-item .club-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 40px;
+}
+.club-item .club-info h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.club-item .club-info .fi {
+  font-size: 1.3rem;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+.club-item .club-badge-wrapper {
   width: 150px;
   height: 150px;
-  font-size: 44px;
-  background-color: gainsboro;
-  color: black;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background-color 0.3s;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+  padding: 5px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+.club-item .club-badge-wrapper img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  background-color: #fff;
+}
+.club-item .club-founded {
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
-.square-button:hover {
-  background-color: rgb(181, 181, 181);
-}
-
-.link-button {
-  color: #007bff;
-  text-decoration: underline;
-  font-size: 18px;
+.square-button {
+  width: 65px;
+  height: 65px;
+  background-color: #3b4045;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 2rem;
+  border: none;
   cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
-
-.link-button:hover {
-  color: #0056b3;
+.square-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
 }/*# sourceMappingURL=main.component.css.map */

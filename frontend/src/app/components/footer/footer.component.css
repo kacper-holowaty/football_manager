@@ -1,0 +1,21 @@
+.app-footer {
+  width: 100%;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  z-index: 1000;
+}
+.app-footer a {
+  color: #bb86fc;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.app-footer a:hover {
+  color: #6200ea;
+  text-decoration: underline;
+}
+.app-footer p {
+  margin: 0.5rem 0 0;
+}/*# sourceMappingURL=footer.component.css.map */
