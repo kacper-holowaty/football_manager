@@ -1,37 +1,37 @@
 .club-list-container {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .actions-container {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
-  
-    .btn {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      background-color: #6200ea;
-      color: white;
-      border: none;
-    }
-  
-    .btn:hover {
-      opacity: 0.8;
-    }
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #6200ea;
+    color: white;
+    border: none;
   }
+
+  .btn:hover {
+    opacity: 0.8;
+  }
+}
   
 .filter-section {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    justify-content: center;
-  }
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  justify-content: center;
+}
   
 .club-list {
   width: 80vw;
@@ -42,87 +42,87 @@
   justify-content: center;
   margin: auto;
 }
-  
-  .club-item {
+
+.club-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(145deg, #222a35, #1a2028);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  color: #fff;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+
+  .club-info {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    background: linear-gradient(145deg, #222a35, #1a2028);
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    color: #fff;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 40px;
 
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-    }
-  
-    .club-info {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      min-height: 40px;
-  
-      h3 {
-        font-size: 1.2rem;
-        font-weight: bold;
-        margin: 0;
-        flex-grow: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis; // Jeśli za długie, to daje "..."
-      }
-  
-      .fi {
-        font-size: 1.3rem;
-        margin-left: 8px;
-        flex-shrink: 0;
-      }
-    }
-
-    .club-badge-wrapper {
-      width: 120px;
-      height: 120px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #fff;
-      border-radius: 10px;
+    h3 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0;
+      flex-grow: 1;
+      white-space: nowrap;
       overflow: hidden;
-      margin: 0.5rem 0;
-      padding: 5px;
-      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
-  
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        background-color: #fff;
-      }
+      text-overflow: ellipsis; // Jeśli za długie, to daje "..."
     }
-  
-    .club-founded {
-      font-size: 0.9rem;
-      opacity: 0.8;
+
+    .fi {
+      font-size: 1.3rem;
+      margin-left: 8px;
+      flex-shrink: 0;
     }
   }
 
-  .paginator {
+  .club-badge-wrapper {
+    width: 120px;
+    height: 120px;
     display: flex;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.0);
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+    padding: 5px;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: #fff;
+    }
   }
-  
-  
-  .no-clubs-message {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #bbb;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-top: 1rem;
+
+  .club-founded {
+    font-size: 0.9rem;
+    opacity: 0.8;
   }
+}
+
+.paginator {
+  display: flex;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.0);
+}
+
+
+.no-clubs-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #bbb;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}

@@ -1,27 +1,24 @@
 .app-footer {
-    // position: relative;
-    // bottom: 0;
-    // left: 0;
-    width: 100%;
-    color: #fff;
-    text-align: center;
-    padding: 1rem;
-    font-size: 0.8rem;
-    z-index: 1000;
-    
-    a {
-      color: #bb86fc;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1.1rem;
-      
-      &:hover {
-        color: #6200ea;
-        text-decoration: underline;
-      }
-    }
+  width: 100%;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  z-index: 1000;
   
-    p {
-      margin: 0.5rem 0 0;
+  a {
+    color: #bb86fc;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    
+    &:hover {
+      color: #6200ea;
+      text-decoration: underline;
     }
   }
+
+  p {
+    margin: 0.5rem 0 0;
+  }
+}
