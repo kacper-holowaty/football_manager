@@ -9,15 +9,15 @@
         <input matInput id="firstName" type="text" formControlName="firstName">
       </mat-form-field>
       @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
-          @if (registerForm.get('firstName')?.errors?.['required']) {
-            <div class="error-msg-form">First name is required.</div>
-          }
-          @if (registerForm.get('firstName')?.errors?.['minlength']) {
-            <div class="error-msg-form">First name is too short.</div>
-          }
-          @if (registerForm.get('firstName')?.errors?.['maxlength']) {
-            <div class="error-msg-form">First name is too long.</div>
-          }
+        @if (registerForm.get('firstName')?.errors?.['required']) {
+          <div class="error-msg-form">First name is required.</div>
+        }
+        @if (registerForm.get('firstName')?.errors?.['minlength']) {
+          <div class="error-msg-form">First name is too short.</div>
+        }
+        @if (registerForm.get('firstName')?.errors?.['maxlength']) {
+          <div class="error-msg-form">First name is too long.</div>
+        }
       }
     </div>
 
@@ -27,15 +27,15 @@
         <input matInput id="lastName" type="text" formControlName="lastName">
       </mat-form-field>
       @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
-          @if (registerForm.get('lastName')?.errors?.['required']) {
-            <div class="error-msg-form">Last name is required.</div>
-          }
-          @if (registerForm.get('lastName')?.errors?.['minlength']) {
-            <div class="error-msg-form">Last name is too short.</div>
-          }
-          @if (registerForm.get('lastName')?.errors?.['maxlength']) {
-            <div class="error-msg-form">Last name is too long.</div>
-          }
+        @if (registerForm.get('lastName')?.errors?.['required']) {
+          <div class="error-msg-form">Last name is required.</div>
+        }
+        @if (registerForm.get('lastName')?.errors?.['minlength']) {
+          <div class="error-msg-form">Last name is too short.</div>
+        }
+        @if (registerForm.get('lastName')?.errors?.['maxlength']) {
+          <div class="error-msg-form">Last name is too long.</div>
+        }
       }
     </div>
 
@@ -56,15 +56,15 @@
         <input matInput id="password" type="password" formControlName="password">
       </mat-form-field>
       @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-          @if (registerForm.get('password')?.errors?.['required']) {
-            <div class="error-msg-form">Password is required.</div>
-          }
-          @if (registerForm.get('password')?.errors?.['minlength']) {
-            <div class="error-msg-form">Password is too short.</div>
-          }
-          @if (registerForm.get('password')?.errors?.['maxlength']) {
-            <div class="error-msg-form">Password is too long.</div>
-          }
+        @if (registerForm.get('password')?.errors?.['required']) {
+          <div class="error-msg-form">Password is required.</div>
+        }
+        @if (registerForm.get('password')?.errors?.['minlength']) {
+          <div class="error-msg-form">Password is too short.</div>
+        }
+        @if (registerForm.get('password')?.errors?.['maxlength']) {
+          <div class="error-msg-form">Password is too long.</div>
+        }
       }
     </div>
 
@@ -84,6 +84,6 @@
   <button mat-raised-button (click)="goToLogin()">Log in</button>
 
   @if (registrationFailed) {
-      <div class="error-message">{{registrationFailed}}</div>
+    <div class="error-message">{{registrationFailed}}</div>
   }
 </div>

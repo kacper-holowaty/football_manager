@@ -3,23 +3,21 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 90vh;
   text-align: center;
-  background-color: #f1f1f1;
-  font-family: Arial, sans-serif;
 }
 .page-not-found h1 {
   font-size: 4rem;
-  color: black;
+  color: whitesmoke;
   margin: 0;
 }
 .page-not-found p {
   font-size: 1.2rem;
-  color: #555;
+  color: #fff;
 }
 .page-not-found a {
   margin-top: 10px;
-  color: #3498db;
+  color: #bb86fc;
   text-decoration: none;
   font-size: 1.1rem;
 }

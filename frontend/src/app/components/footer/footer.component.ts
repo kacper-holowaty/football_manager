@@ -12,7 +12,7 @@ export class FooterComponent {
   public constructor(private router: Router) {}
 
   public isExcludedRoute(): boolean {
-    const excludedRoutes = ['/club/list', '/'];
+    const excludedRoutes = ['/club/list', '/', '/page-not-found'];
 
     return excludedRoutes.includes(this.router.url);
   }

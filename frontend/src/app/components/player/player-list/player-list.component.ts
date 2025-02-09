@@ -9,11 +9,13 @@ import { ClubService } from '../../../services/club.service';
 import { AuthService } from '../../../services/auth.service';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
+import { Club } from '../../../models/club.model';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-player-list',
   standalone: true,
-  imports: [CalculateAgePipe, ContractLeftPipe, MatButtonToggleModule, FormsModule],
+  imports: [CalculateAgePipe, ContractLeftPipe, MatButtonToggleModule, MatIconModule, FormsModule],
   templateUrl: './player-list.component.html',
   styleUrl: './player-list.component.scss'
 })
@@ -26,6 +28,7 @@ export class PlayerListComponent implements OnInit {
   protected isUserLoggedIn: boolean = false;
   protected currentUserId: string = '';
   protected isCurrentUserOwner: boolean = false;
+  protected clubName: string = '';
 
   protected sortBy: 'contractUntil' | 'shirtNumber' | 'fullName' = 'shirtNumber';
   protected sortAscending: boolean = true; 
@@ -58,8 +61,9 @@ export class PlayerListComponent implements OnInit {
     });
 
     if (this.clubId) {
-      this.clubService.getClubById(this.clubId).subscribe((club) => {
+      this.clubService.getClubById(this.clubId).subscribe((club: Club) => {
         this.isCurrentUserOwner = club.ownerId === this.currentUserId;
+        this.clubName = club.name;
       });
     }
     

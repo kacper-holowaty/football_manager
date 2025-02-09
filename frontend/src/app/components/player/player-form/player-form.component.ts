@@ -14,6 +14,7 @@ import { AsyncPipe } from '@angular/common';
 import { debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { allowedCountriesAsyncValidator } from '../../club/club-form/validators';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface PlayerForm {
   photo: FormControl<Blob | null>;
@@ -40,6 +41,7 @@ interface ApiError {
   imports: [
     ReactiveFormsModule,
     MatInputModule,
+    MatIconModule,
     MatAutocompleteModule,
     MatFormFieldModule,
     AsyncPipe
@@ -252,19 +254,6 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     return control?.value ?? defaultValue;
   }
   
-  // private updatePlayer(player: Player): void {
-  //   this.playerService.updatePlayer(player).subscribe(() => {
-  //     console.log("Player updated successfully!");
-  //     this.router.navigate([`/club/${player.clubId}/player/list`]);
-  //   });
-  // }
-  
-  // private addPlayer(player: Player): void {
-  //   this.playerService.addPlayer(player).subscribe(() => {
-  //     console.log("Player added successfully!");
-  //     this.router.navigate([`/club/${player.clubId}/player/list`]);
-  //   });
-  // }
   private updatePlayer(player: Player): void {
     this.playerService.updatePlayer(player).subscribe({
       next: () => {
