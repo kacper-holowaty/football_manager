@@ -1,36 +1,62 @@
-<div>
-  <h2>{{ editing ? 'Edit player form' : 'Add player form' }}</h2>
+<div class="player-form">
+  <h1>{{ editing ? 'Edit player form' : 'Add player form' }}</h1>
   <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
-    <div class="">
-      <label for="name">Full name</label>
-      <input id="name" formControlName="name" />
-      @if (playerForm.get('name')?.invalid && playerForm.get('name')?.touched) {
-        @if (playerForm.get('name')?.errors?.['required']) {
-          <small>Player full name is required.</small>
-        }
-        @if (playerForm.get('name')?.errors?.['minlength']) {
-          <small>Player full name is too short.</small>
-        }
-        @if (playerForm.get('name')?.errors?.['maxlength']) {
-          <small>Player full name is too long.</small>
-        }
-      }
-    </div>
 
-    <div class="">
-      <label for="birthDate">Date of birth</label>
-      <input id="birthDate" formControlName="birthDate" type="date" [min]="'1900-01-01'" [max]="todayDate()"/>
-      @if (playerForm.get('birthDate')?.invalid && playerForm.get('birthDate')?.touched) {
-        <div>
-          <small>Incorrect date of birth.</small>
+    <div class="photo-loader">
+      <label class="photo-label" for="photo"><mat-icon>add_photo_alternate</mat-icon>Choose player photo</label>
+      <input
+        type="file"
+        id="photo"
+        (change)="onPhotoSelected($event)"
+        accept="image/*"
+      />
+      @if (photoPreviewUrl || (player?.photo && !photoRemoved)) {
+        <div class="player-photo-preview">
+          <p class="photo-preview-text">Selected photo:</p>
+          <img class="player-photo" [src]="photoPreviewUrl || player?.photo" alt="Selected badge" />
+          <button mat-raised-button color="warn" (click)="removePhoto()">Remove player photo</button>
         </div>
       }
     </div>
 
     <div>
-      <label for="nationality">Nationality</label>
       <mat-form-field appearance="fill">
-        <mat-label>Select country</mat-label>
+        <mat-label>Full name</mat-label>
+        <input matInput id="name" formControlName="name" />
+      </mat-form-field>
+      @if (playerForm.get('name')?.invalid && playerForm.get('name')?.touched) {
+        @if (playerForm.get('name')?.errors?.['required']) {
+          <div class="form-error-msg">Player full name is required.</div>
+        }
+        @if (playerForm.get('name')?.errors?.['minlength']) {
+          <div class="form-error-msg">Player full name is too short.</div>
+        }
+        @if (playerForm.get('name')?.errors?.['maxlength']) {
+          <div class="form-error-msg">Player full name is too long.</div>
+        }
+      }
+    </div>
+
+    <div>
+      <mat-form-field>
+        <mat-label>Date of birth</mat-label>
+        <input matInput [matDatepicker]="birthDatePicker" id="birthDate" formControlName="birthDate" [min]="'1900-01-01'" [max]="todayDate()" required>
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="birthDatePicker">
+          <mat-icon matDatepickerToggleIcon>calendar_month</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #birthDatePicker></mat-datepicker>
+      </mat-form-field>
+      @if (playerForm.get('birthDate')?.invalid && playerForm.get('birthDate')?.touched) {
+        <div>
+          <div class="form-error-msg date-error">Incorrect date of birth.</div>
+        </div>
+      }
+    </div>  
+
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Select nationality</mat-label>
         <input 
           type="text" 
           matInput 
@@ -49,87 +75,83 @@
       </mat-form-field>
       @if (playerForm.get('nationality')?.invalid && playerForm.get('nationality')?.touched) {
         @if (playerForm.get('nationality')?.errors?.['required']) {
-          <small>Nationality is required.</small>
+          <div class="form-error-msg">Nationality is required.</div>
         }
         @if (playerForm.get('nationality')?.errors?.['invalidCountry']) {
-          <small>Please select a valid country.</small>
+          <div class="form-error-msg">Please select a valid country.</div>
         }
       }
     </div>
     
-    <div class="">
-      <label for="position">Position</label>
-      <select id="position" formControlName="position" class="">
-        <option value="" disabled selected>Choose position</option>
-        @for (option of positionOptions; track option) {
-          <option [value]="option.value">
-            {{ option.label }}
-          </option>
-        }
-      </select>
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Position</mat-label>
+        <mat-select formControlName="position">
+          <mat-option value="" disabled>Choose position</mat-option>
+          @for (option of positionOptions; track option) {
+            <mat-option [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
       @if (playerForm.get('position')?.invalid && playerForm.get('position')?.touched) {
-        <small>Position is required.</small>
+        <div class="form-error-msg">Position is required.</div>
       }
     </div>
     
-    <div class="">
-      <label for="shirtNumber">Shirt number</label>
-      <input id="shirtNumber" formControlName="shirtNumber" type="number" />
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Shirt number</mat-label>
+        <input matInput id="shirtNumber" formControlName="shirtNumber" type="number" />
+      </mat-form-field>
       @if (playerForm.get('shirtNumber')?.invalid && playerForm.get('shirtNumber')?.touched) {
         @if (playerForm.get('shirtNumber')?.errors?.['required']) {
-          <small>Shirt number is required.</small>
+          <div class="form-error-msg">Shirt number is required.</div>
         }
         @if (playerForm.get('shirtNumber')?.errors?.['min']) {
-          <small>Shirt number must be positive number.</small>
+          <div class="form-error-msg">Shirt number must be positive number.</div>
         }
         @if (playerForm.get('shirtNumber')?.errors?.['max']) {
-          <small>Shirt number can't be higher than 99.</small>
+          <div class="form-error-msg">Shirt number can't be higher than 99.</div>
         }
       }
     </div>
 
-    <div class="">
-      <label for="contractUntil">Contract expiration date</label>
-      <input id="contractUntil" formControlName="contractUntil" type="date" [min]="todayDate()"/>
+    <div>
+      <mat-form-field>
+        <mat-label>Contract expiration date</mat-label>
+        <input matInput [matDatepicker]="contractUntilPicker" id="contractUntil" formControlName="contractUntil" [min]="todayDate()" required>
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="contractUntilPicker">
+          <mat-icon matDatepickerToggleIcon>calendar_month</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #contractUntilPicker></mat-datepicker>
+      </mat-form-field>
       @if (playerForm.get('contractUntil')?.invalid && playerForm.get('contractUntil')?.touched) {
-        <small>Contract expiration date is incorrect.</small>
+        <div class="form-error-msg date-error">Contract expiration date is incorrect.</div>
       }
     </div>
 
     <div class="">
-      <label for="salary">Weekly salary</label>
-      <input id="salary" formControlName="salary" type="number" />
+      <mat-form-field appearance="fill">
+        <mat-label>Weekly Salary</mat-label>
+        <input matInput id="salary" formControlName="salary" type="number" step="100" min="0"/>
+      </mat-form-field>
       @if (playerForm.get('salary')?.invalid && playerForm.get('salary')?.touched) {
         @if (playerForm.get('salary')?.errors?.['required']) {
-          <small>Weekly salary is required.</small>
+          <div class="form-error-msg">Weekly salary is required.</div>
         }
         @if (playerForm.get('salary')?.errors?.['min']) {
-          <small>Weekly salary must be positive number.</small>
+          <div class="form-error-msg">Weekly salary must be positive number.</div>
         }
         @if (playerForm.get('salary')?.errors?.['max']) {
-          <small>Weekly salary is too big.</small>
+          <div class="form-error-msg">Weekly salary is too big.</div>
         } 
       }
     </div>
 
-    <div class="photo-loader">
-      <label for="photo"><mat-icon>add_photo_alternate</mat-icon>Player photo</label>
-      <input
-        type="file"
-        id="photo"
-        (change)="onPhotoSelected($event)"
-        accept="image/*"
-      />
-      @if (photoPreviewUrl || (player?.photo && !photoRemoved)) {
-        <div>
-          <p>Selected photo:</p>
-          <img [src]="photoPreviewUrl || player?.photo" alt="Selected badge" style="max-width: 200px;" />
-          <button type="button" (click)="removePhoto()">Remove player photo</button>
-        </div>
-      }
-    </div>
-
-    <button type="submit" class="" [disabled]="playerForm.invalid">
+    <button mat-raised-button [disabled]="playerForm.invalid">
       {{ editing ? 'Update Player' : 'Add Player' }}
     </button>
     @if (errorMessage) {

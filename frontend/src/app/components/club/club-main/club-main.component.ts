@@ -10,6 +10,7 @@ import { FormatDatePipe } from '../../../pipes/format-date.pipe';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DeleteClubDialogComponent } from './delete-club-dialog/delete-club-dialog.component';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-club-main',
@@ -30,7 +31,7 @@ export class ClubMainComponent implements OnInit {
   protected pageSize: number = 2;
   protected currentPage: number = 0;
 
-  public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router, private authService: AuthService, private countryService: CountryService, private dialog: MatDialog) {}
+  public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router, private authService: AuthService, private countryService: CountryService, private dialog: MatDialog, private toastService: ToastService) {}
   
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -94,7 +95,7 @@ export class ClubMainComponent implements OnInit {
   public deleteClub(id: string): void {
     this.clubService.deleteClub(id).subscribe({
       next: () => {
-        console.log('Club deleted successfully');
+        this.toastService.showToast("Club deleted successfully!");
         this.router.navigate(['/main']);
       },
       error: (error) => {

@@ -15,6 +15,10 @@ import { debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { allowedCountriesAsyncValidator } from '../../club/club-form/validators';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { ToastService } from '../../../services/toast.service';
 
 export interface PlayerForm {
   photo: FormControl<Blob | null>;
@@ -44,6 +48,9 @@ interface ApiError {
     MatIconModule,
     MatAutocompleteModule,
     MatFormFieldModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatButtonModule,
     AsyncPipe
   ],
   templateUrl: './player-form.component.html',
@@ -75,7 +82,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
   }
 
-  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService) {
+  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService, private toastService: ToastService) {
     this.playerForm = new FormGroup<PlayerForm>({
       photo: new FormControl(null),
       name: new FormControl('', [
@@ -257,15 +264,17 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
   private updatePlayer(player: Player): void {
     this.playerService.updatePlayer(player).subscribe({
       next: () => {
-        console.log("Player updated successfully!");
+        this.toastService.showToast("Player updated successfully!");
         this.router.navigate([`/club/${player.clubId}/player/list`]);
       },
       error: (error: ApiError) => {
         if (error.status === 400) {
           this.errorMessage = error.error.message || "Conflict occurred.";
+          this.toastService.showToast(this.errorMessage);
         } else {
           console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while updating the player. Please try again.";
+          this.toastService.showToast(this.errorMessage);
         }
       },
     });
@@ -274,15 +283,17 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
   private addPlayer(player: Player): void {
     this.playerService.addPlayer(player).subscribe({
       next: () => {
-        console.log("Player added successfully!");
+        this.toastService.showToast("Player added successfully!");
         this.router.navigate([`/club/${player.clubId}/player/list`]);
       },
       error: (error: ApiError) => {
         if (error.status === 400) {
           this.errorMessage = error.error.message || "Conflict occurred.";
+          this.toastService.showToast(this.errorMessage);
         } else {
           console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while adding the player. Please try again.";
+          this.toastService.showToast(this.errorMessage);
         }
       },
     });

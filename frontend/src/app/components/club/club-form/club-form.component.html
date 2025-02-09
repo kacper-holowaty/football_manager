@@ -224,30 +224,30 @@
             </div>
       
             <div>
-              <mat-form-field class="example-full-width">
+              <mat-form-field>
                 <mat-label>Choose a date</mat-label>
                 <input matInput [matDatepicker]="picker" id="achievementDate-{{ $index }}" formControlName="date" required>
-                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-hint>MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker">
-                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                  <mat-icon matDatepickerToggleIcon>calendar_month</mat-icon>
                 </mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
               @if (clubForm.controls.achievements.controls[$index].get('date')?.invalid && clubForm.controls.achievements.controls[$index].get('date')?.touched) {
                 @if (clubForm.controls.achievements.controls[$index].get('date')?.errors?.['required']) {
-                  <div class="error-msg-form">The achievement date is required.</div>
+                  <div class="error-msg-form date-error">The achievement date is required.</div>
                 }
                 @if (clubForm.controls.achievements.controls[$index].get('date')?.errors?.['minDate']) {
-                  <div class="error-msg-form">The achievement date cannot be earlier than the year the club was founded.</div>
+                  <div class="error-msg-form date date-error">The achievement date cannot be earlier than the year the club was founded.</div>
                 }
                 @if (clubForm.controls.achievements.controls[$index].get('date')?.errors?.['maxDate']) {
-                  <div class="error-msg-form">The achievement date cannot be later than today.</div>
+                  <div class="error-msg-form date-error">The achievement date cannot be later than today.</div>
                 }
               }
             </div>
     
             <div>
-              <mat-form-field appearance="fill" class="achievement-description-textarea">
+              <mat-form-field appearance="fill">
                 <mat-label>Description</mat-label>
                 <textarea matInput id="achievementDescription-{{ $index }}" formControlName="description"></textarea>
               </mat-form-field>
