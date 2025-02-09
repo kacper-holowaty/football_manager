@@ -1,26 +1,30 @@
 @if (player) {
-    <div class="player-details">
-        <h2>Player details</h2>
-        <div class="photo-box">
-            <img [src]="player.photo || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
-        </div>
-        <div class="content">
-            <div class="name-and-flag">
-                <span class="fi" [class]="'fi-'+ countryCode"></span>
-                <h3>{{ player.name }}</h3>
-            </div>
-            <p>Position: {{ player.position }}</p>
-            <p>Age: {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})</p>
-            <p>Shirt number: {{ player.shirtNumber }}.</p>
-            <P>{{ player.contractUntil | contractLeft}}</P>
-            <p>Salary (per week): {{player.salary | numberWithSpaces}}$</p>
-        </div>
-
-        @if (isUserLoggedIn && currentUserId === player.clubOwnerId) {
-            <div>
-                <button (click)="editPlayer(player.playerId)">Edit player</button>
-                <button (click)="deletePlayer(player.playerId)">Delete player</button>
-            </div>
-        }
+  <div class="player-details">
+    <div class="name-and-flag">
+      <h2>{{ player.name }}</h2>
+      <span class="fi" [class]="'fi-'+ countryCode"></span>
     </div>
+
+    <div class="player-body">
+      <div class="photo-box">
+        <img [src]="player.photo || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
+      </div>
+      
+      <div class="content">
+        <p><mat-icon>calendar_today</mat-icon> Age: {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})</p>
+        <p><mat-icon>sports_soccer</mat-icon> Position: {{ player.position }}</p>
+        <p><mat-icon>tag</mat-icon> Shirt number: {{ player.shirtNumber }}</p>
+        <p><mat-icon>flag</mat-icon> Nationality: {{ player.nationality }}</p>
+        <p><mat-icon>assignment</mat-icon> {{ player.contractUntil | contractLeft}}</p>
+        <p><mat-icon>attach_money</mat-icon> Salary (per week): {{player.salary | numberWithSpaces}} &euro;</p>
+      </div>
+    </div>
+
+    @if (isUserLoggedIn && currentUserId === player.clubOwnerId) {
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" (click)="editPlayer(player.playerId)"><mat-icon>edit</mat-icon>Edit</button>
+        <button mat-raised-button color="warn" (click)="openDeletePlayerConfirmationDialog(player.playerId)"><mat-icon>delete</mat-icon>Delete</button>
+      </div>
+    }
+  </div>
 }

@@ -2,18 +2,30 @@ import { Component, OnInit } from '@angular/core';
 import { PlayerService } from '../../../services/player.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from '../../../models/player.model';
-// import { ContractLeftPipe } from '../../../pipes/contract-left.pipe';
 import { CalculateAgePipe } from '../../../pipes/calculate-age.pipe';
 import { FormatDatePipe } from '../../../pipes/format-date.pipe';
 import { NumberWithSpacesPipe } from '../../../pipes/number-with-spaces.pipe';
 import { CountryService } from '../../../services/country.service';
 import { ContractLeftPipe } from '../../../pipes/contract-left.pipe';
 import { AuthService } from '../../../services/auth.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { ToastService } from '../../../services/toast.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DeletePlayerDialogComponent } from './delete-player-dialog/delete-player-dialog.component';
 
 @Component({
   selector: 'app-player-details',
   standalone: true,
-  imports: [CalculateAgePipe, ContractLeftPipe, FormatDatePipe, NumberWithSpacesPipe],
+  imports: [
+    CalculateAgePipe,
+    ContractLeftPipe, 
+    FormatDatePipe, 
+    NumberWithSpacesPipe,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule
+  ],
   templateUrl: './player-details.component.html',
   styleUrl: './player-details.component.scss'
 })
@@ -24,7 +36,7 @@ export class PlayerDetailsComponent implements OnInit {
   protected currentUserId: string = '';
   protected isUserLoggedIn: boolean = false;
 
-  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService) {}
+  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService, private dialog: MatDialog, private toastService: ToastService) {}
 
   public ngOnInit(): void {
     const playerId = this.route.snapshot.paramMap.get('playerId');
@@ -45,14 +57,24 @@ export class PlayerDetailsComponent implements OnInit {
       this.currentUserId = userId;
     });
   }
+
+  public openDeletePlayerConfirmationDialog(playerId: string): void {
+    const dialogRef = this.dialog.open(DeletePlayerDialogComponent, {
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.deletePlayer(playerId);
+      }
+    });
+  }
   
   protected deletePlayer(playerId: string): void {
-    if (confirm('Are you sure you want to delete this player?')) {
-      this.playerService.deletePlayer(playerId).subscribe(() => {
-        this.router.navigate([`club/${this.player?.clubId}/player/list`]);
-        console.log('Player deleted successfully');
-      });
-    }
+    this.playerService.deletePlayer(playerId).subscribe(() => {
+      this.toastService.showToast('Player deleted successfully!');
+      this.router.navigate([`club/${this.player?.clubId}/player/list`]);
+    });
   }
 
   protected editPlayer(playerId: string): void {
