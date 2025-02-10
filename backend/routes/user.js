@@ -7,51 +7,51 @@ const ObjectId = require("mongodb").ObjectId;
 const SECRET_KEY = process.env.SECRET_KEY || 'my_secret_key';
 
 userRoutes.route("/login").post(async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      const db = dbo.getDb();
-      const user = await db.collection("users").findOne({ email });
-  
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid email or password.' });
-      }
-  
-      const isPasswordValid = await bcrypt.compare(password, user.password);
+  const { email, password } = req.body;
 
-      if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Invalid email or password.' });
-      }
+  try {
+    const db = dbo.getDb();
+    const user = await db.collection("users").findOne({ email });
 
-      const token = jwt.sign({ id: user.userId }, SECRET_KEY, { expiresIn: '1h' });
-            
-      res.cookie('authToken', token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: 'strict',
-      });
-
-      res.json({ message: 'Logged in successfully' });
-    } catch (error) {
-      console.error("Error while logging in:", error);
-      res.status(500).json({
-        success: false,
-        message: "Error while logging in. Please try again later.",
-      });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
     }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    const token = jwt.sign({ id: user.userId }, SECRET_KEY, { expiresIn: '1h' });
+          
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+    });
+
+    res.json({ message: 'Logged in successfully' });
+  } catch (error) {
+    console.error("Error while logging in:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error while logging in. Please try again later.",
+    });
+  }
 });  
 
 userRoutes.route("/register").post(async (req, res) => {
-    saltRounds = 10;
-    const { id, firstName, lastName, email, password } = req.body;
+  saltRounds = 10;
+  const { id, firstName, lastName, email, password } = req.body;
 
   try {
     const db = dbo.getDb();
     const existingUser = await db.collection("users").findOne({ email });
 
     if (existingUser) {
-        return res.status(400).json({ message: 'User with this email already exists.' });
-      }
+      return res.status(400).json({ message: 'User with this email already exists.' });
+    }
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     
@@ -115,30 +115,30 @@ userRoutes.route("/user/:id").get(async (req, res) => {
 const authenticateToken = (req, res, next) => {
   const token = req.cookies.authToken;
   if (!token) {
-      req.user = null;
-      return next();
+    req.user = null;
+    return next();
   }
 
   jwt.verify(token, SECRET_KEY, (err, user) => {
-      if (err) {
-          req.user = null;
-          return next();
-      }
-      req.user = user;
-      next();
+    if (err) {
+      req.user = null;
+      return next();
+    }
+    req.user = user;
+    next();
   });
 };
 
 userRoutes.route('/is-authenticated').get(authenticateToken, (req, res) => {
   if (!req.user) {
-      return res.json({ isAuthenticated: false, userId: '' });
+    return res.json({ isAuthenticated: false, userId: '' });
   }
   res.json({ isAuthenticated: true, userId: req.user.id });
 });
   
 userRoutes.route('/logout').post((req, res) => {
-    res.clearCookie('authToken');
-    res.json({ message: 'Logged out successfully.' });
+  res.clearCookie('authToken');
+  res.json({ message: 'Logged out successfully.' });
 });
 
 module.exports = userRoutes;

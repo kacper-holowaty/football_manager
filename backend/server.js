@@ -28,38 +28,7 @@ app.use(cookieParser());
 app.use(require("./routes/club"));
 app.use(require("./routes/user"));
 app.use(require("./routes/player"));
-
-const countries = require('./data/countries.json');
-
-app.get('/countries', (req, res) => {
-    res.json(countries);
-});
-
-app.get('/countries/:country', (req, res) => {
-  const countryName = req.params.country;
-  const country = countries.find(c => c.country.toLowerCase() === countryName.toLowerCase());
-
-  if (country) {
-      res.json({ code: country.code });
-  } else {
-      res.status(404).json({ error: 'Country not found' });
-  }
-});
-
-app.post('/countries/codes', (req, res) => {
-  const { countries: countryNames } = req.body;
-
-  if (!countryNames || !Array.isArray(countryNames)) {
-      return res.status(400).json({ error: 'Invalid request format. Provide an array of country names.' });
-  }
-
-  const result = countryNames.map(countryName => {
-      const country = countries.find(c => c.country.toLowerCase() === countryName.toLowerCase());
-      return country ? { country: countryName, code: country.code } : { country: countryName, code: 'unknown' };
-  });
-
-  res.json(result);
-});
+app.use(require("./routes/country"));
 
 app.listen(port, () => {
   dbo.connectToServer(function (err) {
