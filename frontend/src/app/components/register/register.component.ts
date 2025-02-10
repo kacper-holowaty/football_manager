@@ -10,18 +10,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { ToastService } from '../../services/toast.service';
 
 interface RegisterForm {
-  firstName: FormControl<string | null>;
-  lastName: FormControl<string | null>;
-  email: FormControl<string | null>;
-  password: FormControl<string | null>;
-  confirmPassword: FormControl<string | null>;
+  readonly firstName: FormControl<string | null>;
+  readonly lastName: FormControl<string | null>;
+  readonly email: FormControl<string | null>;
+  readonly password: FormControl<string | null>;
+  readonly confirmPassword: FormControl<string | null>;
 }
 
 interface ApiError {
-  error: {
+  readonly status: number;
+  readonly error: {
     message: string;
   };
-  status: number;
 }
 
 @Component({
@@ -69,7 +69,6 @@ export class RegisterComponent implements OnInit{
       
       this.authService.register(user).subscribe({
         next: () => {
-          console.log("User registered!");
           this.toastService.showToast(`Successfully registered as ${user.email}`);
           this.router.navigate([`/main`]);
         },

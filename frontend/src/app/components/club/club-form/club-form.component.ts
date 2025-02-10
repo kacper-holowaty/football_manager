@@ -21,33 +21,33 @@ import { Location } from '@angular/common';
 import { ToastService } from '../../../services/toast.service';
 
 export interface ClubForm {
-  name: FormControl<string | null>;
-  badge: FormControl<Blob | null>;
-  foundedYear: FormControl<number | null>;
-  stadiumName: FormControl<string | null>;
-  stadiumCapacity: FormControl<number | null>;
-  address: FormGroup<AddressForm>;
-  achievements: FormArray<FormGroup<AchievementForm>>;
+  readonly name: FormControl<string | null>;
+  readonly badge: FormControl<Blob | null>;
+  readonly foundedYear: FormControl<number | null>;
+  readonly stadiumName: FormControl<string | null>;
+  readonly stadiumCapacity: FormControl<number | null>;
+  readonly address: FormGroup<AddressForm>;
+  readonly achievements: FormArray<FormGroup<AchievementForm>>;
 }
 
 export interface AddressForm {
-  street: FormControl<string | null>;
-  houseNumber: FormControl<string | null>;
-  apartmentNumber: FormControl<string | null>;
-  postalCode: FormControl<string | null>;
-  city: FormControl<string | null>;
-  country: FormControl<string | null>;
+  readonly street: FormControl<string | null>;
+  readonly houseNumber: FormControl<string | null>;
+  readonly apartmentNumber: FormControl<string | null>;
+  readonly postalCode: FormControl<string | null>;
+  readonly city: FormControl<string | null>;
+  readonly country: FormControl<string | null>;
 }
 
 export interface AchievementForm {
-  name: FormControl<string | null>;
-  date: FormControl<string | null>;
-  description: FormControl<string | null>;
+  readonly name: FormControl<string | null>;
+  readonly date: FormControl<string | null>;
+  readonly description: FormControl<string | null>;
 }
 
 interface ApiError {
-  status: number;
-  error: {
+  readonly status: number;
+  readonly error: {
     success: boolean;
     message: string;
   };

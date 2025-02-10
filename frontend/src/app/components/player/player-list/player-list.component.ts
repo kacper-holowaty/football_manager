@@ -66,7 +66,6 @@ export class PlayerListComponent implements OnInit {
         this.clubName = club.name;
       });
     }
-    
   }
 
   protected viewPlayerDetails(playerId: string): void {

@@ -1,7 +1,7 @@
 export interface User {
-    id: string;
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string,
+  readonly id: string;
+  readonly firstName: string,
+  readonly lastName: string,
+  readonly email: string,
+  readonly password: string,
 }

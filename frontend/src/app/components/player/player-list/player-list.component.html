@@ -30,7 +30,7 @@
               <h3>{{ player.name }}</h3>
               <span class="fi" [class]="'fi-'+ getCountryCode(player.nationality)"></span>
             </div>
-            <p class="player-position">Position: {{ player.position }}</p>
+            <p>Position: {{ player.position.charAt(0).toUpperCase() + player.position.slice(1) }}</p>
             <p>Age: {{ player.birthDate | calculateAge }}</p>
             <p>Shirt number: {{ player.shirtNumber }}.</p>
             <p>{{ player.contractUntil | contractLeft}}</p>

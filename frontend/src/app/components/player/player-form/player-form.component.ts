@@ -21,19 +21,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { ToastService } from '../../../services/toast.service';
 
 export interface PlayerForm {
-  photo: FormControl<Blob | null>;
-  name: FormControl<string | null>;
-  birthDate: FormControl<string | null>;
-  nationality: FormControl<string | null>;
-  position: FormControl<string | null>;
-  shirtNumber: FormControl<number | null>;
-  contractUntil: FormControl<string | null>;
-  salary: FormControl<number | null>;
+  readonly photo: FormControl<Blob | null>;
+  readonly name: FormControl<string | null>;
+  readonly birthDate: FormControl<string | null>;
+  readonly nationality: FormControl<string | null>;
+  readonly position: FormControl<string | null>;
+  readonly shirtNumber: FormControl<number | null>;
+  readonly contractUntil: FormControl<string | null>;
+  readonly salary: FormControl<number | null>;
 }
 
 interface ApiError {
-  status: number;
-  error: {
+  readonly status: number;
+  readonly error: {
     success: boolean;
     message: string;
   };

@@ -8,15 +8,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { ToastService } from '../../services/toast.service';
 
 interface LoginForm {
-  email: FormControl<string | null>;
-  password: FormControl<string | null>;
+  readonly email: FormControl<string | null>;
+  readonly password: FormControl<string | null>;
 }
 
 interface ApiError {
-  error: {
+  readonly status: number;
+  readonly error: {
     message: string;
   };
-  status: number;
 }
 
 @Component({

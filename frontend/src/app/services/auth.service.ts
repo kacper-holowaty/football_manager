@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
+import { ToastService } from './toast.service';
 
 interface AuthResponse {
-  token: string;
-  user: User;
+  readonly token: string;
+  readonly user: User;
 }
 
 @Injectable({
@@ -16,7 +17,7 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:3000';
 
-  public constructor(private httpClient: HttpClient, private router: Router) {}
+  public constructor(private httpClient: HttpClient, private router: Router, private toastService: ToastService) {}
 
   public login(email: string, password: string): Observable<AuthResponse> {
     return this.httpClient.post<AuthResponse>(`${this.apiUrl}/login`, { email, password }, { withCredentials: true });
@@ -27,7 +28,7 @@ export class AuthService {
       if (isAuthenticated) {
         this.httpClient.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
           next: () => {
-            console.log('User logged out');
+            this.toastService.showToast('User logged out!');
           },
           error: (err) => {
             console.error('Error during logout', err);

@@ -45,5 +45,4 @@ export class ClubNavbarComponent implements OnInit {
       this.router.navigate(['/club/list']);
     }
   }
-
 }
