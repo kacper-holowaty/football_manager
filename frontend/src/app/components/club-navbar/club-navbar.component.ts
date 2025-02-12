@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ClubService } from '../../services/club.service';
 import { MatToolbarModule } from '@angular/material/toolbar'; 
 import { AuthService } from '../../services/auth.service';
@@ -17,7 +17,7 @@ export class ClubNavbarComponent implements OnInit {
   protected applicationName: string = "FC Manager";
   protected isOwner: boolean = false;
 
-  public constructor(private route: ActivatedRoute, private router: Router, private clubService: ClubService, private authService: AuthService) {}
+  public constructor( private router: Router, private clubService: ClubService, private authService: AuthService) {}
 
   public ngOnInit(): void {
     this.clubService.navbarClubId$.subscribe((id) => {

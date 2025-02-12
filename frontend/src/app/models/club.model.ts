@@ -24,9 +24,3 @@ export interface Achievement {
   readonly date: Date;
   readonly description: string;
 }
-
-
-// bardzoo opcjonalne (jak będą chęci)
-// budget: number,
-// income,    //będzie można rozważyć formularze mini do dodawania nowego wydatku czy przychodu.
-// expenses

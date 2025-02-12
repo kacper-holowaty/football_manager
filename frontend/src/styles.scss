@@ -1,19 +1,17 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html, body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    height: 100%;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
 }
 
 body {
-    background-image: url('assets/images/background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    height: 100vh;
-    margin: 0;
+  background-image: url('assets/images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

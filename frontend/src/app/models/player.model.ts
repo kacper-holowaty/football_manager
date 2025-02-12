@@ -11,20 +11,3 @@ export interface Player {
   readonly clubId: string;
   readonly clubOwnerId: string;
 }
-
-// pomysły jak to można rozbudować:
-// height
-// weight
-// prefferedFoot
-// injuryStatus
-// isCaptain ??? jakoś to fajnie obsłużyć by trzeba było
-
-// takie bardziej jak starczy czasu parametry:
-// gamesPlayed
-// goals
-// assists
-// yellowCards 
-// redCards
-// releaseClause
-// marketValue
-// socialMediaLinks string[] (takie już bardziej for fun)
