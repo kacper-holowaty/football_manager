@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AsyncPipe } from '@angular/common';
-import { debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
+import { debounceTime, map, Observable, startWith, switchMap } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { allowedCountriesAsyncValidator } from '../../club/club-form/validators';
 import { MatIconModule } from '@angular/material/icon';
@@ -120,9 +120,6 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
   }
 
   protected filterCountries(value: string): Observable<Country[]> {
-    if (!value) {
-      return of(this.countries);
-    }
     const filterValue = value.toLowerCase();
   
     return this.countryService.getCountries().pipe(

@@ -1,17 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ClubFormService } from '../../../services/club-form.service';
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Achievement, Address, Club } from '../../../models/club.model';
 import { v4 as uuidv4 } from 'uuid';
-import { achievementsDateValidator } from './validators';
-import { allowedCountriesAsyncValidator } from './validators';
 import { Country } from '../../../models/country.model';
 import { CountryService } from '../../../services/country.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
+import { debounceTime, map, Observable, startWith, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ClubService } from '../../../services/club.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -75,69 +74,21 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   protected club?: Club;
   protected clubForm: FormGroup<ClubForm>;
   protected editing: boolean = false;
-  protected currentYear = new Date().getFullYear();
   protected countries: Country[] = [];
   protected filteredCountries: Observable<Country[]>;
   protected errorMessage: string | null = null;
-  
-  public constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService, private location: Location, private toastService: ToastService) {
-    this.clubForm = new FormGroup<ClubForm>({
-      name: new FormControl('', [Validators.required, 
-        Validators.minLength(3), 
-        Validators.maxLength(50), 
-        Validators.pattern(/^[\p{L}][\p{L}\p{N} .-]*$/u),
-      ]),
-      badge: new FormControl(null),
-      foundedYear: new FormControl(null, [Validators.required, 
-        Validators.min(1800), 
-        Validators.max(this.currentYear),
-      ]),
-      stadiumName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3), 
-        Validators.maxLength(32),
-        Validators.pattern(/^[\p{L}][\p{L}\p{N} .-]*$/u),
-      ]),
-      stadiumCapacity: new FormControl(null, [
-        Validators.required, 
-        Validators.min(0), 
-        Validators.max(250000),
-      ]),
-      address: new FormGroup<AddressForm>({
-        street: new FormControl('', [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(32),
-          Validators.pattern(/^[\p{L}\p{N}][\p{L}\p{N} .-]*$/u),
-        ]),
-        houseNumber: new FormControl('', [
-          Validators.required,
-          Validators.maxLength(6),
-          Validators.pattern(/^\d+[A-Z]?$/),
-        ]),
-        apartmentNumber: new FormControl(null, [
-          Validators.maxLength(6),
-          Validators.pattern(/^\d+[A-Z]?$/),
-        ]),
-        postalCode: new FormControl('', [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(6),
-          Validators.pattern(/^[A-Z\d-]{4,6}$/),
-        ]),
-        city: new FormControl('', [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(32),
-          Validators.pattern(/^[A-Z][\p{L} .-]*$/u),
-        ]),
-        country: new FormControl('', [
-          Validators.required],
-        [allowedCountriesAsyncValidator(this.countryService)]
-        ),
-      }),
-      achievements: new FormArray<FormGroup<AchievementForm>>([]),
-    });
+
+  public constructor(
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private router: Router,
+    private clubService: ClubService,
+    private countryService: CountryService,
+    private location: Location,
+    private toastService: ToastService,
+    private clubFormService: ClubFormService
+  ) {
+    this.clubForm = this.clubFormService.createClubForm();
 
     this.filteredCountries = this.clubForm.get('address.country')!.valueChanges.pipe(
       debounceTime(300),
@@ -146,46 +97,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     );
   }
 
-  protected addAchievement(): void {
-    this.clubForm.controls.achievements.push(
-      new FormGroup<AchievementForm>({
-        name: new FormControl('',  [
-          Validators.required, 
-          Validators.pattern(/^[\p{L}][\p{L}\p{N} .-]*$/u)
-        ]),
-        date: new FormControl(null, [
-          Validators.required
-        ]),
-        description: new FormControl('',  [
-          Validators.required,
-          Validators.maxLength(500),
-        ]),
-      })
-    );
-    this.initializeAchievementDateValidator();
-  }
-
-  protected initializeAchievementDateValidator(): void {
-    const foundedYear = this.clubForm.get('foundedYear')?.value ?? null;
-
-    const achievementsArray = this.clubForm.get('achievements') as FormArray<FormGroup<AchievementForm>>;
-
-    achievementsArray.controls.forEach((achievementGroup) => {
-      const dateControl = achievementGroup.get('date');
-      if (dateControl) {
-        dateControl.setValidators([achievementsDateValidator(foundedYear)]);
-        dateControl.updateValueAndValidity({ emitEvent: false });
-      }
-    });
-  }
-
-  protected deleteAchievement(index: number): void {
-    this.clubForm.controls.achievements.removeAt(index);
-  }
-
-  protected get achievements(): FormArray<FormGroup<AchievementForm>> {
-    return this.clubForm.controls.achievements as FormArray<FormGroup<AchievementForm>>;
-  }
 
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -212,7 +123,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
         if (club.achievements.length > 0) {
           club.achievements.forEach((achievement) => {
             const formattedDate = new Date(achievement.date).toISOString().split('T')[0];
-            this.achievements.push(new FormGroup<AchievementForm>({
+            this.clubFormService.getAchievementsFormArray(this.clubForm).push(new FormGroup<AchievementForm>({
               name: new FormControl(achievement.name, Validators.required),
               date: new FormControl(formattedDate, Validators.required),
               description: new FormControl(achievement.description, Validators.required),
@@ -220,7 +131,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
           });
         }
       });
-    }    
+    }
 
     this.countryService.getCountries().subscribe({
       next: (countries) => this.countries = countries,
@@ -235,20 +146,12 @@ export class ClubFormComponent implements OnInit, OnDestroy {
       this.currentUserId = userId;
     });
 
-    this.clubForm.get('foundedYear')?.valueChanges.subscribe((foundedYear) => {
-      const achievementsArray = this.clubForm.get('achievements') as FormArray<FormGroup<AchievementForm>>;
-      achievementsArray.controls.forEach((achievementGroup) => {
-        const dateControl = achievementGroup.get('date');
-        dateControl?.setValidators([achievementsDateValidator(foundedYear)]);
-        dateControl?.updateValueAndValidity();
-      });
+    this.clubForm.get('foundedYear')?.valueChanges.subscribe(() => {
+      this.clubFormService.initializeAchievementDateValidator(this.clubForm);
     });
   }
 
   protected filterCountries(value: string): Observable<Country[]> {
-    if (!value) {
-      return of(this.countries);
-    }
     const filterValue = value.toLowerCase();
 
     return this.countryService.getCountries().pipe(
@@ -420,5 +323,17 @@ export class ClubFormComponent implements OnInit, OnDestroy {
 
   protected goBack(): void {
     this.location.back();
+  }
+
+  protected addAchievement(): void {
+    this.clubFormService.addAchievement(this.clubForm);
+  }
+
+  protected deleteAchievement(index: number): void {
+    this.clubFormService.deleteAchievement(this.clubForm, index);
+  }
+
+  protected get achievements(): FormArray<FormGroup<AchievementForm>> {
+    return this.clubFormService.getAchievementsFormArray(this.clubForm);
   }
 }
