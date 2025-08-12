@@ -21,6 +21,6 @@ public class ClubDto {
     private int stadiumCapacity;
     private UUID userId;
     private AddressDto address;
-    private List<PlayerDto> players;
+    private List<PlayerResponseDto> players;
     private List<AchievementDto> achievements;
 }

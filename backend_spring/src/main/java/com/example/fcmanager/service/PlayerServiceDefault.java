@@ -1,10 +1,17 @@
 package com.example.fcmanager.service;
 
-import com.example.fcmanager.dto.PlayerDto;
+import com.example.fcmanager.domain.Club;
+import com.example.fcmanager.domain.Player;
+import com.example.fcmanager.dto.PlayerResponseDto;
 import com.example.fcmanager.dto.CreatePlayerRequestDto;
+import com.example.fcmanager.dto.UpdatePlayerRequestDto;
 import com.example.fcmanager.mappers.PlayerMapper;
 import com.example.fcmanager.repository.ClubRepository;
 import com.example.fcmanager.repository.PlayerRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,39 +27,66 @@ public class PlayerServiceDefault implements PlayerService {
     private final ClubRepository clubRepository;
     private final PlayerMapper playerMapper;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
-    public List<PlayerDto> getAllPlayers() {
+    public List<PlayerResponseDto> getAllPlayers() {
         return playerRepository.findAll().stream()
-                .map(playerMapper::playerToPlayerDto)
-                .collect(Collectors.toList());
+                .map(playerMapper::toPlayerResponseDto)
+                .toList();
     }
 
     @Override
-    public PlayerDto getPlayerById(UUID id) {
+    public PlayerResponseDto getPlayerById(UUID id) {
         return playerRepository.findById(id)
-                .map(playerMapper::playerToPlayerDto)
-                .orElseThrow(() -> new RuntimeException("Player not found"));
+                .map(playerMapper::toPlayerResponseDto)
+                .orElseThrow(() -> new EntityNotFoundException("No player found with id: " + id));
     }
 
     @Override
-    public PlayerDto savePlayer(CreatePlayerRequestDto createPlayerRequestDto) {
-        var player = playerMapper.playerSaveDtoToPlayer(createPlayerRequestDto);
-        var club = clubRepository.findById(createPlayerRequestDto.getClubId())
-                .orElseThrow(() -> new RuntimeException("Club not found"));
+    @Transactional
+    public PlayerResponseDto createPlayer(CreatePlayerRequestDto createPlayerRequestDto) {
+        Player player = playerMapper.createPlayerRequestDtoToPlayer(createPlayerRequestDto);
+        Club club = clubRepository.findById(createPlayerRequestDto.getClubId())
+                .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + createPlayerRequestDto.getClubId()));
         player.setClub(club);
-        var savedPlayer = playerRepository.save(player);
-        return playerMapper.playerToPlayerDto(savedPlayer);
+        Player savedPlayer = playerRepository.save(player);
+        return playerMapper.toPlayerResponseDto(savedPlayer);
+    }
+
+
+    @Override
+    @Transactional
+    public PlayerResponseDto updatePlayer(UUID id, UpdatePlayerRequestDto dto) {
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+
+        player.setName(dto.getName());
+        player.setPhoto(dto.getPhoto());
+        player.setBirthDate(dto.getBirthDate());
+        player.setNationality(dto.getNationality());
+        player.setPosition(dto.getPosition());
+        player.setShirtNumber(dto.getShirtNumber());
+        player.setContractUntil(dto.getContractUntil());
+        player.setSalary(dto.getSalary());
+
+        Player updatedPlayer = playerRepository.save(player);
+        return playerMapper.toPlayerResponseDto(updatedPlayer);
     }
 
     @Override
+    @Transactional
     public void deletePlayer(UUID id) {
-        playerRepository.deleteById(id);
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+        playerRepository.delete(player);
     }
 
     @Override
-    public List<PlayerDto> getPlayersByClubId(UUID clubId) {
+    public List<PlayerResponseDto> getPlayersByClubId(UUID clubId) {
         return playerRepository.findByClubId(clubId).stream()
-                .map(playerMapper::playerToPlayerDto)
+                .map(playerMapper::toPlayerResponseDto)
                 .collect(Collectors.toList());
     }
 }

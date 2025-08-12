@@ -10,8 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreatePlayerRequestDto {
-
+public class UpdatePlayerRequestDto {
     @NotBlank(message = "Player name is required")
     @Size(min = 2, max = 45, message = "Player name must be between 2 and 45 characters")
     private String name;
@@ -27,8 +26,6 @@ public class CreatePlayerRequestDto {
     @Size(min = 2, max = 30, message = "Nationality must be between 2 and 30 characters")
     private String nationality;
 
-    //    @Pattern(regexp = "^(GK|CB|LB|RB|CDM|CM|CAM|LM|RM|LW|RW|CF|ST)$",
-    //            message = "Position must be one of: GK, CB, LB, RB, CDM, CM, CAM, LM, RM, LW, RW, CF, ST")
     @NotBlank(message = "Position is required")
     @Pattern(regexp = "^(forward|midfielder|defender|goalkeeper)$",
             message = "Position must be one of: forward, midfielder, defender, goalkeeper")
@@ -47,6 +44,4 @@ public class CreatePlayerRequestDto {
     @Min(value = 0, message = "Salary cannot be negative")
     @Max(value = 5000000, message = "Salary cannot exceed 5 million per week")
     private Integer salary;
-
-    private UUID clubId;
 }
