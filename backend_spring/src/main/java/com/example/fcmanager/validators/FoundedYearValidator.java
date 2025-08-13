@@ -1,6 +1,5 @@
 package com.example.fcmanager.validators;
 
-import com.example.fcmanager.validators.FoundedYear;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

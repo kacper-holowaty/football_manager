@@ -26,7 +26,7 @@ public class AchievementServiceDefault implements AchievementService {
 
     @Override
     public List<AchievementResponseDto> getAchievementsByClubId(UUID clubId) {
-        return achievementRepository.findByClubId(clubId).stream()
+        return achievementRepository.findByClub_ClubId(clubId).stream()
                 .map(achievementMapper::toAchievementDto)
                 .collect(Collectors.toList());
     }

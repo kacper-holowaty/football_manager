@@ -26,13 +26,6 @@ public class PlayerServiceDefault implements PlayerService {
     private final PlayerMapper playerMapper;
 
     @Override
-    public List<PlayerResponseDto> getAllPlayers() {
-        return playerRepository.findAll().stream()
-                .map(playerMapper::toPlayerResponseDto)
-                .toList();
-    }
-
-    @Override
     public PlayerResponseDto getPlayerById(UUID id) {
         return playerRepository.findById(id)
                 .map(playerMapper::toPlayerResponseDto)

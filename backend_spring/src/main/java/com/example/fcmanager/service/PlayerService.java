@@ -8,7 +8,6 @@ import com.example.fcmanager.dto.CreatePlayerRequestDto;
 import com.example.fcmanager.dto.UpdatePlayerRequestDto;
 
 public interface PlayerService {
-    List<PlayerResponseDto> getAllPlayers();
     PlayerResponseDto getPlayerById(UUID id);
     PlayerResponseDto createPlayer(CreatePlayerRequestDto createPlayerRequestDto);
     PlayerResponseDto updatePlayer(UUID id, UpdatePlayerRequestDto updatePlayerRequestDto);

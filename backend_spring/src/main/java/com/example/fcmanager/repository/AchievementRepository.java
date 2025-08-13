@@ -10,5 +10,5 @@ import com.example.fcmanager.domain.Achievement;
 
 @Repository
 public interface AchievementRepository extends JpaRepository<Achievement, UUID> {
-    List<Achievement> findByClubId(UUID clubId);
+    List<Achievement> findByClub_ClubId(UUID clubClubId);
 }

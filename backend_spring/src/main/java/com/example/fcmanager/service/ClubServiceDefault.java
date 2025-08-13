@@ -114,7 +114,7 @@ public class ClubServiceDefault implements ClubService {
 
     @Override
     public List<ClubResponseDto> getClubsByUserId(UUID userId) {
-        return clubRepository.findByUserId(userId).stream()
+        return clubRepository.findByUser_UserId(userId).stream()
                 .map(clubMapper::toClubDto)
                 .collect(Collectors.toList());
     }

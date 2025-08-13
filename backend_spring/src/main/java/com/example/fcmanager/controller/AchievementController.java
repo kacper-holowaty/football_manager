@@ -13,19 +13,24 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/achievements")
+@RequestMapping("/api/clubs/{clubId}/achievements")
 @RequiredArgsConstructor
 public class AchievementController {
 
     private final AchievementService achievementService;
 
-    @GetMapping("/club/{clubId}")
+    @GetMapping
     public ResponseEntity<List<AchievementResponseDto>> getAchievementsByClubId(@PathVariable UUID clubId) {
         return ResponseEntity.ok(achievementService.getAchievementsByClubId(clubId));
     }
 
     @PostMapping
-    public ResponseEntity<AchievementResponseDto> createAchievement(@RequestBody AchievementRequestDto achievementRequestDto) {
+    public ResponseEntity<AchievementResponseDto> createAchievement(
+            @PathVariable UUID clubId,
+            @RequestBody AchievementRequestDto achievementRequestDto
+    ) {
+        achievementRequestDto.setClubId(clubId);
+
         AchievementResponseDto createdAchievement = achievementService.createAchievement(achievementRequestDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -37,16 +42,21 @@ public class AchievementController {
 
     @PutMapping("/{achievementId}")
     public ResponseEntity<AchievementResponseDto> updateAchievement(
+            @PathVariable UUID clubId,
             @PathVariable UUID achievementId,
             @RequestBody AchievementRequestDto achievementRequestDto
     ) {
+        achievementRequestDto.setClubId(clubId);
         AchievementResponseDto updatedAchievement = achievementService.updateAchievement(achievementId, achievementRequestDto);
         return ResponseEntity.ok(updatedAchievement);
     }
 
 
     @DeleteMapping("/{achievementId}")
-    public ResponseEntity<Void> deleteAchievement(@PathVariable UUID achievementId) {
+    public ResponseEntity<Void> deleteAchievement(
+            @PathVariable UUID clubId,
+            @PathVariable UUID achievementId
+    ) {
         achievementService.deleteAchievement(achievementId);
         return ResponseEntity.noContent().build();
     }
