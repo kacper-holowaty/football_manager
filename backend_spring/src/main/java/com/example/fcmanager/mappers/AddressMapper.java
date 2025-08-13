@@ -1,16 +1,12 @@
 package com.example.fcmanager.mappers;
 
 import com.example.fcmanager.domain.Address;
-import com.example.fcmanager.dto.AddressDto;
+import com.example.fcmanager.dto.AddressResponseDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
+    AddressResponseDto addressToAddressDto(Address address);
 
-    AddressMapper INSTANCE = Mappers.getMapper(AddressMapper.class);
-
-    AddressDto addressToAddressDto(Address address);
-
-    Address addressDtoToAddress(AddressDto addressDto);
+    Address addressDtoToAddress(AddressResponseDto addressDto);
 }

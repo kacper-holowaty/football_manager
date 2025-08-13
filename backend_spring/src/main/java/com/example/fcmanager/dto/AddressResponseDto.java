@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddressDto {
+public class AddressResponseDto {
     private UUID addressId;
     private String street;
     private int houseNumber;
-    private int apartmentNumber;
+    private Integer apartmentNumber;
     private String postalCode;
     private String city;
     private String country;

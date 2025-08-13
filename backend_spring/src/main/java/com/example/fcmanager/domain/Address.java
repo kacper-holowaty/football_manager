@@ -1,9 +1,8 @@
 package com.example.fcmanager.domain;
 
 import lombok.*;
-
 import jakarta.persistence.*;
-import java.util.List;
+
 import java.util.UUID;
 
 @Entity
@@ -29,6 +28,6 @@ public class Address {
 
     private String country;
 
-    @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
-    private List<Club> clubs;
+    @OneToOne(mappedBy = "address")
+    private Club club;
 }

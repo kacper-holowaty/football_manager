@@ -1,17 +1,22 @@
 package com.example.fcmanager.service;
 
-import com.example.fcmanager.dto.ClubDto;
-import com.example.fcmanager.dto.ClubSaveDto;
-import com.example.fcmanager.mappers.ClubMapper;
-import com.example.fcmanager.repository.AddressRepository;
-import com.example.fcmanager.repository.ClubRepository;
-import com.example.fcmanager.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.example.fcmanager.dto.AchievementResponseDto;
+import com.example.fcmanager.dto.ClubDto;
+import com.example.fcmanager.dto.ClubSaveDto;
+import com.example.fcmanager.mappers.AchievementMapper;
+import com.example.fcmanager.mappers.ClubMapper;
+import com.example.fcmanager.repository.AchievementRepository;
+import com.example.fcmanager.repository.AddressRepository;
+import com.example.fcmanager.repository.ClubRepository;
+import com.example.fcmanager.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +26,8 @@ public class ClubServiceDefault implements ClubService {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final ClubMapper clubMapper;
+    private final AchievementRepository achievementRepository;
+    private final AchievementMapper achievementMapper;
 
     @Override
     public List<ClubDto> getAllClubs() {
@@ -51,7 +58,12 @@ public class ClubServiceDefault implements ClubService {
 
     @Override
     public void deleteClub(UUID id) {
-        clubRepository.deleteById(id);
+        var club = clubRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Club not found"));
+        clubRepository.delete(club);
+        if (club.getAddress() != null) {
+            addressRepository.delete(club.getAddress());
+        }
     }
 
     @Override

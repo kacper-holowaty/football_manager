@@ -1,8 +1,8 @@
 package com.example.fcmanager.domain;
 
 import lombok.*;
-
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.UUID;
 

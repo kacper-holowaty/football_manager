@@ -20,7 +20,7 @@ public class ClubDto {
     private String stadiumName;
     private int stadiumCapacity;
     private UUID userId;
-    private AddressDto address;
+    private AddressResponseDto address;
     private List<PlayerResponseDto> players;
-    private List<AchievementDto> achievements;
+    private List<AchievementResponseDto> achievements;
 }

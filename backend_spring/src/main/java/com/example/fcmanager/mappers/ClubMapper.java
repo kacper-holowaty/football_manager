@@ -9,9 +9,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = {PlayerMapper.class, AchievementMapper.class, AddressMapper.class})
 public interface ClubMapper {
-
-    ClubMapper INSTANCE = Mappers.getMapper(ClubMapper.class);
-
     @Mapping(source = "user.userId", target = "userId")
     ClubDto clubToClubDto(Club club);
 

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AchievementDto {
+public class AchievementResponseDto {
     private UUID achievementId;
     private String name;
     private LocalDate date;

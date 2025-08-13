@@ -3,6 +3,7 @@ package com.example.fcmanager.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.fcmanager.dto.AchievementResponseDto;
 import com.example.fcmanager.dto.ClubDto;
 import com.example.fcmanager.dto.ClubSaveDto;
 
