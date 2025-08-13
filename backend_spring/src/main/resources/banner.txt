@@ -1,0 +1,17 @@
+${AnsiColor.GREEN}
+  ______   _____   __  __
+ |  ____| / ____| |  \/  |
+ | |__   | |      | \  / |  __ _  _ __    __ _   __ _   ___  _ __
+ |  __|  | |      | |\/| | / _` || '_ \  / _` | / _` | / _ \| '__|
+ | |     | |____  | |  | || (_| || | | || (_| || (_| ||  __/| |
+ |_|      \_____| |_|  |_| \__,_||_| |_| \__,_| \__, | \___||_|
+                                                 __/ |
+                                                |___/
+${AnsiColor.BLUE}
+:: Spring Boot :: ${AnsiColor.YELLOW}(v${spring-boot.version})${AnsiColor.BLUE}
+:: Application :: ${AnsiColor.YELLOW}${application.title:FC Manager}${AnsiColor.BLUE}
+:: Version     :: ${AnsiColor.YELLOW}${application.version:1.0.0}${AnsiColor.BLUE}
+:: Profile     :: ${AnsiColor.YELLOW}${spring.profiles.active:default}${AnsiColor.BLUE}
+${AnsiColor.RED}
+⚽ Ready to manage your football club! ⚽
+${AnsiColor.DEFAULT}
