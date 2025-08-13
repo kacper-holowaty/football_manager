@@ -37,7 +37,7 @@ public class CreatePlayerRequestDto {
     @NotNull(message = "Shirt number is required")
     @Min(value = 1, message = "Shirt number must be at least 1")
     @Max(value = 99, message = "Shirt number cannot exceed 99")
-    private int shirtNumber;
+    private Integer shirtNumber;
 
     @NotNull(message = "Contract end date is required")
     @Future(message = "Contract must end in the future")
@@ -48,5 +48,6 @@ public class CreatePlayerRequestDto {
     @Max(value = 5000000, message = "Salary cannot exceed 5 million per week")
     private Integer salary;
 
+    @NotNull(message = "Club ID is required")
     private UUID clubId;
 }

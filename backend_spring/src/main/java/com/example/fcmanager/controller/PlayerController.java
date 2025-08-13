@@ -22,11 +22,6 @@ public class PlayerController {
 
     private final PlayerService playerService;
 
-    @GetMapping
-    public ResponseEntity<List<PlayerResponseDto>> getAllPlayers() {
-        return ResponseEntity.ok(playerService.getAllPlayers());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<PlayerResponseDto> getPlayerById(@PathVariable UUID id) {
         return ResponseEntity.ok(playerService.getPlayerById(id));

@@ -25,9 +25,6 @@ public class PlayerServiceDefault implements PlayerService {
     private final ClubRepository clubRepository;
     private final PlayerMapper playerMapper;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Override
     public List<PlayerResponseDto> getAllPlayers() {
         return playerRepository.findAll().stream()
@@ -48,6 +45,11 @@ public class PlayerServiceDefault implements PlayerService {
         Player player = playerMapper.createPlayerRequestDtoToPlayer(createPlayerRequestDto);
         Club club = clubRepository.findById(createPlayerRequestDto.getClubId())
                 .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + createPlayerRequestDto.getClubId()));
+
+        if (playerRepository.existsByClub_ClubIdAndShirtNumber(createPlayerRequestDto.getClubId(), createPlayerRequestDto.getShirtNumber())) {
+            throw new IllegalArgumentException("Shirt number " + createPlayerRequestDto.getShirtNumber() + " is already taken in this club.");
+        }
+
         player.setClub(club);
         Player savedPlayer = playerRepository.save(player);
         return playerMapper.toPlayerResponseDto(savedPlayer);
@@ -59,6 +61,11 @@ public class PlayerServiceDefault implements PlayerService {
     public PlayerResponseDto updatePlayer(UUID id, UpdatePlayerRequestDto dto) {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+
+        if (playerRepository.existsByClub_ClubIdAndShirtNumberAndPlayerIdNot(player.getClub().getClubId(), dto.getShirtNumber(), id)) {
+            throw new IllegalArgumentException("Shirt number " + dto.getShirtNumber() + " is already taken in this club."
+            );
+        }
 
         player.setName(dto.getName());
         player.setPhoto(dto.getPhoto());
@@ -83,7 +90,7 @@ public class PlayerServiceDefault implements PlayerService {
 
     @Override
     public List<PlayerResponseDto> getPlayersByClubId(UUID clubId) {
-        return playerRepository.findByClubId(clubId).stream()
+        return playerRepository.findByClub_ClubId(clubId).stream()
                 .map(playerMapper::toPlayerResponseDto)
                 .collect(Collectors.toList());
     }

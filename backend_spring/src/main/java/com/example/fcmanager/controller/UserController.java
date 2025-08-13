@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.fcmanager.dto.UserDto;
+import com.example.fcmanager.dto.UserResponseDto;
 import com.example.fcmanager.dto.UserSaveDto;
 import com.example.fcmanager.service.UserService;
 
@@ -27,17 +27,17 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> saveUser(@RequestBody UserSaveDto userSaveDto) {
+    public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserSaveDto userSaveDto) {
         return new ResponseEntity<>(userService.saveUser(userSaveDto), HttpStatus.CREATED);
     }
 

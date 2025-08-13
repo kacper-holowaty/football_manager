@@ -15,8 +15,8 @@ public class PlayerResponseDto {
     private LocalDate birthDate;
     private String nationality;
     private String position;
-    private int shirtNumber;
+    private Integer shirtNumber;
     private LocalDate contractUntil;
-    private int salary;
+    private Integer salary;
     private UUID clubId;
 }

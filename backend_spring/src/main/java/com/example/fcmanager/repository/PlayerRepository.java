@@ -9,5 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, UUID> {
-    List<Player> findByClubId(UUID clubId);
+    boolean existsByClub_ClubIdAndShirtNumber(UUID clubId, Integer shirtNumber);
+    boolean existsByClub_ClubIdAndShirtNumberAndPlayerIdNot(UUID clubId, Integer shirtNumber, UUID playerId);
+    List<Player> findByClub_ClubId(UUID clubId);
 }

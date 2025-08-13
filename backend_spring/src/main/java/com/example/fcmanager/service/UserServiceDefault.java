@@ -1,6 +1,6 @@
 package com.example.fcmanager.service;
 
-import com.example.fcmanager.dto.UserDto;
+import com.example.fcmanager.dto.UserResponseDto;
 import com.example.fcmanager.dto.UserSaveDto;
 import com.example.fcmanager.mappers.UserMapper;
 import com.example.fcmanager.repository.UserRepository;
@@ -18,21 +18,21 @@ public class UserServiceDefault implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::userToUserDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserDto getUserById(UUID id) {
+    public UserResponseDto getUserById(UUID id) {
         return userRepository.findById(id)
                 .map(userMapper::userToUserDto)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Override
-    public UserDto saveUser(UserSaveDto userSaveDto) {
+    public UserResponseDto saveUser(UserSaveDto userSaveDto) {
         var user = userMapper.userSaveDtoToUser(userSaveDto);
         var savedUser = userRepository.save(user);
         return userMapper.userToUserDto(savedUser);

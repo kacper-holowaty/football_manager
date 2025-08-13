@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 public class AddressResponseDto {
     private UUID addressId;
     private String street;
-    private int houseNumber;
-    private Integer apartmentNumber;
+    private String houseNumber;
+    private String apartmentNumber;
     private String postalCode;
     private String city;
     private String country;

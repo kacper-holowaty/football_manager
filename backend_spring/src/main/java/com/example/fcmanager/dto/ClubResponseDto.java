@@ -12,15 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ClubDto {
+public class ClubResponseDto {
     private UUID clubId;
     private String name;
     private byte[] badge;
-    private int foundedYear;
+    private Integer foundedYear;
     private String stadiumName;
-    private int stadiumCapacity;
-    private UUID userId;
+    private Integer stadiumCapacity;
     private AddressResponseDto address;
-    private List<PlayerResponseDto> players;
-    private List<AchievementResponseDto> achievements;
+    private UUID userId;
 }

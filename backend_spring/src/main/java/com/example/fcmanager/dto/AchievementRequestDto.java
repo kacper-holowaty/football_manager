@@ -28,5 +28,6 @@ public class AchievementRequestDto {
     @Size(min = 2, max = 500, message = "Achievement description must be between 2 and 500 characters")
     private String description;
 
+    @NotNull(message = "Club ID is required")
     private UUID clubId;
 }

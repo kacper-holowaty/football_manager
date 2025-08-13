@@ -23,17 +23,17 @@ public class Club {
     @Lob
     private byte[] badge;
 
-    private int foundedYear;
+    private Integer foundedYear;
 
     private String stadiumName;
 
-    private int stadiumCapacity;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Integer stadiumCapacity;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Address address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Player> players;

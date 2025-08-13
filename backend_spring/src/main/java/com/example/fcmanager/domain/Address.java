@@ -18,9 +18,9 @@ public class Address {
 
     private String street;
 
-    private Integer houseNumber;
+    private String houseNumber;
 
-    private Integer apartmentNumber;
+    private String apartmentNumber;
 
     private String postalCode;
 

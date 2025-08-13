@@ -34,7 +34,7 @@ public class UpdatePlayerRequestDto {
     @NotNull(message = "Shirt number is required")
     @Min(value = 1, message = "Shirt number must be at least 1")
     @Max(value = 99, message = "Shirt number cannot exceed 99")
-    private int shirtNumber;
+    private Integer shirtNumber;
 
     @NotNull(message = "Contract end date is required")
     @Future(message = "Contract must end in the future")
