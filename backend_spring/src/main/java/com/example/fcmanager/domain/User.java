@@ -1,5 +1,6 @@
 package com.example.fcmanager.domain;
 
+import com.example.fcmanager.feature.club.domain.Club;
 import lombok.*;
 import jakarta.persistence.*;
 import java.util.List;
@@ -19,6 +20,9 @@ public class User {
     private String firstName;
 
     private String lastName;
+
+    @Column(unique = true)
+    private String username;
 
     @Column(unique = true)
     private String email;
