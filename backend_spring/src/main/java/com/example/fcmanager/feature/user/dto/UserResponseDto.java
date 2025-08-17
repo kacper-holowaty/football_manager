@@ -1,4 +1,4 @@
-package com.example.fcmanager.dto;
+package com.example.fcmanager.feature.user.dto;
 
 import java.util.UUID;
 

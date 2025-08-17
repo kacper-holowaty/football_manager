@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.example.fcmanager.feature.address.domain.Address;
 import com.example.fcmanager.feature.club.domain.Club;
-import com.example.fcmanager.domain.User;
+import com.example.fcmanager.feature.user.domain.User;
 import com.example.fcmanager.feature.address.dto.AddressRequestDto;
 import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
 import com.example.fcmanager.exception.ClubAlreadyExistsException;
@@ -20,7 +20,7 @@ import com.example.fcmanager.feature.club.dto.CreateClubRequestDto;
 import com.example.fcmanager.feature.club.mapper.ClubMapper;
 import com.example.fcmanager.feature.address.repository.AddressRepository;
 import com.example.fcmanager.feature.club.repository.ClubRepository;
-import com.example.fcmanager.repository.UserRepository;
+import com.example.fcmanager.feature.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,7 @@
 package com.example.fcmanager.feature.club.domain;
 
 import com.example.fcmanager.feature.player.domain.Player;
-import com.example.fcmanager.domain.User;
+import com.example.fcmanager.feature.user.domain.User;
 import com.example.fcmanager.feature.achievement.domain.Achievement;
 import com.example.fcmanager.feature.address.domain.Address;
 import jakarta.persistence.*;

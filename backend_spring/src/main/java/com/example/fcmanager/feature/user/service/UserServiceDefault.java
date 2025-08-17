@@ -1,9 +1,8 @@
-package com.example.fcmanager.service;
+package com.example.fcmanager.feature.user.service;
 
-import com.example.fcmanager.dto.UserResponseDto;
-import com.example.fcmanager.dto.UserSaveDto;
-import com.example.fcmanager.mappers.UserMapper;
-import com.example.fcmanager.repository.UserRepository;
+import com.example.fcmanager.feature.user.dto.UserResponseDto;
+import com.example.fcmanager.feature.user.mapper.UserMapper;
+import com.example.fcmanager.feature.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,22 +19,15 @@ public class UserServiceDefault implements UserService {
     @Override
     public List<UserResponseDto> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(userMapper::userToUserDto)
+                .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public UserResponseDto getUserById(UUID id) {
         return userRepository.findById(id)
-                .map(userMapper::userToUserDto)
+                .map(userMapper::toUserDto)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    @Override
-    public UserResponseDto saveUser(UserSaveDto userSaveDto) {
-        var user = userMapper.userSaveDtoToUser(userSaveDto);
-        var savedUser = userRepository.save(user);
-        return userMapper.userToUserDto(savedUser);
     }
 
     @Override
