@@ -47,7 +47,4 @@ public class CreatePlayerRequestDto {
     @Min(value = 0, message = "Salary cannot be negative")
     @Max(value = 5000000, message = "Salary cannot exceed 5 million per week")
     private Integer salary;
-
-    @NotNull(message = "Club ID is required")
-    private UUID clubId;
 }

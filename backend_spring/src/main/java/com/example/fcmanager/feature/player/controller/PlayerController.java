@@ -40,8 +40,7 @@ public class PlayerController {
             @PathVariable UUID clubId,
             @Valid @RequestBody CreatePlayerRequestDto createPlayerRequestDto)
     {
-        createPlayerRequestDto.setClubId(clubId);
-        PlayerResponseDto createdPlayer = playerService.createPlayer(createPlayerRequestDto);
+        PlayerResponseDto createdPlayer = playerService.createPlayer(clubId, createPlayerRequestDto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

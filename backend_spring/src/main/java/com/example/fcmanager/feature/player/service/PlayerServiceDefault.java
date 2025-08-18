@@ -34,20 +34,20 @@ public class PlayerServiceDefault implements PlayerService {
 
     @Override
     @Transactional
-    public PlayerResponseDto createPlayer(CreatePlayerRequestDto createPlayerRequestDto) {
-        Player player = playerMapper.createPlayerRequestDtoToPlayer(createPlayerRequestDto);
-        Club club = clubRepository.findById(createPlayerRequestDto.getClubId())
-                .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + createPlayerRequestDto.getClubId()));
+    public PlayerResponseDto createPlayer(UUID clubId, CreatePlayerRequestDto createPlayerRequestDto) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + clubId));
 
-        if (playerRepository.existsByClub_ClubIdAndShirtNumber(createPlayerRequestDto.getClubId(), createPlayerRequestDto.getShirtNumber())) {
+        if (playerRepository.existsByClub_ClubIdAndShirtNumber(clubId, createPlayerRequestDto.getShirtNumber())) {
             throw new IllegalArgumentException("Shirt number " + createPlayerRequestDto.getShirtNumber() + " is already taken in this club.");
         }
 
+        Player player = playerMapper.createPlayerRequestDtoToPlayer(createPlayerRequestDto);
         player.setClub(club);
+
         Player savedPlayer = playerRepository.save(player);
         return playerMapper.toPlayerResponseDto(savedPlayer);
     }
-
 
     @Override
     @Transactional

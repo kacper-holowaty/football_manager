@@ -30,9 +30,7 @@ public class AchievementController {
             @PathVariable UUID clubId,
             @Valid @RequestBody AchievementRequestDto achievementRequestDto
     ) {
-        achievementRequestDto.setClubId(clubId);
-
-        AchievementResponseDto createdAchievement = achievementService.createAchievement(achievementRequestDto);
+        AchievementResponseDto createdAchievement = achievementService.createAchievement(clubId, achievementRequestDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -47,7 +45,6 @@ public class AchievementController {
             @PathVariable UUID achievementId,
             @Valid @RequestBody AchievementRequestDto achievementRequestDto
     ) {
-        achievementRequestDto.setClubId(clubId);
         AchievementResponseDto updatedAchievement = achievementService.updateAchievement(achievementId, achievementRequestDto);
         return ResponseEntity.ok(updatedAchievement);
     }

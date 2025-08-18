@@ -3,7 +3,6 @@ package com.example.fcmanager.feature.achievement.dto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +26,4 @@ public class AchievementRequestDto {
     @NotBlank(message = "Achievement description is required")
     @Size(min = 2, max = 500, message = "Achievement description must be between 2 and 500 characters")
     private String description;
-
-    @NotNull(message = "Club ID is required")
-    private UUID clubId;
 }

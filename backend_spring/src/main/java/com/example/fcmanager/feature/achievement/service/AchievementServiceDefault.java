@@ -33,10 +33,10 @@ public class AchievementServiceDefault implements AchievementService {
 
     @Override
     @Transactional
-    public AchievementResponseDto createAchievement(AchievementRequestDto achievementRequestDto) {
+    public AchievementResponseDto createAchievement(UUID clubId, AchievementRequestDto achievementRequestDto) {
         Achievement achievement = achievementMapper.achievementRequestDtoToAchievement(achievementRequestDto);
-        Club club = clubRepository.findById(achievementRequestDto.getClubId())
-                .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + achievementRequestDto.getClubId()));
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + clubId));
         achievement.setClub(club);
         Achievement savedAchievement = achievementRepository.save(achievement);
         return achievementMapper.toAchievementDto(savedAchievement);
@@ -51,12 +51,6 @@ public class AchievementServiceDefault implements AchievementService {
         achievement.setName(dto.getName());
         achievement.setDescription(dto.getDescription());
         achievement.setDate(dto.getDate());
-
-        if (!achievement.getClub().getClubId().equals(dto.getClubId())) {
-            Club club = clubRepository.findById(dto.getClubId())
-                    .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + dto.getClubId()));
-            achievement.setClub(club);
-        }
 
         Achievement updatedAchievement = achievementRepository.save(achievement);
         return achievementMapper.toAchievementDto(updatedAchievement);

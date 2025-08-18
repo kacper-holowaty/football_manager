@@ -8,7 +8,7 @@ import com.example.fcmanager.feature.achievement.dto.AchievementResponseDto;
 
 public interface AchievementService {
     List<AchievementResponseDto> getAchievementsByClubId(UUID clubId);
-    AchievementResponseDto createAchievement(AchievementRequestDto achievementRequestDto);
+    AchievementResponseDto createAchievement(UUID clubId, AchievementRequestDto achievementRequestDto);
     AchievementResponseDto updateAchievement(UUID achievementId, AchievementRequestDto achievementRequestDto);
     void deleteAchievement(UUID achievementId);
 }
