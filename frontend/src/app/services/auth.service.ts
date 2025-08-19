@@ -1,64 +1,103 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../models/user.model';
-import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, catchError, EMPTY, map, Observable, tap, throwError } from 'rxjs';
 import { ToastService } from './toast.service';
-
-interface AuthResponse {
-  readonly token: string;
-  readonly user: User;
-}
+import { AuthDto, AuthPayload, RefreshTokenDto } from '../models/dto/auth.dto';
+import { User, UserRequest } from '../models/user.model';
+import { Response } from '../models/types/response.type';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'http://localhost:8080/api/auth';
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
 
-  public constructor(private httpClient: HttpClient, private router: Router, private toastService: ToastService) {}
+  public constructor(
+    private httpClient: HttpClient,
+    private router: Router,
+    private toastService: ToastService,
+    @Inject(TokenService) private tokenService: TokenService
+  ) {}
 
-  public login(email: string, password: string): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(`${this.apiUrl}/login`, { email, password }, { withCredentials: true });
+  public login(user: AuthPayload): Observable<AuthDto> {
+    return this.httpClient.post<Response<AuthDto>>(`${this.apiUrl}/authenticate`, user)
+      .pipe(
+        tap((res: Response<AuthDto>) => {
+          const { accessToken, refreshToken, user } = res.data;
+          this.tokenService.setTokens(accessToken, refreshToken);
+          this.currentUserSubject.next(user);
+          this.router.navigate(['/main']);
+        }),
+        map((res: Response<AuthDto>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          this.toastService.showToast('Login failed');
+
+          return throwError(() => err);
+        })
+      );
   }
 
   public logout(): void {
-    this.isAuthenticated().subscribe((isAuthenticated) => {
-      if (isAuthenticated) {
-        this.httpClient.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
-          next: () => {
-            this.toastService.showToast('User logged out!');
-          },
-          error: (err) => {
-            console.error('Error during logout', err);
-          }
-        });
-      }
-    });
+    this.tokenService.clearTokens();
+    this.currentUserSubject.next(null);
   }
 
-  public register(user: User): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(`${this.apiUrl}/register`, user, { withCredentials: true });
-  }
-
-  public isAuthenticated(): Observable<boolean> {
-    return this.httpClient.get<{ isAuthenticated: boolean }>(`${this.apiUrl}/is-authenticated`, {withCredentials: true})
+  public register(user: UserRequest): Observable<AuthDto> {
+    return this.httpClient.post<Response<AuthDto>>(`${this.apiUrl}/register`, user)
       .pipe(
-        map((response) => response.isAuthenticated), 
-        catchError(() => {
-          return of(false);
+        tap((res: Response<AuthDto>) => {
+          console.log(JSON.stringify(res));
+          console.log(JSON.stringify(res.data));
+          const { accessToken, refreshToken, user } = res.data;
+          this.tokenService.setTokens(accessToken, refreshToken);
+          this.currentUserSubject.next(user);
+        }),
+        map((res: Response<AuthDto>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          this.toastService.showToast('Registration failed');
+
+          return throwError(() => err);
         })
       );
   }
 
-  public getAuthenticatedUserId(): Observable<string> {
-    return this.httpClient.get<{userId: string}>(`${this.apiUrl}/is-authenticated`, {withCredentials: true})
-      .pipe(map((response) => response.userId),
-        catchError(() => {
-          return of('');
+  public isAuthenticated(): boolean {
+    return this.tokenService.isLoggedIn();
+  }
+
+  public refreshToken(): Observable<RefreshTokenDto> {
+    const refreshToken = this.tokenService.getRefreshToken();
+
+    if (!refreshToken) {
+      this.logout();
+
+      return EMPTY;
+    }
+
+    return this.httpClient.post<Response<RefreshTokenDto>>(`${this.apiUrl}/refresh-token`, { refreshToken })
+      .pipe(
+        tap((res: Response<RefreshTokenDto>) => {
+          const { accessToken, refreshToken } = res.data;
+          this.tokenService.setTokens(accessToken, refreshToken);
+        }),
+        map((res: Response<RefreshTokenDto>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          this.logout();
+
+          return throwError(() => err);
         })
       );
+  }
+
+  public getAuthenticatedUserId(): Observable<string> {  
+    return this.currentUser$.pipe(
+      map((user) => (user ? user.id : ''))
+    );
   }
 
   public getUserById(userId: string): Observable<User> {

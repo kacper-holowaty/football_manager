@@ -138,9 +138,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
       error: (err) => console.error('Error fetching countries:', err)
     });
 
-    this.authService.isAuthenticated().subscribe((isAuthenticated) => {
-      this.isUserLoggedIn = isAuthenticated;
-    });
+    this.isUserLoggedIn = this.authService.isAuthenticated();
 
     this.authService.getAuthenticatedUserId().subscribe((userId) => {
       this.currentUserId = userId;

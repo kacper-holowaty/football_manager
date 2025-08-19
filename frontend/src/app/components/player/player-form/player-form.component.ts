@@ -154,9 +154,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
       this.countries = countries;
     });
 
-    this.authService.isAuthenticated().subscribe((isAuthenticated) => {
-      this.isUserLoggedIn = isAuthenticated;
-    });
+    this.isUserLoggedIn = this.authService.isAuthenticated();
 
     this.authService.getAuthenticatedUserId().subscribe((userId) => {
       this.currentUserId = userId;

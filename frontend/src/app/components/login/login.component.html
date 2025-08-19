@@ -4,12 +4,12 @@
   <form [formGroup]="loginForm" (ngSubmit)="login()">
     <div>
       <mat-form-field appearance="fill">
-        <mat-label>E-mail</mat-label>
-        <input matInput id="email" type="email" formControlName="email">
+        <mat-label>Login</mat-label>
+        <input matInput id="login" type="text" formControlName="login">
       </mat-form-field>
     </div>
-    @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-      <div class="error-msg-form">Invalid email address.</div>
+    @if (loginForm.get('login')?.invalid && loginForm.get('login')?.touched) {
+      <div class="error-msg-form">Login is required.</div>
     }
 
     <div>

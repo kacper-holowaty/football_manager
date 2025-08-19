@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ToastService } from '../../services/toast.service';
 
 interface LoginForm {
-  readonly email: FormControl<string | null>;
+  readonly login: FormControl<string | null>;
   readonly password: FormControl<string | null>;
 }
 
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 
   public constructor(private authService: AuthService, private router: Router, private toastService: ToastService) {
     this.loginForm = new FormGroup<LoginForm>({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      login: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
     });
   }
@@ -43,10 +43,10 @@ export class LoginComponent implements OnInit {
 
   protected login(): void {
     if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value as { email: string; password: string };
-      this.authService.login(email, password).subscribe({
+      const { login, password } = this.loginForm.value as { login: string; password: string };
+      this.authService.login({ login, password }).subscribe({
         next: () => {
-          this.toastService.showToast(`Successfully logged in as ${email}`);
+          this.toastService.showToast(`Successfully logged in as ${login}`);
           this.router.navigate(['/main']);
         },
         error: (err: ApiError) => {

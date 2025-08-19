@@ -5,6 +5,8 @@ import { ClubService } from '../../services/club.service';
 import { Club } from '../../models/club.model';
 import { CountryService } from '../../services/country.service';
 import { User } from '../../models/user.model';
+import { HttpErrorResponse } from '@angular/common/http';
+// import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-main',
@@ -25,20 +27,24 @@ export class MainComponent implements OnInit {
   public constructor(private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService) {}
 
   public ngOnInit(): void {
-    this.authService.isAuthenticated().subscribe((isAuthenticated) => {
-      this.isUserLoggedIn = isAuthenticated;
+    this.isUserLoggedIn = this.authService.isAuthenticated();
 
-      if (this.isUserLoggedIn) {
-        this.authService.getAuthenticatedUserId().subscribe((userId) => {
-          this.currentUserId = userId;
-          this.loadUserClubs();
-          this.authService.getUserById(this.currentUserId).subscribe({
-            next: (user: User) => (this.currentUserNameAndEmail = `${user.firstName} ${user.lastName} (${user.email})`),
-            error: (err) => console.error('Error fetching user:', err),
-          });
+    console.log(this.isUserLoggedIn);
+    
+    if (this.isUserLoggedIn) {
+      this.authService.getAuthenticatedUserId().subscribe((userId) => {
+        console.log(userId);
+        
+        this.currentUserId = userId;
+        console.log(this.currentUserId);
+        
+        this.loadUserClubs();
+        this.authService.getUserById(this.currentUserId).subscribe({
+          next: (user: User) => (this.currentUserNameAndEmail = `${user.firstName} ${user.lastName} (${user.email})`),
+          error: (err: HttpErrorResponse) => console.error('Error fetching user:', err),
         });
-      }
-    });
+      });
+    }
   }
 
   private loadUserClubs(): void {

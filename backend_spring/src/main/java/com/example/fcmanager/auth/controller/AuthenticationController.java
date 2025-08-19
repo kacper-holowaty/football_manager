@@ -14,7 +14,7 @@ import com.example.fcmanager.auth.dto.AuthenticationResponseDto;
 import com.example.fcmanager.auth.dto.JwtTokenResponseDto;
 import com.example.fcmanager.auth.dto.RegisterRequestDto;
 import com.example.fcmanager.auth.service.AuthenticationService;
-import com.example.fcmanager.feature.user.service.UserService;
+import com.example.fcmanager.shared.ApiResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -24,37 +24,44 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final UserService userService;
     private final AuthenticationService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDto> register(@RequestBody @Valid RegisterRequestDto registerRequestDto) {
+    public ResponseEntity<ApiResponse<AuthenticationResponseDto>> register(@RequestBody @Valid RegisterRequestDto registerRequestDto) {
         AuthenticationResponseDto authenticationResponseDto = authService.register(registerRequestDto);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/users/{id}")
                 .buildAndExpand(authenticationResponseDto.getUser().getUserId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(authenticationResponseDto);
+        ApiResponse<AuthenticationResponseDto> response = ApiResponse.created(
+                authenticationResponseDto,
+                "User registered successfully"
+        );
+
+        return ResponseEntity.created(location).body(response);
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody @Valid AuthenticationRequestDto request) {
-        return ResponseEntity.ok(authService.authenticate(request));
+    public ResponseEntity<ApiResponse<AuthenticationResponseDto>> authenticate(@RequestBody @Valid AuthenticationRequestDto request) {
+        AuthenticationResponseDto authResponse = authService.authenticate(request);
+        return ResponseEntity.ok(ApiResponse.success(authResponse, "Authentication successful"));
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<JwtTokenResponseDto> refreshToken(HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<JwtTokenResponseDto>> refreshToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(400)
+                    .body(ApiResponse.badRequest("Missing or invalid Authorization header"));
         }
+
         String refreshToken = authHeader.substring(7);
         JwtTokenResponseDto jwtTokenResponseDto = authService.refreshToken(refreshToken);
-        if (jwtTokenResponseDto == null) {
-            return ResponseEntity.status(403).build();
-        }
-        return ResponseEntity.ok(jwtTokenResponseDto);
+
+        return ResponseEntity.ok(ApiResponse.success(jwtTokenResponseDto, "Token refreshed successfully"));
     }
 }
