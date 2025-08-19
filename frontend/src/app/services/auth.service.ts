@@ -1,11 +1,10 @@
 import { Injectable, Inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, catchError, EMPTY, map, Observable, tap, throwError } from 'rxjs';
 import { ToastService } from './toast.service';
-import { AuthDto, AuthPayload, RefreshTokenDto } from '../models/dto/auth.dto';
+import { AuthDto, AuthPayload, RefreshTokenDto } from '../models/auth.model';
 import { User, UserRequest } from '../models/user.model';
-import { Response } from '../models/types/response.type';
+import { Response } from '../models/response.type';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -13,25 +12,23 @@ import { TokenService } from './token.service';
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'http://localhost:8080/api';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   public constructor(
     private httpClient: HttpClient,
-    private router: Router,
     private toastService: ToastService,
     @Inject(TokenService) private tokenService: TokenService
   ) {}
 
   public login(user: AuthPayload): Observable<AuthDto> {
-    return this.httpClient.post<Response<AuthDto>>(`${this.apiUrl}/authenticate`, user)
+    return this.httpClient.post<Response<AuthDto>>(`${this.apiUrl}/auth/authenticate`, user)
       .pipe(
         tap((res: Response<AuthDto>) => {
-          const { accessToken, refreshToken, user } = res.data;
+          const { accessToken, refreshToken, user } = res.data;          
           this.tokenService.setTokens(accessToken, refreshToken);
           this.currentUserSubject.next(user);
-          this.router.navigate(['/main']);
         }),
         map((res: Response<AuthDto>) => res.data),
         catchError((err: HttpErrorResponse) => {
@@ -48,11 +45,9 @@ export class AuthService {
   }
 
   public register(user: UserRequest): Observable<AuthDto> {
-    return this.httpClient.post<Response<AuthDto>>(`${this.apiUrl}/register`, user)
+    return this.httpClient.post<Response<AuthDto>>(`${this.apiUrl}/auth/register`, user)
       .pipe(
         tap((res: Response<AuthDto>) => {
-          console.log(JSON.stringify(res));
-          console.log(JSON.stringify(res.data));
           const { accessToken, refreshToken, user } = res.data;
           this.tokenService.setTokens(accessToken, refreshToken);
           this.currentUserSubject.next(user);
@@ -79,7 +74,7 @@ export class AuthService {
       return EMPTY;
     }
 
-    return this.httpClient.post<Response<RefreshTokenDto>>(`${this.apiUrl}/refresh-token`, { refreshToken })
+    return this.httpClient.post<Response<RefreshTokenDto>>(`${this.apiUrl}/auth/refresh-token`, { refreshToken })
       .pipe(
         tap((res: Response<RefreshTokenDto>) => {
           const { accessToken, refreshToken } = res.data;
@@ -96,11 +91,20 @@ export class AuthService {
 
   public getAuthenticatedUserId(): Observable<string> {  
     return this.currentUser$.pipe(
-      map((user) => (user ? user.id : ''))
+      map((user) => (user ? user.userId : ''))
     );
   }
 
   public getUserById(userId: string): Observable<User> {
-    return this.httpClient.get<User>(`${this.apiUrl}/user/${userId}`);
+    return this.httpClient
+      .get<Response<User>>(`${this.apiUrl}/users/${userId}`)
+      .pipe(
+        map((res: Response<User>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          console.error('Error fetching user:', err);
+
+          return throwError(() => err);
+        })
+      );
   }
 }

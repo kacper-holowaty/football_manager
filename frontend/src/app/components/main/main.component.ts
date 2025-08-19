@@ -6,7 +6,6 @@ import { Club } from '../../models/club.model';
 import { CountryService } from '../../services/country.service';
 import { User } from '../../models/user.model';
 import { HttpErrorResponse } from '@angular/common/http';
-// import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-main',
@@ -22,25 +21,23 @@ export class MainComponent implements OnInit {
   protected defaultBadgeUrl: string = 'assets/images/empty_badge.png';
   protected clubs: Club[] = [];
   protected countryCodes: Record<string, string> = {};
-  protected currentUserNameAndEmail: string = '';
+  protected currentUserName: string = '';
 
   public constructor(private authService: AuthService, private router: Router, private clubService: ClubService, private countryService: CountryService) {}
 
   public ngOnInit(): void {
     this.isUserLoggedIn = this.authService.isAuthenticated();
-
-    console.log(this.isUserLoggedIn);
     
     if (this.isUserLoggedIn) {
-      this.authService.getAuthenticatedUserId().subscribe((userId) => {
-        console.log(userId);
-        
+      this.authService.getAuthenticatedUserId().subscribe((userId) => {        
         this.currentUserId = userId;
         console.log(this.currentUserId);
         
         this.loadUserClubs();
         this.authService.getUserById(this.currentUserId).subscribe({
-          next: (user: User) => (this.currentUserNameAndEmail = `${user.firstName} ${user.lastName} (${user.email})`),
+          next: (user: User) => {
+            this.currentUserName = `${user.firstName} ${user.lastName} (${user.username})`;
+          },
           error: (err: HttpErrorResponse) => console.error('Error fetching user:', err),
         });
       });

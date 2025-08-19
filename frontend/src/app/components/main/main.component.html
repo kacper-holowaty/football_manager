@@ -1,6 +1,6 @@
 <button class="btn" routerLink="/">Log out</button>
 <div class="button-container">
-  <h2>{{currentUserNameAndEmail}} clubs</h2>
+  <h2>Hello {{currentUserName}}! Here are your clubs!</h2>
   @if (clubs.length > 0) {
     <div class="club-list">
       @for (club of clubs; track $index) {

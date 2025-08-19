@@ -88,6 +88,14 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.notFound("User not found"));
     }
 
+    @ExceptionHandler(UserNotFoundWithIdException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserNotFoundWithId(
+            UserNotFoundWithIdException ex, WebRequest request) {
+        log.warn("User not found with id: {}", ex.getMessage());
+        return ResponseEntity.status(404)
+                .body(ApiResponse.notFound("User not found"));
+    }
+
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ApiResponse<Void>> handleJwtException(
             JwtException ex, WebRequest request) {
