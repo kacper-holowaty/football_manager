@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Club } from '../models/club.model';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Response } from '../models/response.type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClubService {
-  private apiUrl = "http://localhost:3000/clubs";
+  private apiUrl = "http://localhost:8080/api/clubs";
 
   public constructor(private httpClient: HttpClient) {}
 
@@ -50,7 +51,13 @@ export class ClubService {
   }
 
   public getClubById(clubId: string): Observable<Club> {
-    return this.httpClient.get<Club>(`${this.apiUrl}/${clubId}`);
+    return this.httpClient.get<Response<Club>>(`${this.apiUrl}/${clubId}`)
+      .pipe(
+        map((res: Response<Club>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          return throwError(() => err);
+        })
+      );
   }
 
   public updateClub(club: Club): Observable<Club> {
@@ -92,13 +99,23 @@ export class ClubService {
   }
 
   public getClubsByOwnerId(ownerId: string): Observable<Club[]> {
-    const params = new HttpParams().set('ownerId', ownerId);
-
-    return this.httpClient.get<Club[]>(this.apiUrl, { params });
+    return this.httpClient.get<Response<Club[]>>(`${this.apiUrl}/user/${ownerId}`)
+      .pipe(
+        map((res: Response<Club[]>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          return throwError(() => err);
+        })
+      );
   }
 
   public getAllClubs(): Observable<Club[]> {
-    return this.httpClient.get<Club[]>(this.apiUrl);
+    return this.httpClient.get<Response<Club[]>>(this.apiUrl)
+      .pipe(
+        map((res: Response<Club[]>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          return throwError(() => err);
+        })
+      );
   }
 
   public deleteClub(clubId: string): Observable<void> {

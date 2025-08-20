@@ -31,8 +31,6 @@ export class MainComponent implements OnInit {
     if (this.isUserLoggedIn) {
       this.authService.getAuthenticatedUserId().subscribe((userId) => {        
         this.currentUserId = userId;
-        console.log(this.currentUserId);
-        
         this.loadUserClubs();
         this.authService.getUserById(this.currentUserId).subscribe({
           next: (user: User) => {

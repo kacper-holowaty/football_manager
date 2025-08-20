@@ -6,8 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { CountryService } from '../../../services/country.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { FormatDatePipe } from '../../../pipes/format-date.pipe';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DeleteClubDialogComponent } from './delete-club-dialog/delete-club-dialog.component';
 import { ToastService } from '../../../services/toast.service';
@@ -15,7 +14,7 @@ import { ToastService } from '../../../services/toast.service';
 @Component({
   selector: 'app-club-main',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, FormatDatePipe, MatPaginatorModule, MatDialogModule],
+  imports: [MatIconModule, MatButtonModule, MatPaginatorModule, MatDialogModule],
   templateUrl: './club-main.component.html',
   styleUrl: './club-main.component.scss'
 })
@@ -40,10 +39,10 @@ export class ClubMainComponent implements OnInit {
         next: (club: Club) => {
           this.club = club;
 
-          this.sortedAchievements = [...club.achievements].sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          );
-          this.updatePaginatedAchievements();
+          // this.sortedAchievements = [...club.achievements].sort(
+          //   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          // );
+          // this.updatePaginatedAchievements();
 
           this.countryService.getCountryCode(club.address.country).subscribe((result) => {
             this.countryCode = result.code;
@@ -62,17 +61,17 @@ export class ClubMainComponent implements OnInit {
     });
   }
 
-  private updatePaginatedAchievements(): void {
-    const startIndex = this.currentPage * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.paginatedAchievements = this.sortedAchievements.slice(startIndex, endIndex);
-  }
+  // private updatePaginatedAchievements(): void {
+  //   const startIndex = this.currentPage * this.pageSize;
+  //   const endIndex = startIndex + this.pageSize;
+  //   this.paginatedAchievements = this.sortedAchievements.slice(startIndex, endIndex);
+  // }
 
-  public changePage(event: PageEvent): void {
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.updatePaginatedAchievements();
-  }
+  // public changePage(event: PageEvent): void {
+  //   this.currentPage = event.pageIndex;
+  //   this.pageSize = event.pageSize;
+  //   this.updatePaginatedAchievements();
+  // }
 
   public openDeleteClubConfirmationDialog(clubId: string): void {
     const dialogRef = this.dialog.open(DeleteClubDialogComponent, {

@@ -45,6 +45,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/clubs/user/{ownerId}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/clubs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/countries/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
