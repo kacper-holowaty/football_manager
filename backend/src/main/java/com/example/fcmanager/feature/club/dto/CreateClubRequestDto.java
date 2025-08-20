@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.example.fcmanager.feature.address.dto.AddressRequestDto;
 import com.example.fcmanager.shared.validators.FoundedYear;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -46,5 +47,5 @@ public class CreateClubRequestDto {
     private AddressRequestDto address;
 
     @NotNull(message = "User ID is required")
-    private UUID userId;
+    private UUID ownerId;
 }

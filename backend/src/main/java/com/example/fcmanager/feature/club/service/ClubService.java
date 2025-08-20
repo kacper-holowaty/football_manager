@@ -13,5 +13,5 @@ public interface ClubService {
     ClubResponseDto createClub(CreateClubRequestDto createClubRequestDto);
     ClubResponseDto updateClub(UUID id, UpdateClubRequestDto updateClubRequestDto);
     void deleteClub(UUID id);
-    List<ClubResponseDto> getClubsByUserId(UUID userId);
+    List<ClubResponseDto> getClubsByOwnerId(UUID userId);
 }

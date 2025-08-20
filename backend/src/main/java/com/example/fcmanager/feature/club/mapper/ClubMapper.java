@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {PlayerMapper.class, AchievementMapper.class, AddressMapper.class})
 public interface ClubMapper {
-    @Mapping(source = "user.userId", target = "userId")
+    @Mapping(source = "user.userId", target = "ownerId")
     ClubResponseDto toClubDto(Club club);
 
     @Mapping(target = "user", ignore = true)

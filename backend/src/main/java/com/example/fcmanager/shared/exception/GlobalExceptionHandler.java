@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
             BadCredentialsException ex, WebRequest request) {
         log.warn("Authentication failed for request: {}", request.getDescription(false));
         return ResponseEntity.status(401)
-                .body(ApiResponse.unauthorized("Invalid login or password"));
+                .body(ApiResponse.unauthorized("Invalid login or password."));
     }
 
     @ExceptionHandler(AccessDeniedException.class)

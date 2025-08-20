@@ -7,7 +7,6 @@ export interface Club {
   readonly stadiumName: string,
   readonly stadiumCapacity: number,
   readonly address: Address,
-  readonly achievements: Achievement[],
 }
 
 export interface Address {

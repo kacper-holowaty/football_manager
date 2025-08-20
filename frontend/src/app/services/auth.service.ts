@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, catchError, EMPTY, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, EMPTY, map, Observable, tap, throwError } from 'rxjs';
 import { ToastService } from './toast.service';
 import { AuthDto, AuthPayload, RefreshTokenDto } from '../models/auth.model';
 import { User, UserRequest } from '../models/user.model';
@@ -13,8 +13,6 @@ import { TokenService } from './token.service';
 export class AuthService {
 
   private apiUrl = 'http://localhost:8080/api';
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
 
   public constructor(
     private httpClient: HttpClient,
@@ -26,9 +24,9 @@ export class AuthService {
     return this.httpClient.post<Response<AuthDto>>(`${this.apiUrl}/auth/authenticate`, user)
       .pipe(
         tap((res: Response<AuthDto>) => {
-          const { accessToken, refreshToken, user } = res.data;          
+          const { accessToken, refreshToken, user } = res.data;
           this.tokenService.setTokens(accessToken, refreshToken);
-          this.currentUserSubject.next(user);
+          this.tokenService.setUser(user);
         }),
         map((res: Response<AuthDto>) => res.data),
         catchError((err: HttpErrorResponse) => {
@@ -41,7 +39,7 @@ export class AuthService {
 
   public logout(): void {
     this.tokenService.clearTokens();
-    this.currentUserSubject.next(null);
+    this.tokenService.removeUser();
   }
 
   public register(user: UserRequest): Observable<AuthDto> {
@@ -50,7 +48,7 @@ export class AuthService {
         tap((res: Response<AuthDto>) => {
           const { accessToken, refreshToken, user } = res.data;
           this.tokenService.setTokens(accessToken, refreshToken);
-          this.currentUserSubject.next(user);
+          this.tokenService.setUser(user);
         }),
         map((res: Response<AuthDto>) => res.data),
         catchError((err: HttpErrorResponse) => {
@@ -89,10 +87,12 @@ export class AuthService {
       );
   }
 
-  public getAuthenticatedUserId(): Observable<string> {  
-    return this.currentUser$.pipe(
-      map((user) => (user ? user.userId : ''))
-    );
+  public getAuthenticatedUserId(): Observable<string> {
+    return new Observable<string>((subscriber) => {
+      const user = this.tokenService.getUser();
+      subscriber.next(user ? user.userId : '');
+      subscriber.complete();
+    });
   }
 
   public getUserById(userId: string): Observable<User> {

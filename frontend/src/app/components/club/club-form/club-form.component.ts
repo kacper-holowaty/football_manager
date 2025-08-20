@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ClubFormService } from '../../../services/club-form.service';
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Achievement, Address, Club } from '../../../models/club.model';
 import { v4 as uuidv4 } from 'uuid';
 import { Country } from '../../../models/country.model';
@@ -120,16 +120,16 @@ export class ClubFormComponent implements OnInit, OnDestroy {
           },
         });
 
-        if (club.achievements.length > 0) {
-          club.achievements.forEach((achievement) => {
-            const formattedDate = new Date(achievement.date).toISOString().split('T')[0];
-            this.clubFormService.getAchievementsFormArray(this.clubForm).push(new FormGroup<AchievementForm>({
-              name: new FormControl(achievement.name, Validators.required),
-              date: new FormControl(formattedDate, Validators.required),
-              description: new FormControl(achievement.description, Validators.required),
-            }));
-          });
-        }
+        // if (club.achievements.length > 0) {
+        //   club.achievements.forEach((achievement) => {
+        //     const formattedDate = new Date(achievement.date).toISOString().split('T')[0];
+        //     this.clubFormService.getAchievementsFormArray(this.clubForm).push(new FormGroup<AchievementForm>({
+        //       name: new FormControl(achievement.name, Validators.required),
+        //       date: new FormControl(formattedDate, Validators.required),
+        //       description: new FormControl(achievement.description, Validators.required),
+        //     }));
+        //   });
+        // }
       });
     }
 
@@ -239,7 +239,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
       stadiumName: this.extractValue(formValue.stadiumName, ''),
       stadiumCapacity: this.extractValue(formValue.stadiumCapacity, 0),
       address: this.createAddress(formValue.address as FormGroup<AddressForm>),
-      achievements: this.createAchievements(formValue.achievements as FormArray<FormGroup<AchievementForm>>),
+      // achievements: this.createAchievements(formValue.achievements as FormArray<FormGroup<AchievementForm>>),
     };
   }
   

@@ -31,17 +31,17 @@ export class ClubService {
     formData.append("address[city]", club.address.city);
     formData.append("address[country]", club.address.country);
 
-    club.achievements.forEach((achievement, index) => {
-      formData.append(`achievements[${index}][name]`, achievement.name);
-      formData.append(
-        `achievements[${index}][date]`,
-        new Date(achievement.date).toISOString()
-      );
-      formData.append(
-        `achievements[${index}][description]`,
-        achievement.description
-      );
-    });
+    // club.achievements.forEach((achievement, index) => {
+    //   formData.append(`achievements[${index}][name]`, achievement.name);
+    //   formData.append(
+    //     `achievements[${index}][date]`,
+    //     new Date(achievement.date).toISOString()
+    //   );
+    //   formData.append(
+    //     `achievements[${index}][description]`,
+    //     achievement.description
+    //   );
+    // });
 
     if (club.badge) {
       formData.append("badge", club.badge);
@@ -79,17 +79,17 @@ export class ClubService {
     formData.append("address[city]", club.address.city);
     formData.append("address[country]", club.address.country);
 
-    club.achievements.forEach((achievement, index) => {
-      formData.append(`achievements[${index}][name]`, achievement.name);
-      formData.append(
-        `achievements[${index}][date]`,
-        new Date(achievement.date).toISOString()
-      );
-      formData.append(
-        `achievements[${index}][description]`,
-        achievement.description
-      );
-    });
+    // club.achievements.forEach((achievement, index) => {
+    //   formData.append(`achievements[${index}][name]`, achievement.name);
+    //   formData.append(
+    //     `achievements[${index}][date]`,
+    //     new Date(achievement.date).toISOString()
+    //   );
+    //   formData.append(
+    //     `achievements[${index}][description]`,
+    //     achievement.description
+    //   );
+    // });
 
     if (club.badge) {
       formData.append("badge", club.badge);

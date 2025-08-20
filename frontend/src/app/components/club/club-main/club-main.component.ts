@@ -55,7 +55,7 @@ export class ClubMainComponent implements OnInit {
     }
 
     this.isUserLoggedIn = this.authService.isAuthenticated();
-
+    
     this.authService.getAuthenticatedUserId().subscribe((userId) => {
       this.currentUserId = userId;
     });

@@ -3,10 +3,8 @@ package com.example.fcmanager.feature.club.dto;
 import java.util.UUID;
 
 import com.example.fcmanager.feature.address.dto.AddressResponseDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -20,5 +18,5 @@ public class ClubResponseDto {
     private String stadiumName;
     private Integer stadiumCapacity;
     private AddressResponseDto address;
-    private UUID userId;
+    private UUID ownerId;
 }

@@ -1,31 +1,47 @@
 import { Injectable } from '@angular/core';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
-  private accessToken: string | null = null;
-  private refreshToken: string | null = null;
+  
+  private readonly ACCESS_TOKEN_KEY = 'accessToken';
+  private readonly REFRESH_TOKEN_KEY = 'refreshToken';
 
   public setTokens(accessToken: string, refreshToken: string): void {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
+    sessionStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
+    sessionStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
   }
 
   public getAccessToken(): string | null {
-    return this.accessToken;
+    return sessionStorage.getItem(this.ACCESS_TOKEN_KEY);
   }
 
   public getRefreshToken(): string | null {
-    return this.refreshToken;
+    return sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
   }
 
   public clearTokens(): void {
-    this.accessToken = null;
-    this.refreshToken = null;
+    sessionStorage.removeItem(this.ACCESS_TOKEN_KEY);
+    sessionStorage.removeItem(this.REFRESH_TOKEN_KEY);
   }
 
   public isLoggedIn(): boolean {
-    return !!this.accessToken;
+    return !!sessionStorage.getItem(this.ACCESS_TOKEN_KEY);
+  }
+
+  public setUser(user: User): void {
+    sessionStorage.setItem('user', JSON.stringify(user));
+  }
+
+  public getUser(): User | null {
+    const user = sessionStorage.getItem('user');
+    
+    return user ? JSON.parse(user) : null;
+  }
+
+  public removeUser(): void {
+    sessionStorage.removeItem('user');
   }
 }

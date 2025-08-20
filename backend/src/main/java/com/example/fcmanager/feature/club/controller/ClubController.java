@@ -4,18 +4,18 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import com.example.fcmanager.feature.club.dto.ClubResponseDto;
 import com.example.fcmanager.feature.club.dto.CreateClubRequestDto;
 import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
-import com.example.fcmanager.shared.dto.ApiResponse;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.example.fcmanager.feature.club.service.ClubService;
+import com.example.fcmanager.shared.dto.ApiResponse;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/clubs")
@@ -68,9 +68,9 @@ public class ClubController {
         return ResponseEntity.ok(ApiResponse.success(null, "Club deleted successfully"));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<ApiResponse<List<ClubResponseDto>>> getClubsByUserId(@PathVariable UUID userId) {
-        List<ClubResponseDto> clubs = clubService.getClubsByUserId(userId);
+    @GetMapping("/user/{ownerId}")
+    public ResponseEntity<ApiResponse<List<ClubResponseDto>>> getClubsByUserId(@PathVariable UUID ownerId) {
+        List<ClubResponseDto> clubs = clubService.getClubsByOwnerId(ownerId);
         return ResponseEntity.ok(ApiResponse.success(clubs, "Clubs fetched successfully for user"));
     }
 }

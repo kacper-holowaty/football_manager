@@ -58,8 +58,8 @@ public class ClubServiceDefault implements ClubService {
 
         Club club = clubMapper.createClubRequestDtoToClub(createClubRequestDto);
 
-        User user = userRepository.findById(createClubRequestDto.getUserId())
-                .orElseThrow(() -> new UserNotFoundWithIdException((createClubRequestDto.getUserId()).toString()));
+        User user = userRepository.findById(createClubRequestDto.getOwnerId())
+                .orElseThrow(() -> new UserNotFoundWithIdException((createClubRequestDto.getOwnerId()).toString()));
 
         AddressRequestDto addressRequestDto = createClubRequestDto.getAddress();
 
@@ -114,7 +114,7 @@ public class ClubServiceDefault implements ClubService {
     }
 
     @Override
-    public List<ClubResponseDto> getClubsByUserId(UUID userId) {
+    public List<ClubResponseDto> getClubsByOwnerId(UUID userId) {
         return clubRepository.findByUser_UserId(userId).stream()
                 .map(clubMapper::toClubDto)
                 .collect(Collectors.toList());
