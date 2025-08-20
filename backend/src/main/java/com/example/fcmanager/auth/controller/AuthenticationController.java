@@ -14,7 +14,7 @@ import com.example.fcmanager.auth.dto.AuthenticationResponseDto;
 import com.example.fcmanager.auth.dto.JwtTokenResponseDto;
 import com.example.fcmanager.auth.dto.RegisterRequestDto;
 import com.example.fcmanager.auth.service.AuthenticationService;
-import com.example.fcmanager.shared.ApiResponse;
+import com.example.fcmanager.shared.dto.ApiResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

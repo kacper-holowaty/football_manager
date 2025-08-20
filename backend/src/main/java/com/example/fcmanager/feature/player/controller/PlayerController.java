@@ -1,6 +1,7 @@
 package com.example.fcmanager.feature.player.controller;
 
 import com.example.fcmanager.feature.player.dto.UpdatePlayerRequestDto;
+import com.example.fcmanager.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,22 +25,25 @@ public class PlayerController {
     private final PlayerService playerService;
 
     @GetMapping
-    public ResponseEntity<List<PlayerResponseDto>> getPlayersByClubId(@PathVariable UUID clubId) {
-        return ResponseEntity.ok(playerService.getPlayersByClubId(clubId));
+    public ResponseEntity<ApiResponse<List<PlayerResponseDto>>> getPlayersByClubId(@PathVariable UUID clubId) {
+        List<PlayerResponseDto> players = playerService.getPlayersByClubId(clubId);
+        return ResponseEntity.ok(ApiResponse.success(players));
     }
 
     @GetMapping("/{playerId}")
-    public ResponseEntity<PlayerResponseDto> getPlayerById(
+    public ResponseEntity<ApiResponse<PlayerResponseDto>> getPlayerById(
             @PathVariable UUID clubId,
-            @PathVariable UUID playerId) {
-        return ResponseEntity.ok(playerService.getPlayerById(playerId));
+            @PathVariable UUID playerId
+    ) {
+        PlayerResponseDto player = playerService.getPlayerById(playerId);
+        return ResponseEntity.ok(ApiResponse.success(player));
     }
 
     @PostMapping
-    public ResponseEntity<PlayerResponseDto> createPlayer(
+    public ResponseEntity<ApiResponse<PlayerResponseDto>> createPlayer(
             @PathVariable UUID clubId,
-            @Valid @RequestBody CreatePlayerRequestDto createPlayerRequestDto)
-    {
+            @Valid @RequestBody CreatePlayerRequestDto createPlayerRequestDto
+    ) {
         PlayerResponseDto createdPlayer = playerService.createPlayer(clubId, createPlayerRequestDto);
 
         URI location = ServletUriComponentsBuilder
@@ -47,25 +51,28 @@ public class PlayerController {
                 .path("/{id}")
                 .buildAndExpand(createdPlayer.getPlayerId())
                 .toUri();
-        return ResponseEntity.created(location).body(createdPlayer);
+
+        return ResponseEntity
+                .created(location)
+                .body(ApiResponse.created(createdPlayer, "Player created successfully"));
     }
 
     @PutMapping("/{playerId}")
-    public ResponseEntity<PlayerResponseDto> updatePlayer(
+    public ResponseEntity<ApiResponse<PlayerResponseDto>> updatePlayer(
             @PathVariable UUID clubId,
             @PathVariable UUID playerId,
-            @Valid @RequestBody UpdatePlayerRequestDto updatePlayerRequestDto)
-    {
+            @Valid @RequestBody UpdatePlayerRequestDto updatePlayerRequestDto
+    ) {
         PlayerResponseDto updatedPlayer = playerService.updatePlayer(playerId, updatePlayerRequestDto);
-        return ResponseEntity.ok(updatedPlayer);
+        return ResponseEntity.ok(ApiResponse.success(updatedPlayer, "Player updated successfully"));
     }
 
     @DeleteMapping("/{playerId}")
-    public ResponseEntity<Void> deletePlayer(
+    public ResponseEntity<ApiResponse<Void>> deletePlayer(
             @PathVariable UUID clubId,
-            @PathVariable UUID playerId)
-    {
+            @PathVariable UUID playerId
+    ) {
         playerService.deletePlayer(playerId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(null, "Player deleted successfully"));
     }
 }

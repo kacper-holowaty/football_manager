@@ -1,5 +1,7 @@
 package com.example.fcmanager.feature.achievement.service;
 
+import com.example.fcmanager.shared.exception.AchievementNotFoundException;
+import com.example.fcmanager.shared.exception.ClubNotFoundException;
 import com.example.fcmanager.feature.achievement.domain.Achievement;
 import com.example.fcmanager.feature.club.domain.Club;
 import com.example.fcmanager.feature.achievement.dto.AchievementRequestDto;
@@ -7,7 +9,6 @@ import com.example.fcmanager.feature.achievement.dto.AchievementResponseDto;
 import com.example.fcmanager.feature.achievement.mapper.AchievementMapper;
 import com.example.fcmanager.feature.achievement.repository.AchievementRepository;
 import com.example.fcmanager.feature.club.repository.ClubRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class AchievementServiceDefault implements AchievementService {
     public AchievementResponseDto createAchievement(UUID clubId, AchievementRequestDto achievementRequestDto) {
         Achievement achievement = achievementMapper.achievementRequestDtoToAchievement(achievementRequestDto);
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + clubId));
+                .orElseThrow(() -> new ClubNotFoundException(clubId.toString()));
         achievement.setClub(club);
         Achievement savedAchievement = achievementRepository.save(achievement);
         return achievementMapper.toAchievementDto(savedAchievement);
@@ -46,7 +47,7 @@ public class AchievementServiceDefault implements AchievementService {
     @Transactional
     public AchievementResponseDto updateAchievement(UUID achievementId, AchievementRequestDto dto) {
         Achievement achievement = achievementRepository.findById(achievementId)
-                .orElseThrow(() -> new EntityNotFoundException("Achievement not found with id: " + achievementId));
+                .orElseThrow(() -> new AchievementNotFoundException(achievementId.toString()));
 
         achievement.setName(dto.getName());
         achievement.setDescription(dto.getDescription());
@@ -60,7 +61,7 @@ public class AchievementServiceDefault implements AchievementService {
     @Transactional
     public void deleteAchievement(UUID achievementId) {
         Achievement achievement = achievementRepository.findById(achievementId)
-                .orElseThrow(() -> new EntityNotFoundException("Achievement not found with id: " + achievementId));
+                .orElseThrow(() -> new AchievementNotFoundException(achievementId.toString()));
         achievementRepository.delete(achievement);
     }
 }

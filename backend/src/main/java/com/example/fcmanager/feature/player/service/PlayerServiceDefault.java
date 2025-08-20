@@ -1,5 +1,8 @@
 package com.example.fcmanager.feature.player.service;
 
+import com.example.fcmanager.shared.exception.ClubNotFoundException;
+import com.example.fcmanager.shared.exception.PlayerNotFoundException;
+import com.example.fcmanager.shared.exception.ShirtNumberAlreadyTakenException;
 import com.example.fcmanager.feature.club.domain.Club;
 import com.example.fcmanager.feature.player.domain.Player;
 import com.example.fcmanager.feature.player.dto.PlayerResponseDto;
@@ -8,7 +11,6 @@ import com.example.fcmanager.feature.player.dto.UpdatePlayerRequestDto;
 import com.example.fcmanager.feature.player.mapper.PlayerMapper;
 import com.example.fcmanager.feature.club.repository.ClubRepository;
 import com.example.fcmanager.feature.player.repository.PlayerRepository;
-import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,17 +31,17 @@ public class PlayerServiceDefault implements PlayerService {
     public PlayerResponseDto getPlayerById(UUID id) {
         return playerRepository.findById(id)
                 .map(playerMapper::toPlayerResponseDto)
-                .orElseThrow(() -> new EntityNotFoundException("No player found with id: " + id));
+                .orElseThrow(() -> new PlayerNotFoundException(id.toString()));
     }
 
     @Override
     @Transactional
     public PlayerResponseDto createPlayer(UUID clubId, CreatePlayerRequestDto createPlayerRequestDto) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new EntityNotFoundException("No club found with id: " + clubId));
+                .orElseThrow(() -> new ClubNotFoundException(clubId.toString()));
 
         if (playerRepository.existsByClub_ClubIdAndShirtNumber(clubId, createPlayerRequestDto.getShirtNumber())) {
-            throw new IllegalArgumentException("Shirt number " + createPlayerRequestDto.getShirtNumber() + " is already taken in this club.");
+            throw new ShirtNumberAlreadyTakenException(createPlayerRequestDto.getShirtNumber());
         }
 
         Player player = playerMapper.createPlayerRequestDtoToPlayer(createPlayerRequestDto);
@@ -53,11 +55,10 @@ public class PlayerServiceDefault implements PlayerService {
     @Transactional
     public PlayerResponseDto updatePlayer(UUID id, UpdatePlayerRequestDto dto) {
         Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+                .orElseThrow(() -> new PlayerNotFoundException(id.toString()));
 
         if (playerRepository.existsByClub_ClubIdAndShirtNumberAndPlayerIdNot(player.getClub().getClubId(), dto.getShirtNumber(), id)) {
-            throw new IllegalArgumentException("Shirt number " + dto.getShirtNumber() + " is already taken in this club."
-            );
+            throw new ShirtNumberAlreadyTakenException(dto.getShirtNumber());
         }
 
         player.setName(dto.getName());
@@ -77,7 +78,7 @@ public class PlayerServiceDefault implements PlayerService {
     @Transactional
     public void deletePlayer(UUID id) {
         Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+                .orElseThrow(() -> new PlayerNotFoundException(id.toString()));
         playerRepository.delete(player);
     }
 

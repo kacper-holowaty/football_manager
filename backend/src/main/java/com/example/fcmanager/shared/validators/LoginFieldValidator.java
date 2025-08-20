@@ -1,4 +1,4 @@
-package com.example.fcmanager.validators;
+package com.example.fcmanager.shared.validators;
 
 import com.example.fcmanager.auth.dto.AuthenticationRequestDto;
 import jakarta.validation.ConstraintValidator;

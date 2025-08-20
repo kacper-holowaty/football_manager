@@ -1,7 +1,7 @@
 package com.example.fcmanager.feature.club.dto;
 
 import com.example.fcmanager.feature.address.dto.AddressRequestDto;
-import com.example.fcmanager.validators.FoundedYear;
+import com.example.fcmanager.shared.validators.FoundedYear;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;

@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.example.fcmanager.shared.exception.ClubNotFoundException;
+import com.example.fcmanager.shared.exception.UserNotFoundWithIdException;
 import com.example.fcmanager.feature.address.domain.Address;
 import com.example.fcmanager.feature.club.domain.Club;
 import com.example.fcmanager.feature.user.domain.User;
 import com.example.fcmanager.feature.address.dto.AddressRequestDto;
 import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
-import com.example.fcmanager.exception.ClubAlreadyExistsException;
+import com.example.fcmanager.shared.exception.ClubAlreadyExistsException;
 import com.example.fcmanager.feature.address.mapper.AddressMapper;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,7 @@ public class ClubServiceDefault implements ClubService {
     public ClubResponseDto getClubById(UUID id) {
         return clubRepository.findById(id)
                 .map(clubMapper::toClubDto)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
+                .orElseThrow(() -> new ClubNotFoundException(id.toString()));
     }
 
     @Override
@@ -58,7 +59,7 @@ public class ClubServiceDefault implements ClubService {
         Club club = clubMapper.createClubRequestDtoToClub(createClubRequestDto);
 
         User user = userRepository.findById(createClubRequestDto.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + createClubRequestDto.getUserId()));
+                .orElseThrow(() -> new UserNotFoundWithIdException((createClubRequestDto.getUserId()).toString()));
 
         AddressRequestDto addressRequestDto = createClubRequestDto.getAddress();
 
@@ -76,7 +77,7 @@ public class ClubServiceDefault implements ClubService {
     @Transactional
     public ClubResponseDto updateClub(UUID id, UpdateClubRequestDto updateClubRequestDto) {
         Club club = clubRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
+                .orElseThrow(() -> new ClubNotFoundException(id.toString()));
 
         if (!club.getName().equals(updateClubRequestDto.getName()) && clubRepository.existsByName(updateClubRequestDto.getName())) {
             throw new ClubAlreadyExistsException(updateClubRequestDto.getName());
@@ -107,7 +108,7 @@ public class ClubServiceDefault implements ClubService {
     @Transactional
     public void deleteClub(UUID id) {
         Club club = clubRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
+                .orElseThrow(() -> new ClubNotFoundException(id.toString()));
 
         clubRepository.delete(club);
     }

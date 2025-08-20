@@ -1,4 +1,4 @@
-package com.example.fcmanager.shared;
+package com.example.fcmanager.shared.dto;
 
 import java.time.LocalDateTime;
 

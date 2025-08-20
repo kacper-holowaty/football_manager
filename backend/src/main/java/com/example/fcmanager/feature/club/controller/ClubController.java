@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.example.fcmanager.feature.club.dto.ClubResponseDto;
 import com.example.fcmanager.feature.club.dto.CreateClubRequestDto;
 import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
+import com.example.fcmanager.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,43 +25,52 @@ public class ClubController {
     private final ClubService clubService;
 
     @GetMapping
-    public ResponseEntity<List<ClubResponseDto>> getAllClubs() {
-        return ResponseEntity.ok(clubService.getAllClubs());
+    public ResponseEntity<ApiResponse<List<ClubResponseDto>>> getAllClubs() {
+        List<ClubResponseDto> clubs = clubService.getAllClubs();
+        return ResponseEntity.ok(ApiResponse.success(clubs, "Clubs fetched successfully"));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClubResponseDto> getClubById(@PathVariable UUID id) {
-        return ResponseEntity.ok(clubService.getClubById(id));
+    public ResponseEntity<ApiResponse<ClubResponseDto>> getClubById(@PathVariable UUID id) {
+        ClubResponseDto club = clubService.getClubById(id);
+        return ResponseEntity.ok(ApiResponse.success(club, "Club fetched successfully"));
     }
 
     @PostMapping
-    public ResponseEntity<ClubResponseDto> createClub(@Valid @RequestBody CreateClubRequestDto createClubRequestDto) {
+    public ResponseEntity<ApiResponse<ClubResponseDto>> createClub(
+            @Valid @RequestBody CreateClubRequestDto createClubRequestDto
+    ) {
         ClubResponseDto createdClub = clubService.createClub(createClubRequestDto);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(createdClub.getClubId())
                 .toUri();
-        return ResponseEntity.created(location).body(createdClub);
+
+        return ResponseEntity
+                .created(location)
+                .body(ApiResponse.created(createdClub, "Club created successfully"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClubResponseDto> updateClub(
+    public ResponseEntity<ApiResponse<ClubResponseDto>> updateClub(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateClubRequestDto updateClubRequestDto) {
 
         ClubResponseDto updatedClub = clubService.updateClub(id, updateClubRequestDto);
-        return ResponseEntity.ok(updatedClub);
+        return ResponseEntity.ok(ApiResponse.success(updatedClub, "Club updated successfully"));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClub(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> deleteClub(@PathVariable UUID id) {
         clubService.deleteClub(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(null, "Club deleted successfully"));
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ClubResponseDto>> getClubsByUserId(@PathVariable UUID userId) {
-        return ResponseEntity.ok(clubService.getClubsByUserId(userId));
+    public ResponseEntity<ApiResponse<List<ClubResponseDto>>> getClubsByUserId(@PathVariable UUID userId) {
+        List<ClubResponseDto> clubs = clubService.getClubsByUserId(userId);
+        return ResponseEntity.ok(ApiResponse.success(clubs, "Clubs fetched successfully for user"));
     }
 }

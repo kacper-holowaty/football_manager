@@ -6,7 +6,7 @@ import com.example.fcmanager.feature.country.dto.CountryCodeMappingDto;
 import com.example.fcmanager.feature.country.dto.CountryCodeResponseDto;
 import com.example.fcmanager.feature.country.dto.CountryCodesRequestDto;
 import com.example.fcmanager.feature.country.service.CountryService;
-import com.example.fcmanager.shared.ApiResponse;
+import com.example.fcmanager.shared.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

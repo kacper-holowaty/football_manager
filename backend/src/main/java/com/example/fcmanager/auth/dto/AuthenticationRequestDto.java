@@ -1,6 +1,6 @@
 package com.example.fcmanager.auth.dto;
 
-import com.example.fcmanager.validators.ValidLoginField;
+import com.example.fcmanager.shared.validators.ValidLoginField;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 

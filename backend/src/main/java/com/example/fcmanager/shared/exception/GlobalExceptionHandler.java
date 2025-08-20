@@ -1,4 +1,4 @@
-package com.example.fcmanager.exception;
+package com.example.fcmanager.shared.exception;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import com.example.fcmanager.shared.ApiResponse;
+import com.example.fcmanager.shared.dto.ApiResponse;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
             UserAlreadyExistsException ex, WebRequest request) {
         log.warn("User already exists: {}", ex.getMessage());
         return ResponseEntity.status(409)
-                .body(ApiResponse.error(409, "User with this email or username already exists"));
+                .body(ApiResponse.error(409, ex.getMessage()));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -80,12 +80,36 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.notFound("Requested resource not found"));
     }
 
+    @ExceptionHandler(AchievementNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAchievementNotFound(
+            UserNotFoundException ex, WebRequest request) {
+        log.warn("Achievement not found: {}", ex.getMessage());
+        return ResponseEntity.status(404)
+                .body(ApiResponse.notFound(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ClubNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleClubNotFound(
+            UserNotFoundException ex, WebRequest request) {
+        log.warn("Club not found: {}", ex.getMessage());
+        return ResponseEntity.status(404)
+                .body(ApiResponse.notFound(ex.getMessage()));
+    }
+
+    @ExceptionHandler(PlayerNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handlePlayerNotFound(
+            UserNotFoundException ex, WebRequest request) {
+        log.warn("Player not found: {}", ex.getMessage());
+        return ResponseEntity.status(404)
+                .body(ApiResponse.notFound(ex.getMessage()));
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleUserNotFound(
             UserNotFoundException ex, WebRequest request) {
         log.warn("User not found: {}", ex.getMessage());
         return ResponseEntity.status(404)
-                .body(ApiResponse.notFound("User not found"));
+                .body(ApiResponse.notFound(ex.getMessage()));
     }
 
     @ExceptionHandler(UserNotFoundWithIdException.class)
@@ -93,7 +117,7 @@ public class GlobalExceptionHandler {
             UserNotFoundWithIdException ex, WebRequest request) {
         log.warn("User not found with id: {}", ex.getMessage());
         return ResponseEntity.status(404)
-                .body(ApiResponse.notFound("User not found"));
+                .body(ApiResponse.notFound(ex.getMessage()));
     }
 
     @ExceptionHandler(JwtException.class)
@@ -109,7 +133,17 @@ public class GlobalExceptionHandler {
             TokenExpiredException ex, WebRequest request) {
         log.warn("Token expired for request: {}", request.getDescription(false));
         return ResponseEntity.status(401)
-                .body(ApiResponse.unauthorized("Token has expired"));
+                .body(ApiResponse.unauthorized(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ShirtNumberAlreadyTakenException.class)
+    public ResponseEntity<ApiResponse<Void>> handleShirtNumberAlreadyTaken(
+            ShirtNumberAlreadyTakenException ex, WebRequest request) {
+
+        log.warn("Shirt number conflict: {}", ex.getMessage());
+
+        return ResponseEntity.status(409)
+                .body(ApiResponse.error(409, ex.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

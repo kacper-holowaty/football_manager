@@ -1,7 +1,7 @@
-package com.example.fcmanager.exception;
+package com.example.fcmanager.shared.exception;
 
 public class UserNotFoundWithIdException extends RuntimeException {
     public UserNotFoundWithIdException(String id) {
-        super("User with id'" + id + "' not found.");
+        super("User not found with id: " + id);
     }
 }

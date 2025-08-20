@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.fcmanager.feature.user.dto.UserResponseDto;
 import com.example.fcmanager.feature.user.service.UserService;
-import com.example.fcmanager.shared.ApiResponse;
+import com.example.fcmanager.shared.dto.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 

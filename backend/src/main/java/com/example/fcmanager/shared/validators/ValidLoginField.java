@@ -1,4 +1,4 @@
-package com.example.fcmanager.validators;
+package com.example.fcmanager.shared.validators;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

@@ -1,4 +1,4 @@
-package com.example.fcmanager.exception;
+package com.example.fcmanager.shared.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String login) {
