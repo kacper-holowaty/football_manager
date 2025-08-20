@@ -21,13 +21,13 @@ public class UserServiceDefault implements UserService {
     public UserResponseDto getUserById(UUID id) {
         return userRepository.findById(id)
                 .map(userMapper::toUserDto)
-                .orElseThrow(() -> new UserNotFoundWithIdException("User not found with id: " + id));
+                .orElseThrow(() -> new UserNotFoundWithIdException(id.toString()));
     }
 
     @Override
     public void deleteUser(UUID id) {
         if (!userRepository.existsById(id)) {
-            throw new UserNotFoundWithIdException("Cannot delete. User not found with id: " + id);
+            throw new UserNotFoundWithIdException(id.toString());
         }
         userRepository.deleteById(id);
     }
