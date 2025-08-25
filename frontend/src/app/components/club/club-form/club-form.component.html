@@ -5,10 +5,10 @@
     <div class="file-input-group">
       <label for="badge" class="file-label"><mat-icon>file_upload</mat-icon>Choose club badge </label>
       <input id="badge" type="file" (change)="onBadgeSelected($event)" accept="image/*"/>
-      @if (badgePreviewUrl || (club?.badge && !badgeRemoved)) {
+      @if (badgePreviewUrl || (club?.badgeUrl && !badgeRemoved)) {
         <div class="badge-preview">
           <p class="badge-preview-text">Selected badge:</p>
-          <img class="badge-image" [src]="badgePreviewUrl || club?.badge" alt="Selected badge" />
+          <img class="badge-image" [src]="badgePreviewUrl || club?.badgeUrl" alt="Selected badge" />
           <button mat-raised-button color="warn" (click)="removePhoto()">Remove badge</button>
         </div>
       }
@@ -203,7 +203,7 @@
       </div>
     </div>
 
-    <div class="achievements">
+    <!-- <div class="achievements">
       <h3>Achievements</h3>
       <div formArrayName="achievements">
         @for (achievement of achievements.controls; track $index) {
@@ -266,7 +266,7 @@
       }
       </div>
       <button mat-raised-button (click)="addAchievement()">Add Achievement</button>
-    </div>
+    </div> -->
 
     <button mat-raised-button [disabled]="clubForm.invalid">
       {{ editing ? 'Update club information' : 'Create club' }}

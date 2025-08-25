@@ -22,7 +22,6 @@ import { MatIconModule } from '@angular/material/icon';
 export class PlayerListComponent implements OnInit {
   protected players: Player[] = [];
   protected defaultPhotoUrl: string = 'assets/images/no_photo.png';
-  protected apiUrl: string = "http://localhost:3000";
   protected clubId: string | null = '';
   protected countryCodes: Record<string, string> = {};
   protected isUserLoggedIn: boolean = false;

@@ -4,6 +4,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.fcmanager.feature.club.dto.CreateClubMultipartRequestDto;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -36,10 +39,29 @@ public class ClubController {
         return ResponseEntity.ok(ApiResponse.success(club, "Club fetched successfully"));
     }
 
-    @PostMapping
+    // @PostMapping
+    // public ResponseEntity<ApiResponse<ClubResponseDto>> createClub(
+    //         @Valid @RequestBody CreateClubRequestDto createClubRequestDto
+    // ) {
+    //     ClubResponseDto createdClub = clubService.createClub(createClubRequestDto);
+
+    //     URI location = ServletUriComponentsBuilder
+    //             .fromCurrentRequest()
+    //             .path("/{id}")
+    //             .buildAndExpand(createdClub.getClubId())
+    //             .toUri();
+
+    //     return ResponseEntity
+    //             .created(location)
+    //             .body(ApiResponse.created(createdClub, "Club created successfully"));
+    // }
+
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ClubResponseDto>> createClub(
-            @Valid @RequestBody CreateClubRequestDto createClubRequestDto
+            @Valid @ModelAttribute CreateClubMultipartRequestDto request
     ) {
+        CreateClubRequestDto createClubRequestDto = request.toCreateClubRequestDto();
         ClubResponseDto createdClub = clubService.createClub(createClubRequestDto);
 
         URI location = ServletUriComponentsBuilder
@@ -60,6 +82,24 @@ public class ClubController {
 
         ClubResponseDto updatedClub = clubService.updateClub(id, updateClubRequestDto);
         return ResponseEntity.ok(ApiResponse.success(updatedClub, "Club updated successfully"));
+    }
+
+    @GetMapping("/{id}/badge")
+    public ResponseEntity<byte[]> getClubBadge(@PathVariable UUID id) {
+        byte[] badge = clubService.getClubBadge(id);
+
+        if (badge == null || badge.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentLength(badge.length);
+        headers.setCacheControl("public, max-age=3600");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(badge);
     }
 
     @DeleteMapping("/{id}")

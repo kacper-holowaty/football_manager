@@ -1,5 +1,6 @@
 package com.example.fcmanager.shared.exception;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.example.fcmanager.shared.dto.ApiResponse;
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @ControllerAdvice
 @Slf4j
@@ -160,6 +162,30 @@ public class GlobalExceptionHandler {
         log.error("Runtime exception for request: {}", request.getDescription(false), ex);
         return ResponseEntity.status(500)
                 .body(ApiResponse.error(500, "An unexpected error occurred"));
+    }
+
+    @ExceptionHandler(FileProcessingException.class)
+    public ResponseEntity<ApiResponse<Void>> handleFileProcessingException(
+            FileProcessingException ex, WebRequest request) {
+        log.error("File processing error for request: {} - {}", request.getDescription(false), ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.badRequest("Error processing uploaded file: " + ex.getMessage()));
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIOException(
+            IOException ex, WebRequest request) {
+        log.error("File processing error for request: {} - {}", request.getDescription(false), ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.badRequest("Error processing uploaded file: " + ex.getMessage()));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMaxSizeException(
+            MaxUploadSizeExceededException ex, WebRequest request) {
+        log.warn("File size exceeded for request: {}", request.getDescription(false));
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.badRequest("File size exceeds maximum allowed limit"));
     }
 
     @ExceptionHandler(Exception.class)

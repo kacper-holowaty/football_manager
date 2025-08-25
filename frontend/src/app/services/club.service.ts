@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Club } from '../models/club.model';
+import { Club, ClubRequest } from '../models/club.model';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Response } from '../models/response.type';
@@ -12,24 +12,23 @@ export class ClubService {
 
   public constructor(private httpClient: HttpClient) {}
 
-  public addClub(club: Club): Observable<Club> {
+  public addClub(club: ClubRequest): Observable<Club> {
     const formData = new FormData();
 
-    formData.append("clubId", club.clubId);
     formData.append("name", club.name);
     formData.append("foundedYear", club.foundedYear.toString());
     formData.append("stadiumName", club.stadiumName);
     formData.append("stadiumCapacity", club.stadiumCapacity.toString());
     formData.append("ownerId", club.ownerId);
 
-    formData.append("address[street]", club.address.street);
-    formData.append("address[houseNumber]", club.address.houseNumber);
+    formData.append("addressStreet", club.address.street);
+    formData.append("addressHouseNumber", club.address.houseNumber);
     if (club.address.apartmentNumber) {
-      formData.append("address[apartmentNumber]", club.address.apartmentNumber);
+      formData.append("addressApartmentNumber", club.address.apartmentNumber);
     }
-    formData.append("address[postalCode]", club.address.postalCode);
-    formData.append("address[city]", club.address.city);
-    formData.append("address[country]", club.address.country);
+    formData.append("addressPostalCode", club.address.postalCode);
+    formData.append("addressCity", club.address.city);
+    formData.append("addressCountry", club.address.country);
 
     // club.achievements.forEach((achievement, index) => {
     //   formData.append(`achievements[${index}][name]`, achievement.name);
@@ -47,23 +46,32 @@ export class ClubService {
       formData.append("badge", club.badge);
     }
     
-    return this.httpClient.post<Club>(this.apiUrl, formData);
+    return this.httpClient.post<Response<Club>>(this.apiUrl, formData)
+      .pipe(
+        map((response) => ({
+          ...response.data,
+          badgeUrl: response.data.hasBadge ? `${this.apiUrl}/${response.data.clubId}/badge` : undefined
+        }))
+      );
   }
 
   public getClubById(clubId: string): Observable<Club> {
     return this.httpClient.get<Response<Club>>(`${this.apiUrl}/${clubId}`)
       .pipe(
-        map((res: Response<Club>) => res.data),
+        map((res: Response<Club>) => ({
+          ...res.data,
+          badgeUrl: res.data.hasBadge ? `${this.apiUrl}/${clubId}/badge` : undefined
+        })),
         catchError((err: HttpErrorResponse) => {
           return throwError(() => err);
         })
       );
   }
 
-  public updateClub(club: Club): Observable<Club> {
+  public updateClub(clubId: string, club: ClubRequest): Observable<Club> {
     const formData = new FormData();
 
-    formData.append("clubId", club.clubId);
+    // formData.append("clubId", club.clubId);
     formData.append("name", club.name);
     formData.append("foundedYear", club.foundedYear.toString());
     formData.append("stadiumName", club.stadiumName);
@@ -95,13 +103,21 @@ export class ClubService {
       formData.append("badge", club.badge);
     }
     
-    return this.httpClient.put<Club>(`${this.apiUrl}/${club.clubId}`, formData);
+    return this.httpClient.put<Club>(`${this.apiUrl}/${clubId}`, formData);
   }
 
   public getClubsByOwnerId(ownerId: string): Observable<Club[]> {
     return this.httpClient.get<Response<Club[]>>(`${this.apiUrl}/user/${ownerId}`)
       .pipe(
-        map((res: Response<Club[]>) => res.data),
+        map((res: Response<Club[]>) => {
+          const response = res.data;
+          const clubs = response.map((club) => ({
+            ...club,
+            badgeUrl: club.hasBadge ? `${this.apiUrl}/${club.clubId}/badge` : undefined
+          }));
+
+          return clubs;
+        }),
         catchError((err: HttpErrorResponse) => {
           return throwError(() => err);
         })
@@ -111,7 +127,15 @@ export class ClubService {
   public getAllClubs(): Observable<Club[]> {
     return this.httpClient.get<Response<Club[]>>(this.apiUrl)
       .pipe(
-        map((res: Response<Club[]>) => res.data),
+        map((res: Response<Club[]>) =>  {
+          const response = res.data;
+          const clubs = response.map((club) => ({
+            ...club,
+            badgeUrl: club.hasBadge ? `${this.apiUrl}/${club.clubId}/badge` : undefined
+          }));
+
+          return clubs;
+        }),
         catchError((err: HttpErrorResponse) => {
           return throwError(() => err);
         })

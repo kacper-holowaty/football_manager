@@ -89,7 +89,7 @@ export class ClubListComponent implements OnInit {
     const filtered = this.clubs?.filter((club) =>
       club.name.toLowerCase().includes(this.searchName.toLowerCase()) &&
       (this.selectedCountry ? club.address.country === this.selectedCountry : true) &&
-      (!this.onlyWithBadge || club.badge !== null)
+      (!this.onlyWithBadge || club.badgeUrl)
     ) || [];
 
     this.filteredClubs = filtered;

@@ -13,10 +13,10 @@ import lombok.*;
 public class ClubResponseDto {
     private UUID clubId;
     private String name;
-    private byte[] badge;
     private Integer foundedYear;
     private String stadiumName;
     private Integer stadiumCapacity;
     private AddressResponseDto address;
+    private boolean hasBadge;
     private UUID ownerId;
 }

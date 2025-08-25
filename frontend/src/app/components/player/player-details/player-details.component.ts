@@ -39,9 +39,10 @@ export class PlayerDetailsComponent implements OnInit {
   public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService, private dialog: MatDialog, private toastService: ToastService) {}
 
   public ngOnInit(): void {
+    const clubId = this.route.snapshot.paramMap.get('id');
     const playerId = this.route.snapshot.paramMap.get('playerId');
-    if (playerId) {
-      this.playerService.getPlayerById(playerId).subscribe((player: Player) => {
+    if (clubId && playerId) {
+      this.playerService.getPlayerById(clubId, playerId).subscribe((player: Player) => {
         this.player = player;
         this.countryService.getCountryCode(player.nationality).subscribe((result) => {
           this.countryCode = result.code;

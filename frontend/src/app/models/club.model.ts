@@ -1,6 +1,17 @@
 export interface Club {
   readonly clubId: string,
   readonly name: string,
+  readonly badgeUrl?: string;
+  readonly ownerId: string,
+  readonly foundedYear: number,
+  readonly stadiumName: string,
+  readonly stadiumCapacity: number,
+  readonly address: Address,
+  readonly hasBadge?: boolean;
+}
+
+export interface ClubRequest {
+  readonly name: string,
   readonly badge: Blob | null,
   readonly ownerId: string,
   readonly foundedYear: number,

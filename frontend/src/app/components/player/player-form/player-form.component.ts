@@ -129,11 +129,12 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
   
 
   public ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('playerId');
-    if (id) {
+    const clubId = this.route.snapshot.paramMap.get('id');
+    const playerId = this.route.snapshot.paramMap.get('playerId');
+    if (clubId && playerId) {
       this.editing = true;
       
-      this.playerService.getPlayerById(id).subscribe((player: Player) => {
+      this.playerService.getPlayerById(clubId, playerId).subscribe((player: Player) => {
         this.player = player;
         const formattedBirthDate = new Date(player.birthDate).toISOString().split('T')[0];
         const formattedContractUntil = new Date(player.contractUntil).toISOString().split('T')[0];

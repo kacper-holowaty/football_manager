@@ -4,25 +4,25 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.example.fcmanager.shared.exception.ClubNotFoundException;
-import com.example.fcmanager.shared.exception.UserNotFoundWithIdException;
-import com.example.fcmanager.feature.address.domain.Address;
-import com.example.fcmanager.feature.club.domain.Club;
-import com.example.fcmanager.feature.user.domain.User;
-import com.example.fcmanager.feature.address.dto.AddressRequestDto;
-import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
-import com.example.fcmanager.shared.exception.ClubAlreadyExistsException;
-import com.example.fcmanager.feature.address.mapper.AddressMapper;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import com.example.fcmanager.feature.address.domain.Address;
+import com.example.fcmanager.feature.address.dto.AddressRequestDto;
+import com.example.fcmanager.feature.address.mapper.AddressMapper;
+import com.example.fcmanager.feature.address.repository.AddressRepository;
+import com.example.fcmanager.feature.club.domain.Club;
 import com.example.fcmanager.feature.club.dto.ClubResponseDto;
 import com.example.fcmanager.feature.club.dto.CreateClubRequestDto;
+import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
 import com.example.fcmanager.feature.club.mapper.ClubMapper;
-import com.example.fcmanager.feature.address.repository.AddressRepository;
 import com.example.fcmanager.feature.club.repository.ClubRepository;
+import com.example.fcmanager.feature.user.domain.User;
 import com.example.fcmanager.feature.user.repository.UserRepository;
+import com.example.fcmanager.shared.exception.ClubAlreadyExistsException;
+import com.example.fcmanager.shared.exception.ClubNotFoundException;
+import com.example.fcmanager.shared.exception.UserNotFoundWithIdException;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -105,6 +105,13 @@ public class ClubServiceDefault implements ClubService {
     }
 
     @Override
+    public byte[] getClubBadge(UUID id) {
+        return clubRepository.findById(id)
+                .map(Club::getBadge)
+                .orElseThrow(() -> new ClubNotFoundException(id.toString()));
+    }
+
+    @Override
     @Transactional
     public void deleteClub(UUID id) {
         Club club = clubRepository.findById(id)
@@ -114,8 +121,9 @@ public class ClubServiceDefault implements ClubService {
     }
 
     @Override
+    @Transactional
     public List<ClubResponseDto> getClubsByOwnerId(UUID userId) {
-        return clubRepository.findByUser_UserId(userId).stream()
+        return clubRepository.findByUserUserId(userId).stream()
                 .map(clubMapper::toClubDto)
                 .collect(Collectors.toList());
     }

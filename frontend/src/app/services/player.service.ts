@@ -1,22 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Player } from '../models/player.model';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Response } from '../models/response.type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayerService {
-  private apiUrl = 'http://localhost:3000/players';
+  private apiUrl = 'http://localhost:8080/api';
 
   public constructor(private httpClient: HttpClient) {}
 
   public getPlayersByClub(clubId: string): Observable<Player[]> {
-    return this.httpClient.get<Player[]>(`${this.apiUrl}/club/${clubId}`);
+    return this.httpClient.get<Response<Player[]>>(`${this.apiUrl}/clubs/${clubId}/players`)
+      .pipe(
+        map((res: Response<Player[]>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          return throwError(() => err);
+        })
+      );
   }
 
-  public getPlayerById(id: string): Observable<Player> {
-    return this.httpClient.get<Player>(`${this.apiUrl}/${id}`);
+  public getPlayerById(clubId: string, playerId: string): Observable<Player> {
+    return this.httpClient.get<Response<Player>>(`${this.apiUrl}/clubs/${clubId}/players/${playerId}`)
+      .pipe(
+        map((res: Response<Player>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          return throwError(() => err);
+        })
+      );
   }
 
   public addPlayer(player: Player): Observable<Player> {

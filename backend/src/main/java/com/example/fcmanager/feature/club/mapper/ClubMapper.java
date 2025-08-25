@@ -8,10 +8,12 @@ import com.example.fcmanager.feature.address.mapper.AddressMapper;
 import com.example.fcmanager.feature.player.mapper.PlayerMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring", uses = {PlayerMapper.class, AchievementMapper.class, AddressMapper.class})
 public interface ClubMapper {
     @Mapping(source = "user.userId", target = "ownerId")
+    @Mapping(source = "badge", target = "hasBadge", qualifiedByName = "mapHasBadge")
     ClubResponseDto toClubDto(Club club);
 
     @Mapping(target = "user", ignore = true)
@@ -19,4 +21,9 @@ public interface ClubMapper {
     @Mapping(target = "players", ignore = true)
     @Mapping(target = "achievements", ignore = true)
     Club createClubRequestDtoToClub(CreateClubRequestDto createClubRequestDto);
+
+    @Named("mapHasBadge")
+    default boolean mapHasBadge(byte[] badge) {
+        return badge != null && badge.length > 0;
+    }
 }

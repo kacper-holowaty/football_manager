@@ -10,7 +10,7 @@
             <span class="fi" [class]="'fi-'+getCountryCode(club.address.country)"></span> 
           </div>
           <div class="club-badge-wrapper">
-            <img [src]="club.badge || defaultBadgeUrl" [alt]="club.name + 'Badge'" class="club-badge"/>
+            <img [src]="club.badgeUrl || defaultBadgeUrl" [alt]="club.name + 'Badge'" class="club-badge"/>
           </div>
           <p class="club-founded">Founded: {{ club.foundedYear }}</p>
         </div>
