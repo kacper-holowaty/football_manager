@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClubService } from '../../../services/club.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Achievement, Club } from '../../../models/club.model';
+import { Club } from '../../../models/club.model';
 import { AuthService } from '../../../services/auth.service';
 import { CountryService } from '../../../services/country.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,10 +25,10 @@ export class ClubMainComponent implements OnInit {
   protected isUserLoggedIn: boolean = false;
   protected countryCode: string = '';
   
-  protected sortedAchievements: Achievement[] = [];
-  protected paginatedAchievements: Achievement[] = [];
-  protected pageSize: number = 2;
-  protected currentPage: number = 0;
+  // protected sortedAchievements: Achievement[] = [];
+  // protected paginatedAchievements: Achievement[] = [];
+  // protected pageSize: number = 2;
+  // protected currentPage: number = 0;
 
   public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router, private authService: AuthService, private countryService: CountryService, private dialog: MatDialog, private toastService: ToastService) {}
   

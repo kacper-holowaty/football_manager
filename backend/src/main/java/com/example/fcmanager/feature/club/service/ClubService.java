@@ -21,4 +21,6 @@ public interface ClubService {
     List<ClubResponseDto> getClubsByOwnerId(UUID userId);
 
     byte[] getClubBadge(UUID id);
+
+    void removeClubBadge(UUID id);
 }

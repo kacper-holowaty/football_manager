@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.example.fcmanager.shared.exception.UserClubLimitExceededException;
 import org.springframework.stereotype.Service;
 
 import com.example.fcmanager.feature.address.domain.Address;
@@ -56,10 +57,15 @@ public class ClubServiceDefault implements ClubService {
             throw new ClubAlreadyExistsException(createClubRequestDto.getName());
         }
 
-        Club club = clubMapper.createClubRequestDtoToClub(createClubRequestDto);
-
         User user = userRepository.findById(createClubRequestDto.getOwnerId())
                 .orElseThrow(() -> new UserNotFoundWithIdException((createClubRequestDto.getOwnerId()).toString()));
+
+        long userClubsCount = clubRepository.countByUserUserId(createClubRequestDto.getOwnerId());
+        if (userClubsCount >= 4) {
+            throw new UserClubLimitExceededException(user.getUsername());
+        }
+
+        Club club = clubMapper.createClubRequestDtoToClub(createClubRequestDto);
 
         AddressRequestDto addressRequestDto = createClubRequestDto.getAddress();
 
@@ -84,7 +90,11 @@ public class ClubServiceDefault implements ClubService {
         }
 
         club.setName(updateClubRequestDto.getName());
-        club.setBadge(updateClubRequestDto.getBadge());
+        if (updateClubRequestDto.getBadge() != null) {
+            club.setBadge(updateClubRequestDto.getBadge());
+        } else {
+            club.setBadge(null);
+        }
         club.setFoundedYear(updateClubRequestDto.getFoundedYear());
         club.setStadiumName(updateClubRequestDto.getStadiumName());
         club.setStadiumCapacity(updateClubRequestDto.getStadiumCapacity());
@@ -126,5 +136,14 @@ public class ClubServiceDefault implements ClubService {
         return clubRepository.findByUserUserId(userId).stream()
                 .map(clubMapper::toClubDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void removeClubBadge(UUID id) {
+        Club club = clubRepository.findById(id)
+                .orElseThrow(() -> new ClubNotFoundException(id.toString()));
+        club.setBadge(null);
+        clubRepository.save(club);
     }
 }

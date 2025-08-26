@@ -18,7 +18,7 @@ public class CreateClubRequestDto {
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
     @Pattern(
-            regexp = "^[\\p{L}][\\p{L}\\p{N} .-]*$",
+            regexp = "^\\p{L}[\\p{L}\\p{N} .-]*$",
             message = "Name must start with a letter and can contain letters, digits, spaces, dots, or hyphens"
     )
     private String name;
@@ -32,7 +32,7 @@ public class CreateClubRequestDto {
     @NotBlank(message = "Stadium name is required")
     @Size(min = 3, max = 32, message = "Stadium name must be between 3 and 32 characters")
     @Pattern(
-            regexp = "^[\\p{L}][\\p{L}\\p{N} .-]*$",
+            regexp = "^\\p{L}[\\p{L}\\p{N} .-]*$",
             message = "Stadium name must start with a letter and can contain letters, digits, spaces, dots, or hyphens"
     )
     private String stadiumName;

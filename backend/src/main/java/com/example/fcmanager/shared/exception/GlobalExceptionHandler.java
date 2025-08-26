@@ -12,13 +12,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import com.example.fcmanager.shared.dto.ApiResponse;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @ControllerAdvice
 @Slf4j
@@ -64,6 +64,15 @@ public class GlobalExceptionHandler {
         log.warn("Club already exists: {}", ex.getMessage());
         return ResponseEntity.status(409)
                 .body(ApiResponse.error(409, ex.getMessage()));
+    }
+
+    @ExceptionHandler(UserClubLimitExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserClubLimitExceeded(
+            UserClubLimitExceededException ex, WebRequest request) {
+        log.warn("User club limit exceeded for request: {} - {}",
+                request.getDescription(false), ex.getMessage());
+        return ResponseEntity.status(409)
+                .body(ApiResponse.conflict(ex.getMessage()));
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)

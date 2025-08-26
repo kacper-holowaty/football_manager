@@ -12,7 +12,7 @@ public class RegisterRequestDto {
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 40, message = "First name must be between 2 and 40 characters")
     @Pattern(
-            regexp = "^[\\p{Lu}][\\p{L}\\- ]*[\\p{L}]$",
+            regexp = "^\\p{Lu}[\\p{L}\\- ]*\\p{L}$",
             message = "First name must start with a capital letter, contain only letters, spaces or '-', and not end with space or '-'"
     )
     private String firstName;
@@ -20,7 +20,7 @@ public class RegisterRequestDto {
     @NotBlank(message = "Last name is required")
     @Size(min = 2, max = 40, message = "Last name must be between 2 and 40 characters")
     @Pattern(
-            regexp = "^(?![ \\-])[\\p{L}\\- ]*[\\p{L}]$",
+            regexp = "^(?![ \\-])[\\p{L}\\- ]*\\p{L}$",
             message = "Last name cannot start with space or '-', must contain only letters, spaces or '-', and cannot end with space or '-'"
     )
     private String lastName;

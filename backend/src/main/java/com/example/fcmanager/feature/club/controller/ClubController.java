@@ -4,16 +4,13 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-import com.example.fcmanager.feature.club.dto.CreateClubMultipartRequestDto;
+import com.example.fcmanager.feature.club.dto.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.example.fcmanager.feature.club.dto.ClubResponseDto;
-import com.example.fcmanager.feature.club.dto.CreateClubRequestDto;
-import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
 import com.example.fcmanager.feature.club.service.ClubService;
 import com.example.fcmanager.shared.dto.ApiResponse;
 
@@ -39,24 +36,6 @@ public class ClubController {
         return ResponseEntity.ok(ApiResponse.success(club, "Club fetched successfully"));
     }
 
-    // @PostMapping
-    // public ResponseEntity<ApiResponse<ClubResponseDto>> createClub(
-    //         @Valid @RequestBody CreateClubRequestDto createClubRequestDto
-    // ) {
-    //     ClubResponseDto createdClub = clubService.createClub(createClubRequestDto);
-
-    //     URI location = ServletUriComponentsBuilder
-    //             .fromCurrentRequest()
-    //             .path("/{id}")
-    //             .buildAndExpand(createdClub.getClubId())
-    //             .toUri();
-
-    //     return ResponseEntity
-    //             .created(location)
-    //             .body(ApiResponse.created(createdClub, "Club created successfully"));
-    // }
-
-
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ClubResponseDto>> createClub(
             @Valid @ModelAttribute CreateClubMultipartRequestDto request
@@ -75,12 +54,14 @@ public class ClubController {
                 .body(ApiResponse.created(createdClub, "Club created successfully"));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ClubResponseDto>> updateClub(
             @PathVariable UUID id,
-            @Valid @RequestBody UpdateClubRequestDto updateClubRequestDto) {
-
+            @Valid @ModelAttribute UpdateClubMultipartRequestDto request
+    ) {
+        UpdateClubRequestDto updateClubRequestDto = request.toUpdateClubRequestDto();
         ClubResponseDto updatedClub = clubService.updateClub(id, updateClubRequestDto);
+
         return ResponseEntity.ok(ApiResponse.success(updatedClub, "Club updated successfully"));
     }
 
@@ -95,11 +76,17 @@ public class ClubController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
         headers.setContentLength(badge.length);
-        headers.setCacheControl("public, max-age=3600");
+        headers.setCacheControl("no-cache, no-store, must-revalidate");
 
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(badge);
+    }
+
+    @DeleteMapping("/{id}/badge")
+    public ResponseEntity<ApiResponse<Void>> removeClubBadge(@PathVariable UUID id) {
+        clubService.removeClubBadge(id);
+        return ResponseEntity.ok(ApiResponse.success(null, "Club badge removed successfully"));
     }
 
     @DeleteMapping("/{id}")

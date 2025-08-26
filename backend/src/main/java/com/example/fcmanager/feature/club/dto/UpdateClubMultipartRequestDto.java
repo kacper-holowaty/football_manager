@@ -8,14 +8,12 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.UUID;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateClubMultipartRequestDto {
+public class UpdateClubMultipartRequestDto {
 
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
@@ -43,7 +41,6 @@ public class CreateClubMultipartRequestDto {
     @Min(value = 0, message = "Stadium capacity must be at least 0")
     @Max(value = 250000, message = "Stadium capacity must be at most 250000")
     private Integer stadiumCapacity;
-
 
     @NotBlank(message = "Street is required")
     @Size(min = 3, max = 32, message = "Street must be between 3 and 32 characters")
@@ -89,10 +86,7 @@ public class CreateClubMultipartRequestDto {
     @Size(min = 3, max = 40, message = "Country must be between 3 and 40 characters")
     private String addressCountry;
 
-    @NotNull(message = "Owner ID is required")
-    private UUID ownerId;
-
-    public CreateClubRequestDto toCreateClubRequestDto() {
+    public UpdateClubRequestDto toUpdateClubRequestDto() {
         byte[] badgeBytes = null;
         if (badge != null && !badge.isEmpty()) {
             try {
@@ -102,7 +96,7 @@ public class CreateClubMultipartRequestDto {
             }
         }
 
-        return CreateClubRequestDto.builder()
+        return UpdateClubRequestDto.builder()
                 .name(this.name)
                 .badge(badgeBytes)
                 .foundedYear(this.foundedYear)
@@ -116,7 +110,6 @@ public class CreateClubMultipartRequestDto {
                         .city(this.addressCity)
                         .country(this.addressCountry)
                         .build())
-                .ownerId(this.ownerId)
                 .build();
     }
 }

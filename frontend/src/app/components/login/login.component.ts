@@ -6,17 +6,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ToastService } from '../../services/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface LoginForm {
   readonly login: FormControl<string | null>;
   readonly password: FormControl<string | null>;
-}
-
-interface ApiError {
-  readonly status: number;
-  readonly error: {
-    message: string;
-  };
 }
 
 @Component({
@@ -49,13 +43,15 @@ export class LoginComponent implements OnInit {
           this.toastService.showToast(`Successfully logged in as ${login}`);
           this.router.navigate(['/main']);
         },
-        error: (err: ApiError) => {
-          if (typeof err.error.message === 'string') {
-            this.toastService.showToast(`${err.error.message}`);
-            this.loginFailed = err.error.message;
+        error: (err: HttpErrorResponse) => {
+          if (err.error && typeof err.error === 'object' && 'message' in err.error) {
+            const errorMessage = (err.error as { message: string }).message;
+            this.toastService.showToast(errorMessage);
+            this.loginFailed = errorMessage;
           } else {
-            this.toastService.showToast('Invalid credentials or server error. Please try again.');
-            this.loginFailed = 'Invalid credentials or server error. Please try again.';
+            const defaultMessage = 'Invalid credentials or server error. Please try again.';
+            this.toastService.showToast(defaultMessage);
+            this.loginFailed = defaultMessage;
           }
         },
       });

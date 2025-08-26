@@ -13,7 +13,7 @@ public class AchievementRequestDto {
     @NotBlank(message = "Achievement name is required")
     @Size(min = 2, max = 50, message = "Achievement name must be between 2 and 50 characters")
     @Pattern(
-            regexp = "^[\\p{L}][\\p{L}\\p{N} .-]*$",
+            regexp = "^\\p{L}[\\p{L}\\p{N} .-]*$",
             flags = Pattern.Flag.UNICODE_CASE,
             message = "Name must start with a letter and can contain letters, digits, spaces, dots or hyphens"
     )

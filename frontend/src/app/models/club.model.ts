@@ -20,6 +20,16 @@ export interface ClubRequest {
   readonly address: Address,
 }
 
+export interface UpdateClubRequest {
+  readonly name: string,
+  readonly badge: Blob | null,
+  readonly ownerId: string,
+  readonly foundedYear: number,
+  readonly stadiumName: string,
+  readonly stadiumCapacity: number,
+  readonly address: Address,
+}
+
 export interface Address {
   readonly street: string,
   readonly houseNumber: string,

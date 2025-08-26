@@ -2,6 +2,7 @@ package com.example.fcmanager.feature.club.dto;
 
 import com.example.fcmanager.feature.address.dto.AddressRequestDto;
 import com.example.fcmanager.shared.validators.FoundedYear;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -14,7 +15,7 @@ public class UpdateClubRequestDto {
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
     @Pattern(
-            regexp = "^[\\p{L}][\\p{L}\\p{N} .-]*$",
+            regexp = "^\\p{L}[\\p{L}\\p{N} .-]*$",
             message = "Name must start with a letter and can contain letters, digits, spaces, dots, or hyphens"
     )
     private String name;
@@ -28,7 +29,7 @@ public class UpdateClubRequestDto {
     @NotBlank(message = "Stadium name is required")
     @Size(min = 3, max = 32, message = "Stadium name must be between 3 and 32 characters")
     @Pattern(
-            regexp = "^[\\p{L}][\\p{L}\\p{N} .-]*$",
+            regexp = "^\\p{L}[\\p{L}\\p{N} .-]*$",
             message = "Stadium name must start with a letter and can contain letters, digits, spaces, dots, or hyphens"
     )
     private String stadiumName;

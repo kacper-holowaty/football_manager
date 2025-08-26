@@ -87,13 +87,15 @@ export class RegisterComponent implements OnInit{
           this.router.navigate([`/main`]);
         },
         error: (err: HttpErrorResponse) => {
-          console.log(err);
-          console.log(JSON.stringify(err));
-          
-          const errorBody = err.error as { message: string };
-          const errorMessage: string = errorBody.message || err.message || 'An error occurred. Please try again later.';
-          this.registrationFailed = errorMessage;
-          this.toastService.showToast(errorMessage);
+          if (err.error && typeof err.error === 'object' && 'message' in err.error) {
+            const errorMessage = (err.error as { message: string }).message;
+            this.registrationFailed = errorMessage;
+            this.toastService.showToast(errorMessage);
+          } else {
+            const defaultMessage = 'An error occurred. Please try again later.';
+            this.registrationFailed = defaultMessage;
+            this.toastService.showToast(defaultMessage);
+          }
         }
       });
     }

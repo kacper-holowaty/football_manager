@@ -47,11 +47,11 @@ export class ClubFormService {
         houseNumber: new FormControl('', [
           Validators.required,
           Validators.maxLength(6),
-          Validators.pattern(/^\d+[A-Z]?$/),
+          Validators.pattern(/^[1-9]\d{0,4}[a-zA-Z]?$/),
         ]),
         apartmentNumber: new FormControl(null, [
           Validators.maxLength(6),
-          Validators.pattern(/^\d+[A-Z]?$/),
+          Validators.pattern(/^[1-9]\d{0,4}$/),
         ]),
         postalCode: new FormControl('', [
           Validators.required,
@@ -63,7 +63,7 @@ export class ClubFormService {
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(32),
-          Validators.pattern(/^[A-Z][\p{L} .-]*$/u),
+          Validators.pattern(/^[\p{Lu}][\p{L}\p{M}]*([ -][\p{L}\p{M}]+)*$/u),
         ]),
         country: new FormControl('', [Validators.required], [allowedCountriesAsyncValidator(this.countryService)]),
       })

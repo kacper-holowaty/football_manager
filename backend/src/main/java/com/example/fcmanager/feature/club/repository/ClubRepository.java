@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface ClubRepository extends JpaRepository<Club, UUID> {
     boolean existsByName(String name);
     List<Club> findByUserUserId(UUID userUserId);
+    long countByUserUserId(UUID userUserId);
 }

@@ -3,7 +3,7 @@ import { ClubFormService } from '../../../services/club-form.service';
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Address, Club, ClubRequest } from '../../../models/club.model';
+import { Address, Club, ClubRequest, UpdateClubRequest } from '../../../models/club.model';
 import { Country } from '../../../models/country.model';
 import { CountryService } from '../../../services/country.service';
 import { MatInputModule } from '@angular/material/input';
@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Location } from '@angular/common';
 import { ToastService } from '../../../services/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface ClubForm {
   readonly name: FormControl<string | null>;
@@ -41,14 +42,6 @@ export interface AchievementForm {
   readonly name: FormControl<string | null>;
   readonly date: FormControl<string | null>;
   readonly description: FormControl<string | null>;
-}
-
-interface ApiError {
-  readonly status: number;
-  readonly error: {
-    success: boolean;
-    message: string;
-  };
 }
 
 @Component({
@@ -104,23 +97,20 @@ export class ClubFormComponent implements OnInit, OnDestroy {
       this.clubService.getClubById(id).subscribe((club: Club) => {
         this.club = club;
 
-        // UPDATOWANIE. NAPRAWIĆ PÓŹNIEJ!
-
-        // this.clubForm.patchValue({
-        //   name: club.name,
-        //   badge: club.badge,
-        //   foundedYear: club.foundedYear,
-        //   stadiumName: club.stadiumName,
-        //   stadiumCapacity: club.stadiumCapacity,
-        //   address: {
-        //     street: club.address.street,
-        //     houseNumber: club.address.houseNumber,
-        //     apartmentNumber: club.address.apartmentNumber,
-        //     postalCode: club.address.postalCode,
-        //     city: club.address.city,
-        //     country: club.address.country,
-        //   },
-        // });
+        this.clubForm.patchValue({
+          name: club.name,
+          foundedYear: club.foundedYear,
+          stadiumName: club.stadiumName,
+          stadiumCapacity: club.stadiumCapacity,
+          address: {
+            street: club.address.street,
+            houseNumber: club.address.houseNumber,
+            apartmentNumber: club.address.apartmentNumber,
+            postalCode: club.address.postalCode,
+            city: club.address.city,
+            country: club.address.country,
+          },
+        });
 
         // if (club.achievements.length > 0) {
         //   club.achievements.forEach((achievement) => {
@@ -167,7 +157,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   
     if (input.files) {
       const file = input.files[0];
-      console.log('Selected file:', file);
   
       if (file.type.startsWith('image/')) {
         this.handleImageFile(file);
@@ -205,21 +194,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  // protected onSubmit(): void {
-  //   if (!this.clubForm.valid) {
-  //     return;
-  //   }
-  
-  //   const formValue: Partial<ClubForm> = this.mapFormValue();
-  //   const club = this.createClub(formValue);
-  
-  //   if (this.editing) {
-  //     this.updateClub(club);
-  //   } else {
-  //     this.addClub(club);
-  //   }
-  // }
-
   protected onSubmit(): void {
     if (!this.clubForm.valid) {
       return;
@@ -227,8 +201,8 @@ export class ClubFormComponent implements OnInit, OnDestroy {
 
     const formValue: Partial<ClubForm> = this.mapFormValue();
     if (this.editing) {
-      // const club = this.createClubForUpdate(formValue);
-      // this.updateClub(club);
+      const clubUpdateRequest = this.createClubUpdateRequest(formValue);
+      this.updateClub(clubUpdateRequest);
     } else {
       const clubRequest = this.createClubRequest(formValue);
       this.addClub(clubRequest);
@@ -259,36 +233,19 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     };
   }
 
-
-  // UPDATOWANIE. NAAPRAWIĆ PÓŹNIEJ!
-
-  // private createClubForUpdate(formValue: Partial<ClubForm>): Club {
-  //   return {
-  //     clubId: this.club?.clubId || '',
-  //     name: this.extractValue(formValue.name, ''),
-  //     badge: this.extractValue(formValue.badge, null),
-  //     ownerId: this.currentUserId,
-  //     foundedYear: this.extractValue(formValue.foundedYear, 0),
-  //     stadiumName: this.extractValue(formValue.stadiumName, ''),
-  //     stadiumCapacity: this.extractValue(formValue.stadiumCapacity, 0),
-  //     address: this.createAddress(formValue.address as FormGroup<AddressForm>),
-  //   };
-  // }
-
-
-  // private createClub(formValue: Partial<ClubForm>): Club {
-  //   return {
-  //     clubId: this.club ? this.club.clubId : '',
-  //     name: this.extractValue(formValue.name, ''),
-  //     badge: this.extractValue(formValue.badge, null),
-  //     ownerId: this.currentUserId,
-  //     foundedYear: this.extractValue(formValue.foundedYear, 0),
-  //     stadiumName: this.extractValue(formValue.stadiumName, ''),
-  //     stadiumCapacity: this.extractValue(formValue.stadiumCapacity, 0),
-  //     address: this.createAddress(formValue.address as FormGroup<AddressForm>),
-  //     // achievements: this.createAchievements(formValue.achievements as FormArray<FormGroup<AchievementForm>>),
-  //   };
-  // }
+  private createClubUpdateRequest(formValue: Partial<ClubForm>): UpdateClubRequest {
+    const badgeValue = this.clubForm.get('badge')?.value;
+    
+    return {
+      name: this.extractValue(formValue.name, ''),
+      badge: badgeValue ?? null,
+      ownerId: this.currentUserId,
+      foundedYear: this.extractValue(formValue.foundedYear, 0),
+      stadiumName: this.extractValue(formValue.stadiumName, ''),
+      stadiumCapacity: this.extractValue(formValue.stadiumCapacity, 0),
+      address: this.createAddress(formValue.address as FormGroup<AddressForm>),
+    };
+  }
   
   private extractValue<T>(control: FormControl<T | null> | undefined, defaultValue: T): T {
     return control?.value ?? defaultValue;
@@ -325,48 +282,49 @@ export class ClubFormComponent implements OnInit, OnDestroy {
         this.toastService.showToast("Club added successfully!");
         this.router.navigate([`/club/${createdClub.clubId}/main`]);
       },
-      error: (error: ApiError) => {
-        if (error.status === 400) {
-          this.errorMessage = error.error.message || "Single user must have maximum 4 clubs.";
-          this.toastService.showToast(this.errorMessage);
-        } 
-        else if (error.status === 409) {
-          this.errorMessage = error.error.message || "Club name exists in database.";
-          this.toastService.showToast(this.errorMessage);
+      error: (error: HttpErrorResponse) => {
+        if (error.error && typeof error.error === 'object' && 'message' in error.error) {
+          this.errorMessage = (error.error as { message: string }).message;
         } else {
-          console.error("An error occurred:", error);
-          this.errorMessage = "An error occurred while adding the club. Please try again.";
-          this.toastService.showToast(this.errorMessage);
+          this.errorMessage = "An error occurred while adding the club.";
         }
+        this.toastService.showToast(this.errorMessage);
       },
     });
   }
-
-  // UPDATOWANIE. NAPRAWIĆ PÓŹNIEJ!
   
-  // private updateClub(club: Club): void {
-  //   this.clubService.updateClub(club).subscribe({
-  //     next: () => {
-  //       this.toastService.showToast("Club updated successfully!");
-  //       this.router.navigate([`/club/${club.clubId}/main`]);
-  //     },
-  //     error: (error: ApiError) => {
-  //       if (error.status === 404) {
-  //         this.errorMessage = error.error.message || "Club not found.";
-  //         this.toastService.showToast(this.errorMessage);
-  //       } 
-  //       else if (error.status === 409) {
-  //         this.errorMessage = error.error.message || "Club name exists in database.";
-  //         this.toastService.showToast(this.errorMessage);
-  //       }
-  //       else {
-  //         console.error("An error occurred:", error);
-  //         this.errorMessage = "An error occurred while updating the club. Please try again.";
-  //         this.toastService.showToast(this.errorMessage);
-  //       }
-  //     },
-  //   });
-  // }
+  private updateClub(club: UpdateClubRequest): void {
+    if (this.badgeRemoved) {
+      this.clubService.removeClubBadge(this.club!.clubId).subscribe({
+        next: () => {
+          this.updateClubDetails(club);
+        },
+        error: (error) => {
+          console.error("Error removing badge:", error);
+          this.toastService.showToast("Error removing badge.");
+        }
+      });
+    } else {
+      this.updateClubDetails(club);
+    }
+  }
+
+  private updateClubDetails(club: UpdateClubRequest): void {
+    this.clubService.updateClub(this.club!.clubId, club).subscribe({
+      next: () => {
+        this.toastService.showToast("Club updated successfully!");
+        this.router.navigate([`/club/${this.club!.clubId}/main`]);
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.error && typeof error.error === 'object' && 'message' in error.error) {
+          this.errorMessage = (error.error as { message: string }).message;
+        } else {
+          this.errorMessage = "An error occurred while updating the club.";
+        }
+        this.toastService.showToast(this.errorMessage);
+      },
+    });
+  }
 
 
 

@@ -42,7 +42,7 @@ public class AddressRequestDto {
     @NotBlank(message = "City is required")
     @Size(min = 2, max = 32, message = "City must be between 2 and 32 characters")
     @Pattern(
-            regexp = "^[\\p{Lu}][\\p{L}\\p{M}\\p{Lu}]*([ -][\\p{L}\\p{M}\\p{Lu}]+)*$",
+            regexp = "^\\p{Lu}[\\p{L}\\p{M}\\p{Lu}]*([ -][\\p{L}\\p{M}\\p{Lu}]+)*$",
             flags = Pattern.Flag.UNICODE_CASE,
             message = "City must start with a capital letter and contain only letters, spaces or hyphens"
     )

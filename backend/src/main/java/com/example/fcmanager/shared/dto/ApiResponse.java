@@ -27,20 +27,12 @@ public class ApiResponse<T> {
         return new ApiResponse<>(200, message, data, LocalDateTime.now());
     }
 
-    public static <T> ApiResponse<T> created(T data) {
-        return new ApiResponse<>(201, "Resource created successfully", data, LocalDateTime.now());
-    }
-
     public static <T> ApiResponse<T> created(T data, String message) {
         return new ApiResponse<>(201, message, data, LocalDateTime.now());
     }
 
     public static <T> ApiResponse<T> error(int status, String message) {
         return new ApiResponse<>(status, message, null, LocalDateTime.now());
-    }
-
-    public static <T> ApiResponse<T> badRequest(String message, T data) {
-        return new ApiResponse<>(400, message, data, LocalDateTime.now());
     }
 
     public static <T> ApiResponse<T> badRequest(String message) {
@@ -57,5 +49,9 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> notFound(String message) {
         return new ApiResponse<>(404, message, null, LocalDateTime.now());
+    }
+
+    public static <T> ApiResponse<T> conflict(String message) {
+        return new ApiResponse<>(409, message, null, LocalDateTime.now());
     }
 }
