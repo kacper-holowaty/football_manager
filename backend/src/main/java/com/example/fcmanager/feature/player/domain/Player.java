@@ -27,7 +27,8 @@ public class Player {
 
     private String nationality;
 
-    private String position;
+    @Column(columnDefinition = "TEXT")
+    private String positions;
 
     private Integer shirtNumber;
 

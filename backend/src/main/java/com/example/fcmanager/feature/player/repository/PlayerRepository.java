@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface PlayerRepository extends JpaRepository<Player, UUID> {
     boolean existsByClub_ClubIdAndShirtNumber(UUID clubId, Integer shirtNumber);
     boolean existsByClub_ClubIdAndShirtNumberAndPlayerIdNot(UUID clubId, Integer shirtNumber, UUID playerId);
-    List<Player> findByClub_ClubId(UUID clubId);
+    List<Player> findByClubClubId(UUID clubId);
 }

@@ -2,6 +2,7 @@ package com.example.fcmanager.feature.player.dto;
 
 import lombok.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -11,10 +12,10 @@ import java.util.UUID;
 public class PlayerResponseDto {
     private UUID playerId;
     private String name;
-    private byte[] photo;
+    private boolean hasPhoto;
     private LocalDate birthDate;
     private String nationality;
-    private String position;
+    private List<String> positions;
     private Integer shirtNumber;
     private LocalDate contractUntil;
     private Integer salary;

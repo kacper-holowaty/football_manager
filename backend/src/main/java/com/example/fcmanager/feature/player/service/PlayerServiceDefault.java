@@ -57,15 +57,20 @@ public class PlayerServiceDefault implements PlayerService {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id.toString()));
 
-        if (playerRepository.existsByClub_ClubIdAndShirtNumberAndPlayerIdNot(player.getClub().getClubId(), dto.getShirtNumber(), id)) {
+        if (playerRepository.existsByClub_ClubIdAndShirtNumberAndPlayerIdNot(
+                player.getClub().getClubId(), dto.getShirtNumber(), id)) {
             throw new ShirtNumberAlreadyTakenException(dto.getShirtNumber());
         }
 
         player.setName(dto.getName());
-        player.setPhoto(dto.getPhoto());
+        if (dto.getPhoto() != null) {
+            player.setPhoto(dto.getPhoto());
+        } else {
+            player.setPhoto(null);
+        }
         player.setBirthDate(dto.getBirthDate());
         player.setNationality(dto.getNationality());
-        player.setPosition(dto.getPosition());
+        player.setPositions(dto.getPositions());
         player.setShirtNumber(dto.getShirtNumber());
         player.setContractUntil(dto.getContractUntil());
         player.setSalary(dto.getSalary());
@@ -83,9 +88,26 @@ public class PlayerServiceDefault implements PlayerService {
     }
 
     @Override
+    @Transactional
     public List<PlayerResponseDto> getPlayersByClubId(UUID clubId) {
-        return playerRepository.findByClub_ClubId(clubId).stream()
+        return playerRepository.findByClubClubId(clubId).stream()
                 .map(playerMapper::toPlayerResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public byte[] getPlayerPhoto(UUID id) {
+        return playerRepository.findById(id)
+                .map(Player::getPhoto)
+                .orElseThrow(() -> new PlayerNotFoundException(id.toString()));
+    }
+
+    @Override
+    @Transactional
+    public void removePlayerPhoto(UUID id) {
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id.toString()));
+        player.setPhoto(null);
+        playerRepository.save(player);
     }
 }

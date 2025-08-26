@@ -15,7 +15,6 @@ public class CreatePlayerRequestDto {
     @Size(min = 2, max = 45, message = "Player name must be between 2 and 45 characters")
     private String name;
 
-    @Size(max = 5242880, message = "Photo size cannot exceed 5MB")
     private byte[] photo;
 
     @NotNull(message = "Birth date is required")
@@ -26,12 +25,10 @@ public class CreatePlayerRequestDto {
     @Size(min = 2, max = 30, message = "Nationality must be between 2 and 30 characters")
     private String nationality;
 
-    //    @Pattern(regexp = "^(GK|CB|LB|RB|CDM|CM|CAM|LM|RM|LW|RW|CF|ST)$",
-    //            message = "Position must be one of: GK, CB, LB, RB, CDM, CM, CAM, LM, RM, LW, RW, CF, ST")
     @NotBlank(message = "Position is required")
-    @Pattern(regexp = "^(forward|midfielder|defender|goalkeeper)$",
-            message = "Position must be one of: forward, midfielder, defender, goalkeeper")
-    private String position;
+    @Pattern(regexp = "^(GK|CB|LB|RB|CDM|CM|CAM|LM|RM|LW|RW|CF|ST)(,(GK|CB|LB|RB|CDM|CM|CAM|LM|RM|LW|RW|CF|ST))*$",
+            message = "Positions must be comma-separated valid positions: GK, CB, LB, RB, CDM, CM, CAM, LM, RM, LW, RW, CF, ST")
+    private String positions;
 
     @NotNull(message = "Shirt number is required")
     @Min(value = 1, message = "Shirt number must be at least 1")

@@ -1,13 +1,13 @@
 package com.example.fcmanager.feature.player.controller;
 
-import com.example.fcmanager.feature.player.dto.UpdatePlayerRequestDto;
+import com.example.fcmanager.feature.player.dto.*;
 import com.example.fcmanager.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.fcmanager.feature.player.dto.PlayerResponseDto;
-import com.example.fcmanager.feature.player.dto.CreatePlayerRequestDto;
 import com.example.fcmanager.feature.player.service.PlayerService;
 
 import java.net.URI;
@@ -39,11 +39,12 @@ public class PlayerController {
         return ResponseEntity.ok(ApiResponse.success(player));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PlayerResponseDto>> createPlayer(
             @PathVariable UUID clubId,
-            @Valid @RequestBody CreatePlayerRequestDto createPlayerRequestDto
+            @Valid @ModelAttribute CreatePlayerMultipartRequestDto request
     ) {
+        CreatePlayerRequestDto createPlayerRequestDto = request.toCreatePlayerRequestDto();
         PlayerResponseDto createdPlayer = playerService.createPlayer(clubId, createPlayerRequestDto);
 
         URI location = ServletUriComponentsBuilder
@@ -57,14 +58,42 @@ public class PlayerController {
                 .body(ApiResponse.created(createdPlayer, "Player created successfully"));
     }
 
-    @PutMapping("/{playerId}")
+    @PutMapping(value = "/{playerId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PlayerResponseDto>> updatePlayer(
             @PathVariable UUID clubId,
             @PathVariable UUID playerId,
-            @Valid @RequestBody UpdatePlayerRequestDto updatePlayerRequestDto
+            @Valid @ModelAttribute UpdatePlayerMultipartRequestDto request
     ) {
+        UpdatePlayerRequestDto updatePlayerRequestDto = request.toUpdatePlayerRequestDto();
         PlayerResponseDto updatedPlayer = playerService.updatePlayer(playerId, updatePlayerRequestDto);
         return ResponseEntity.ok(ApiResponse.success(updatedPlayer, "Player updated successfully"));
+    }
+
+    @GetMapping("/{playerId}/photo")
+    public ResponseEntity<byte[]> getPlayerPhoto(@PathVariable UUID clubId, @PathVariable UUID playerId) {
+        byte[] photo = playerService.getPlayerPhoto(playerId);
+
+        if (photo == null || photo.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG); // or MediaType.IMAGE_PNG depending on your needs
+        headers.setContentLength(photo.length);
+        headers.setCacheControl("no-cache, no-store, must-revalidate");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(photo);
+    }
+
+    @DeleteMapping("/{playerId}/photo")
+    public ResponseEntity<ApiResponse<Void>> removePlayerPhoto(
+            @PathVariable UUID clubId,
+            @PathVariable UUID playerId
+    ) {
+        playerService.removePlayerPhoto(playerId);
+        return ResponseEntity.ok(ApiResponse.success(null, "Player photo removed successfully"));
     }
 
     @DeleteMapping("/{playerId}")
