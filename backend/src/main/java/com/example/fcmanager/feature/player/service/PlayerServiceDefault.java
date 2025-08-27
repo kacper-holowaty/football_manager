@@ -1,6 +1,7 @@
 package com.example.fcmanager.feature.player.service;
 
 import com.example.fcmanager.shared.exception.ClubNotFoundException;
+import com.example.fcmanager.shared.exception.MaxPlayersLimitExceededException;
 import com.example.fcmanager.shared.exception.PlayerNotFoundException;
 import com.example.fcmanager.shared.exception.ShirtNumberAlreadyTakenException;
 import com.example.fcmanager.feature.club.domain.Club;
@@ -39,6 +40,10 @@ public class PlayerServiceDefault implements PlayerService {
     public PlayerResponseDto createPlayer(UUID clubId, CreatePlayerRequestDto createPlayerRequestDto) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new ClubNotFoundException(clubId.toString()));
+
+        if (playerRepository.countByClub_ClubId(clubId) >= 30) {
+            throw new MaxPlayersLimitExceededException(club.getName());
+        }
 
         if (playerRepository.existsByClub_ClubIdAndShirtNumber(clubId, createPlayerRequestDto.getShirtNumber())) {
             throw new ShirtNumberAlreadyTakenException(createPlayerRequestDto.getShirtNumber());
@@ -90,7 +95,7 @@ public class PlayerServiceDefault implements PlayerService {
     @Override
     @Transactional
     public List<PlayerResponseDto> getPlayersByClubId(UUID clubId) {
-        return playerRepository.findByClubClubId(clubId).stream()
+        return playerRepository.findByClub_ClubId(clubId).stream()
                 .map(playerMapper::toPlayerResponseDto)
                 .collect(Collectors.toList());
     }

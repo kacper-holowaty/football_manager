@@ -75,6 +75,17 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.conflict(ex.getMessage()));
     }
 
+    @ExceptionHandler(MaxPlayersLimitExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMaxPlayersLimitExceeded(
+            MaxPlayersLimitExceededException ex, WebRequest request) {
+
+        log.warn("Max players limit exceeded for request: {} - {}",
+                request.getDescription(false), ex.getMessage());
+
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.badRequest(ex.getMessage()));
+    }
+
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<Void>> handleUserAlreadyExists(
             UserAlreadyExistsException ex, WebRequest request) {
