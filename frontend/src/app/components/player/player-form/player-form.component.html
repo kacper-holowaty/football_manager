@@ -10,11 +10,11 @@
         (change)="onPhotoSelected($event)"
         accept="image/*"
       />
-      @if (photoPreviewUrl || (player?.photo && !photoRemoved)) {
+      @if (photoPreviewUrl || (player?.photoUrl&& !photoRemoved)) {
         <div class="player-photo-preview">
           <p class="photo-preview-text">Selected photo:</p>
-          <img class="player-photo" [src]="photoPreviewUrl || player?.photo" alt="Selected badge" />
-          <button mat-raised-button color="warn" (click)="removePhoto()">Remove player photo</button>
+          <img class="player-photo" [src]="photoPreviewUrl || player?.photoUrl" alt="Selected badge" />
+          <button type="button" mat-raised-button color="warn" (click)="removePhoto()">Remove player photo</button>
         </div>
       }
     </div>
@@ -85,18 +85,18 @@
     
     <div>
       <mat-form-field appearance="fill">
-        <mat-label>Position</mat-label>
-        <mat-select formControlName="position">
-          <mat-option value="" disabled>Choose position</mat-option>
+        <mat-label>Positions</mat-label>
+        <mat-select formControlName="positions" multiple>
+          <mat-option value="" disabled>Choose up to 3 positions</mat-option>
           @for (option of positionOptions; track option) {
-            <mat-option [value]="option.value">
-              {{ option.label }}
+            <mat-option [value]="option">
+              {{ option }}
             </mat-option>
           }
         </mat-select>
       </mat-form-field>
-      @if (playerForm.get('position')?.invalid && playerForm.get('position')?.touched) {
-        <div class="form-error-msg">Position is required.</div>
+      @if (playerForm.get('positions')?.invalid && playerForm.get('positions')?.touched) {
+        <div class="form-error-msg">At least one position is required (max 3).</div>
       }
     </div>
     
@@ -135,7 +135,7 @@
 
     <div class="">
       <mat-form-field appearance="fill">
-        <mat-label>Weekly Salary</mat-label>
+        <mat-label>Weekly salary</mat-label>
         <input matInput id="salary" formControlName="salary" type="number" step="100" min="0"/>
       </mat-form-field>
       @if (playerForm.get('salary')?.invalid && playerForm.get('salary')?.touched) {

@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ToastService } from '../../../services/toast.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DeletePlayerDialogComponent } from './delete-player-dialog/delete-player-dialog.component';
+import { ClubService } from '../../../services/club.service';
 
 @Component({
   selector: 'app-player-details',
@@ -35,8 +36,18 @@ export class PlayerDetailsComponent implements OnInit {
   protected countryCode: string = '';
   protected currentUserId: string = '';
   protected isUserLoggedIn: boolean = false;
+  protected clubOwnerId: string = '';
 
-  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService, private dialog: MatDialog, private toastService: ToastService) {}
+  public constructor(
+    private route: ActivatedRoute, 
+    private playerService: PlayerService, 
+    private router: Router, 
+    private countryService: CountryService, 
+    private authService: AuthService, 
+    private dialog: MatDialog, 
+    private toastService: ToastService,
+    private clubService: ClubService
+  ) {}
 
   public ngOnInit(): void {
     const clubId = this.route.snapshot.paramMap.get('id');
@@ -47,6 +58,10 @@ export class PlayerDetailsComponent implements OnInit {
         this.countryService.getCountryCode(player.nationality).subscribe((result) => {
           this.countryCode = result.code;
         });
+      });
+
+      this.clubService.getClubById(clubId).subscribe((club) => {
+        this.clubOwnerId = club.ownerId;
       });
     }
 
@@ -70,7 +85,7 @@ export class PlayerDetailsComponent implements OnInit {
   }
   
   protected deletePlayer(playerId: string): void {
-    this.playerService.deletePlayer(playerId).subscribe(() => {
+    this.playerService.deletePlayer(this.player!.clubId, playerId).subscribe(() => {
       this.toastService.showToast('Player deleted successfully!');
       this.router.navigate([`club/${this.player?.clubId}/player/list`]);
     });

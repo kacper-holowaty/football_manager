@@ -102,7 +102,13 @@ export class ClubService {
       formData.append("badge", club.badge);
     }
     
-    return this.httpClient.put<Club>(`${this.apiUrl}/${clubId}`, formData);
+    return this.httpClient.put<Response<Club>>(`${this.apiUrl}/${clubId}`, formData)
+      .pipe(
+        map((response) => ({
+          ...response.data,
+          badgeUrl: response.data.hasBadge ? `${this.apiUrl}/${response.data.clubId}/badge` : undefined
+        }))
+      );
   }
 
   public getClubsByOwnerId(ownerId: string): Observable<Club[]> {

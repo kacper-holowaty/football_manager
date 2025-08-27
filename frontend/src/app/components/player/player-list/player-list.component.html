@@ -23,14 +23,18 @@
       @for (player of players; track $index) {
         <div (click)="viewPlayerDetails(player.playerId)" (keydown)="viewPlayerDetails(player.playerId)" tabindex="0" class="player-item">
           <div class="photo-box">
-            <img [src]="player.photo || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
+            <img [src]="player.photoUrl || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
           </div>
           <div class="content">
             <div class="name-and-flag">
               <h3>{{ player.name }}</h3>
               <span class="fi" [class]="'fi-'+ getCountryCode(player.nationality)"></span>
             </div>
-            <p>Position: {{ player.position.charAt(0).toUpperCase() + player.position.slice(1) }}</p>
+            <p>Position: {{ player.positions[0].charAt(0).toUpperCase() + player.positions[0].slice(1) }}
+              @if (player.positions.length > 1) {
+                (+{{ player.positions.length - 1 }} more)
+              }
+            </p>
             <p>Age: {{ player.birthDate | calculateAge }}</p>
             <p>Shirt number: {{ player.shirtNumber }}.</p>
             <p>{{ player.contractUntil | contractLeft}}</p>

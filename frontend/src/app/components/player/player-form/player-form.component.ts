@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Player } from '../../../models/player.model';
+import { Player, PlayerRequest } from '../../../models/player.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayerService } from '../../../services/player.service';
-import { v4 as uuidv4 } from 'uuid';
 import { DateValidators } from './date-validators';
 import { CountryService } from '../../../services/country.service';
 import { Country } from '../../../models/country.model';
@@ -19,24 +18,17 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { ToastService } from '../../../services/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface PlayerForm {
   readonly photo: FormControl<Blob | null>;
   readonly name: FormControl<string | null>;
   readonly birthDate: FormControl<string | null>;
   readonly nationality: FormControl<string | null>;
-  readonly position: FormControl<string | null>;
+  readonly positions: FormControl<string[] | null>;
   readonly shirtNumber: FormControl<number | null>;
   readonly contractUntil: FormControl<string | null>;
   readonly salary: FormControl<number | null>;
-}
-
-interface ApiError {
-  readonly status: number;
-  readonly error: {
-    success: boolean;
-    message: string;
-  };
 }
 
 @Component({
@@ -66,12 +58,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
   protected filteredCountries: Observable<Country[]>; 
   protected errorMessage: string = '';
 
-  protected positionOptions = [
-    { label: 'Forward', value: 'forward' },
-    { label: 'Midfielder', value: 'midfielder' },
-    { label: 'Defender', value: 'defender' },
-    { label: 'Goalkeeper', value: 'goalkeeper' },
-  ];
+  protected positionOptions = ["GK", "CB", "LB", "RB", "CDM", "CM", "CAM", "LM", "RM", "LW", "RW", "CF", "ST"];
 
   protected todayDate(): string {
     const today = new Date();
@@ -95,7 +82,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
         DateValidators.birthDateValidator(),
       ]),
       nationality: new FormControl('', Validators.required, [allowedCountriesAsyncValidator(this.countryService)]),
-      position: new FormControl('', Validators.required),
+      positions: new FormControl([] as string[], [Validators.required, Validators.maxLength(3)]),
       shirtNumber: new FormControl(null, [
         Validators.required,
         Validators.min(1),
@@ -126,7 +113,6 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
       map((countries) => countries.filter((country) => country.country.toLowerCase().includes(filterValue)))
     );
   }
-  
 
   public ngOnInit(): void {
     const clubId = this.route.snapshot.paramMap.get('id');
@@ -139,11 +125,10 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
         const formattedBirthDate = new Date(player.birthDate).toISOString().split('T')[0];
         const formattedContractUntil = new Date(player.contractUntil).toISOString().split('T')[0];
         this.playerForm.patchValue({
-          photo: player.photo,
           name: player.name,
           birthDate: formattedBirthDate,
           nationality: player.nationality,
-          position: player.position,
+          positions: player.positions,
           shirtNumber: player.shirtNumber,
           contractUntil: formattedContractUntil,
           salary: player.salary,
@@ -170,7 +155,6 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
   
     if (input.files) {
       const file = input.files[0];
-      console.log('Selected file:', file);
   
       if (file.type.startsWith('image/')) {
         this.handleImageFile(file);
@@ -228,28 +212,27 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
       name: this.playerForm.get('name') as FormControl<string | null> | undefined,
       birthDate: this.playerForm.get('birthDate') as FormControl<string | null> | undefined,
       nationality: this.playerForm.get('nationality') as FormControl<string | null> | undefined,
-      position: this.playerForm.get('position') as FormControl<string | null> | undefined,
+      positions: this.playerForm.get('positions') as FormControl<string[] | null> | undefined,
       shirtNumber: this.playerForm.get('shirtNumber') as FormControl<number | null> | undefined,
       contractUntil: this.playerForm.get('contractUntil') as FormControl<string | null> | undefined,
       salary: this.playerForm.get('salary') as FormControl<number | null> | undefined,
     };
   }
   
-  private createPlayer(formValue: Partial<PlayerForm>): Player {
+  private createPlayer(formValue: Partial<PlayerForm>): PlayerRequest {
     const clubId = this.route.snapshot.paramMap.get('id');
+    const photoValue = this.playerForm.get('photo')?.value;
 
     return {
-      playerId: this.player ? this.player.playerId : uuidv4(),
-      photo: this.extractValue(formValue.photo, null),
+      photo: photoValue ?? null,
       name: this.extractValue(formValue.name, ''),
-      birthDate: formValue.birthDate?.value ? new Date(formValue.birthDate.value) : new Date(),
+      birthDate: formValue.birthDate?.value ? this.formatDateToYearMonthDay(new Date(formValue.birthDate.value)) : this.formatDateToYearMonthDay(new Date()),
       nationality: this.extractValue(formValue.nationality, ''),
-      position: this.extractValue(formValue.position, ''),
+      positions: this.extractValue(formValue.positions, []),
       shirtNumber: this.extractValue(formValue.shirtNumber, 0),
-      contractUntil: formValue.contractUntil?.value ? new Date(formValue.contractUntil.value) : new Date(),
+      contractUntil: formValue.contractUntil?.value ? this.formatDateToYearMonthDay(new Date(formValue.contractUntil.value)) : this.formatDateToYearMonthDay(new Date()),
       salary: this.extractValue(formValue.salary, 0),
       clubId: clubId ?? '',
-      clubOwnerId: this.currentUserId,
     };
   }
   
@@ -257,42 +240,61 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     return control?.value ?? defaultValue;
   }
   
-  private updatePlayer(player: Player): void {
-    this.playerService.updatePlayer(player).subscribe({
+  private updatePlayer(player: PlayerRequest): void {
+    if (this.photoRemoved) {
+      this.playerService.removePlayerPhoto(this.player!.clubId, this.player!.playerId).subscribe({
+        next: () => {
+          this.updatePlayerDetails(player);
+        },
+        error: (error) => {
+          console.error("Error removing photo:", error);
+          this.toastService.showToast("Error removing photo.");
+        }
+      });
+    } else {
+      this.updatePlayerDetails(player);
+    }
+  }
+
+  private updatePlayerDetails(player: PlayerRequest): void {
+    this.playerService.updatePlayer(this.player!.playerId, player).subscribe({
       next: () => {
         this.toastService.showToast("Player updated successfully!");
         this.router.navigate([`/club/${player.clubId}/player/list`]);
       },
-      error: (error: ApiError) => {
-        if (error.status === 400) {
-          this.errorMessage = error.error.message || "Conflict occurred.";
-          this.toastService.showToast(this.errorMessage);
+      error: (error: HttpErrorResponse) => {
+        if (error.error && typeof error.error === 'object' && 'message' in error.error) {
+          this.errorMessage = (error.error as { message: string }).message;
         } else {
-          console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while updating the player. Please try again.";
-          this.toastService.showToast(this.errorMessage);
         }
+        this.toastService.showToast(this.errorMessage);
       },
     });
   }
 
-  private addPlayer(player: Player): void {
+  private addPlayer(player: PlayerRequest): void {
     this.playerService.addPlayer(player).subscribe({
       next: () => {
         this.toastService.showToast("Player added successfully!");
         this.router.navigate([`/club/${player.clubId}/player/list`]);
       },
-      error: (error: ApiError) => {
-        if (error.status === 400) {
-          this.errorMessage = error.error.message || "Conflict occurred.";
-          this.toastService.showToast(this.errorMessage);
+      error: (error: HttpErrorResponse) => {
+        if (error.error && typeof error.error === 'object' && 'message' in error.error) {
+          this.errorMessage = (error.error as { message: string }).message;
         } else {
-          console.error("An error occurred:", error);
           this.errorMessage = "An error occurred while adding the player. Please try again.";
-          this.toastService.showToast(this.errorMessage);
         }
+        this.toastService.showToast(this.errorMessage);
       },
     });
+  }
+  private formatDateToYearMonthDay(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }
 

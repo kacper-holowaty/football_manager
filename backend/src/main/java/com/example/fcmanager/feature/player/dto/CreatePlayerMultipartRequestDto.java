@@ -3,7 +3,6 @@ package com.example.fcmanager.feature.player.dto;
 import com.example.fcmanager.shared.exception.FileProcessingException;
 import lombok.*;
 import jakarta.validation.constraints.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,7 +26,6 @@ public class CreatePlayerMultipartRequestDto {
 
     @NotNull(message = "Birth date is required")
     @Past(message = "Birth date must be in the past")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
 
     @NotBlank(message = "Nationality is required")
@@ -45,7 +43,6 @@ public class CreatePlayerMultipartRequestDto {
 
     @NotNull(message = "Contract end date is required")
     @Future(message = "Contract must end in the future")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate contractUntil;
 
     @NotNull(message = "Salary is required")

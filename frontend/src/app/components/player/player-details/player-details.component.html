@@ -7,12 +7,16 @@
 
     <div class="player-body">
       <div class="photo-box">
-        <img [src]="player.photo || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
+        <img [src]="player.photoUrl || defaultPhotoUrl" alt="{{ player.name }}" class="player-photo">
       </div>
       
       <div class="content">
         <p><mat-icon>calendar_today</mat-icon> Age: {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})</p>
-        <p><mat-icon>sports_soccer</mat-icon> Position: {{ player.position.charAt(0).toUpperCase() + player.position.slice(1) }}</p>
+        <p><mat-icon>sports_soccer</mat-icon> Position: {{ player.positions[0].charAt(0).toUpperCase() + player.positions[0].slice(1) }}
+          @if (player.positions.length > 1) {
+            (+{{ player.positions.length - 1 }} more)
+          }
+        </p>
         <p><mat-icon>tag</mat-icon> Shirt number: {{ player.shirtNumber }}</p>
         <p><mat-icon>flag</mat-icon> Nationality: {{ player.nationality }}</p>
         <p><mat-icon>assignment</mat-icon> {{ player.contractUntil | contractLeft}}</p>
@@ -20,7 +24,7 @@
       </div>
     </div>
 
-    @if (isUserLoggedIn && currentUserId === player.clubOwnerId) {
+    @if (isUserLoggedIn && currentUserId === clubOwnerId) {
       <div class="action-buttons">
         <button mat-raised-button color="primary" (click)="editPlayer(player.playerId)"><mat-icon>edit</mat-icon>Edit</button>
         <button mat-raised-button color="warn" (click)="openDeletePlayerConfirmationDialog(player.playerId)"><mat-icon>delete</mat-icon>Delete</button>

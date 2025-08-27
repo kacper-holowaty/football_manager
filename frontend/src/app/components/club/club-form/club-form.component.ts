@@ -201,7 +201,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
 
     const formValue: Partial<ClubForm> = this.mapFormValue();
     if (this.editing) {
-      const clubUpdateRequest = this.createClubUpdateRequest(formValue);
+      const clubUpdateRequest = this.updateClubRequest(formValue);
       this.updateClub(clubUpdateRequest);
     } else {
       const clubRequest = this.createClubRequest(formValue);
@@ -233,7 +233,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     };
   }
 
-  private createClubUpdateRequest(formValue: Partial<ClubForm>): UpdateClubRequest {
+  private updateClubRequest(formValue: Partial<ClubForm>): UpdateClubRequest {
     const badgeValue = this.clubForm.get('badge')?.value;
     
     return {
