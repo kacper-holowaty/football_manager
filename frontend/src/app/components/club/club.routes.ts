@@ -4,7 +4,7 @@ import { ClubListComponent } from './club-list/club-list.component';
 import { ClubMainComponent } from './club-main/club-main.component';
 import { authGuard } from '../../auth/auth.guard';
 import { ownerGuard } from '../../auth/owner.guard';
-import { AchievementComponent } from '../achievement/achievement.component';
+import { AchievementMainComponent } from '../achievement/achievement-main/achievement-main.component';
 
 export const CLUB_ROUTES: Routes = [
   {
@@ -40,7 +40,8 @@ export const CLUB_ROUTES: Routes = [
       import('../player/player.routes').then((r) => r.PLAYER_ROUTES),
   },
   {
-    path: ':id/achievement',
-    component: AchievementComponent,
+    path: ':id/achievements',
+    component: AchievementMainComponent,
+    title: 'Club Achievements',
   }
 ];

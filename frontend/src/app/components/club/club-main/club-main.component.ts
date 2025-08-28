@@ -25,11 +25,6 @@ export class ClubMainComponent implements OnInit {
   protected isUserLoggedIn: boolean = false;
   protected countryCode: string = '';
   
-  // protected sortedAchievements: Achievement[] = [];
-  // protected paginatedAchievements: Achievement[] = [];
-  // protected pageSize: number = 2;
-  // protected currentPage: number = 0;
-
   public constructor(private route: ActivatedRoute, private clubService: ClubService, private router: Router, private authService: AuthService, private countryService: CountryService, private dialog: MatDialog, private toastService: ToastService) {}
   
   public ngOnInit(): void {
@@ -38,11 +33,6 @@ export class ClubMainComponent implements OnInit {
       this.clubService.getClubById(id).subscribe({
         next: (club: Club) => {
           this.club = club;
-
-          // this.sortedAchievements = [...club.achievements].sort(
-          //   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          // );
-          // this.updatePaginatedAchievements();
 
           this.countryService.getCountryCode(club.address.country).subscribe((result) => {
             this.countryCode = result.code;
@@ -60,18 +50,6 @@ export class ClubMainComponent implements OnInit {
       this.currentUserId = userId;
     });
   }
-
-  // private updatePaginatedAchievements(): void {
-  //   const startIndex = this.currentPage * this.pageSize;
-  //   const endIndex = startIndex + this.pageSize;
-  //   this.paginatedAchievements = this.sortedAchievements.slice(startIndex, endIndex);
-  // }
-
-  // public changePage(event: PageEvent): void {
-  //   this.currentPage = event.pageIndex;
-  //   this.pageSize = event.pageSize;
-  //   this.updatePaginatedAchievements();
-  // }
 
   public openDeleteClubConfirmationDialog(clubId: string): void {
     const dialogRef = this.dialog.open(DeleteClubDialogComponent, {

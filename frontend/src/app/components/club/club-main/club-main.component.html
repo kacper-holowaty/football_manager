@@ -24,31 +24,6 @@
     </div>
   </div>
 
-  <!-- @if (club.achievements && club.achievements.length > 0) {
-  <div class="club-achievements">
-    <h3><mat-icon>emoji_events</mat-icon> Achievements:</h3>
-    <mat-paginator 
-      [length]="club.achievements.length"
-      [pageSize]="pageSize"
-      [pageIndex]="currentPage"
-      (page)="changePage($event)"
-      class="achievements-paginator">
-    </mat-paginator>
-    <div class="achievements-list">
-    @for (achievement of paginatedAchievements; track $index) {
-      <div class="achievement-card">
-      <mat-icon class="trophy-icon">emoji_events</mat-icon>
-      <div class="achievement-details">
-        <p>{{ achievement.date | formatDate }}</p>
-        <p class="achievement-name">{{ achievement.name }}</p>
-        <p>{{ achievement.description }}</p>
-      </div>
-      </div>
-    }
-    </div>
-  </div>
-  } -->
-
   @if (isUserLoggedIn && currentUserId === club.ownerId) {
     <div class="club-actions">
       <button mat-raised-button color="primary" (click)="editClub(club.clubId)">

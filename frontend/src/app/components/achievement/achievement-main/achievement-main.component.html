@@ -1,0 +1,42 @@
+<div class="achievements-container">
+  <h3><mat-icon>emoji_events</mat-icon> Achievements</h3>
+  @if (isUserLoggedIn && currentUserId === clubOwnerId) {
+    <button mat-raised-button color="primary" (click)="openAddAchievementForm()">
+      <mat-icon>add</mat-icon> Add Achievement
+    </button>
+  }
+
+  @if (paginatedAchievements.length > 0) {
+    <mat-paginator 
+      [length]="totalAchievements"
+      [pageSize]="pageSize"
+      [pageIndex]="currentPage"
+      (page)="changePage($event)"
+      class="achievements-paginator">
+    </mat-paginator>
+    <div class="achievements-list">
+      @for (achievement of paginatedAchievements; track achievement.achievementId) {
+        <div class="achievement-card">
+          <mat-icon class="trophy-icon">emoji_events</mat-icon>
+          <div class="achievement-details">
+            <p>{{ achievement.date | date:'mediumDate' }}</p>
+            <p class="achievement-name">{{ achievement.name }}</p>
+            <p>{{ achievement.description }}</p>
+          </div>
+          @if (isUserLoggedIn && currentUserId === clubOwnerId) {
+            <div class="achievement-actions">
+              <button mat-icon-button color="accent" (click)="openEditAchievementForm(achievement)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="openDeleteAchievementConfirmationDialog(achievement.achievementId)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="no-achievements-message">No achievements found for this club.</p>
+  }
+</div>

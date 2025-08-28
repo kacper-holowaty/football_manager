@@ -38,9 +38,3 @@ export interface Address {
   readonly city: string,
   readonly country: string;
 }
-
-export interface Achievement {
-  readonly name: string;
-  readonly date: Date;
-  readonly description: string;
-}

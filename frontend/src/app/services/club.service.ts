@@ -30,18 +30,6 @@ export class ClubService {
     formData.append("addressCity", club.address.city);
     formData.append("addressCountry", club.address.country);
 
-    // club.achievements.forEach((achievement, index) => {
-    //   formData.append(`achievements[${index}][name]`, achievement.name);
-    //   formData.append(
-    //     `achievements[${index}][date]`,
-    //     new Date(achievement.date).toISOString()
-    //   );
-    //   formData.append(
-    //     `achievements[${index}][description]`,
-    //     achievement.description
-    //   );
-    // });
-
     if (club.badge) {
       formData.append("badge", club.badge);
     }
@@ -85,18 +73,6 @@ export class ClubService {
     formData.append("addressPostalCode", club.address.postalCode);
     formData.append("addressCity", club.address.city);
     formData.append("addressCountry", club.address.country);
-
-    // club.achievements.forEach((achievement, index) => {
-    //   formData.append(`achievements[${index}][name]`, achievement.name);
-    //   formData.append(
-    //     `achievements[${index}][date]`,
-    //     new Date(achievement.date).toISOString()
-    //   );
-    //   formData.append(
-    //     `achievements[${index}][description]`,
-    //     achievement.description
-    //   );
-    // });
 
     if (club.badge instanceof Blob) {
       formData.append("badge", club.badge);

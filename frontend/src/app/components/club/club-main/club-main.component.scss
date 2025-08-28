@@ -61,61 +61,10 @@
   }
 }
 
-.club-achievements {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 15px;
-  border-radius: 8px;
-  h3 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-}
-
-.achievement-details {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-  max-width: 90%;
-}
-
-.achievements-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-}
-
-.achievement-card {
-  display: flex;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 10px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 400px;
-}
-
-.trophy-icon {
-  color: gold;
-}
-
-.achievement-name {
-  margin-top: -13px;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
 .club-actions {
   display: flex;
   gap: 15px;
   justify-content: center;
-}
-
-.achievements-paginator {
-  display: flex;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.0);
 }
 
 @media (max-width: 768px) {

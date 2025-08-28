@@ -26,9 +26,8 @@ export interface ClubForm {
   readonly stadiumName: FormControl<string | null>;
   readonly stadiumCapacity: FormControl<number | null>;
   readonly address: FormGroup<AddressForm>;
-  // readonly achievements: FormArray<FormGroup<AchievementForm>>;
 }
-
+ 
 export interface AddressForm {
   readonly street: FormControl<string | null>;
   readonly houseNumber: FormControl<string | null>;
@@ -37,13 +36,7 @@ export interface AddressForm {
   readonly city: FormControl<string | null>;
   readonly country: FormControl<string | null>;
 }
-
-export interface AchievementForm {
-  readonly name: FormControl<string | null>;
-  readonly date: FormControl<string | null>;
-  readonly description: FormControl<string | null>;
-}
-
+ 
 @Component({
   selector: 'app-club-form',
   standalone: true,
@@ -111,17 +104,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
             country: club.address.country,
           },
         });
-
-        // if (club.achievements.length > 0) {
-        //   club.achievements.forEach((achievement) => {
-        //     const formattedDate = new Date(achievement.date).toISOString().split('T')[0];
-        //     this.clubFormService.getAchievementsFormArray(this.clubForm).push(new FormGroup<AchievementForm>({
-        //       name: new FormControl(achievement.name, Validators.required),
-        //       date: new FormControl(formattedDate, Validators.required),
-        //       description: new FormControl(achievement.description, Validators.required),
-        //     }));
-        //   });
-        // }
       });
     }
 
@@ -135,10 +117,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     this.authService.getAuthenticatedUserId().subscribe((userId) => {
       this.currentUserId = userId;
     });
-
-    // this.clubForm.get('foundedYear')?.valueChanges.subscribe(() => {
-    //   this.clubFormService.initializeAchievementDateValidator(this.clubForm);
-    // });
   }
 
   protected filterCountries(value: string): Observable<Country[]> {
@@ -217,7 +195,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
       stadiumName: this.clubForm.get('stadiumName') as FormControl<string | null> | undefined,
       stadiumCapacity: this.clubForm.get('stadiumCapacity') as FormControl<number | null> | undefined,
       address: this.clubForm.get('address') as FormGroup<AddressForm> | undefined,
-      // achievements: this.clubForm.get('achievements') as FormArray<FormGroup<AchievementForm>> | undefined,
     };
   }
 
@@ -263,18 +240,6 @@ export class ClubFormComponent implements OnInit, OnDestroy {
       country: addressFormValue.country ?? '',
     };
   }
-  
-  // private createAchievements(achievements: FormArray<FormGroup<AchievementForm>>): Achievement[] {
-  //   return achievements.controls.map((achievementFormGroup) => {
-  //     const achievementFormValue = achievementFormGroup.value;
-  
-  //     return {
-  //       name: achievementFormValue.name ?? '',
-  //       date: achievementFormValue.date ? new Date(achievementFormValue.date) : new Date(),
-  //       description: achievementFormValue.description ?? '',
-  //     };
-  //   });
-  // }
   
   private addClub(clubRequest: ClubRequest): void {
     this.clubService.addClub(clubRequest).subscribe({
@@ -326,21 +291,7 @@ export class ClubFormComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
   protected goBack(): void {
     this.location.back();
   }
-
-  // protected addAchievement(): void {
-  //   this.clubFormService.addAchievement(this.clubForm);
-  // }
-
-  // protected deleteAchievement(index: number): void {
-  //   this.clubFormService.deleteAchievement(this.clubForm, index);
-  // }
-
-  // protected get achievements(): FormArray<FormGroup<AchievementForm>> {
-  //   return this.clubFormService.getAchievementsFormArray(this.clubForm);
-  // }
 }
