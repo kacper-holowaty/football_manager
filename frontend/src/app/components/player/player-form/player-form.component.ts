@@ -133,6 +133,15 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
           contractUntil: formattedContractUntil,
           salary: player.salary,
         });
+        if (player.photoUrl) {
+          this.photoPreviewUrl = player.photoUrl;
+          this.playerService.getPlayerPhotoAsBlob(player.clubId, player.playerId).subscribe({
+            next: (blob) => {
+              this.playerForm.get('photo')?.setValue(blob);
+            },
+            error: (err) => console.error('Error fetching photo as blob:', err)
+          });
+        }
       });
     }
 
@@ -221,10 +230,9 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
   
   private createPlayer(formValue: Partial<PlayerForm>): PlayerRequest {
     const clubId = this.route.snapshot.paramMap.get('id');
-    const photoValue = this.playerForm.get('photo')?.value;
 
     return {
-      photo: photoValue ?? null,
+      photo: this.playerForm.get('photo')?.value ?? null,
       name: this.extractValue(formValue.name, ''),
       birthDate: formValue.birthDate?.value ? this.formatDateToYearMonthDay(new Date(formValue.birthDate.value)) : this.formatDateToYearMonthDay(new Date()),
       nationality: this.extractValue(formValue.nationality, ''),

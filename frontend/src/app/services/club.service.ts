@@ -131,6 +131,10 @@ export class ClubService {
     return this.httpClient.delete<void>(`${this.apiUrl}/${clubId}/badge`);
   }
 
+  public getClubBadgeAsBlob(clubId: string): Observable<Blob> {
+    return this.httpClient.get(`${this.apiUrl}/${clubId}/badge`, { responseType: 'blob' });
+  }
+
   public navbarClubIdSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public navbarClubId$ = this.navbarClubIdSubject.asObservable();
   

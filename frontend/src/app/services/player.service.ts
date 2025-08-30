@@ -82,7 +82,7 @@ export class PlayerService {
     formData.append("salary", player.salary.toString());
     formData.append("clubId", player.clubId);
   
-    if (player.photo) {
+    if (player.photo instanceof Blob) {
       formData.append("photo", player.photo);
     }
   
@@ -101,5 +101,9 @@ export class PlayerService {
 
   public removePlayerPhoto(clubId: string, playerId: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.apiUrl}/clubs/${clubId}/players/${playerId}/photo`);
+  }
+
+  public getPlayerPhotoAsBlob(clubId: string, playerId: string): Observable<Blob> {
+    return this.httpClient.get(`${this.apiUrl}/clubs/${clubId}/players/${playerId}/photo`, { responseType: 'blob' });
   }
 }

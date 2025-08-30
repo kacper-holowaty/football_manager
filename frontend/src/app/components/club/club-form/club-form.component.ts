@@ -104,6 +104,15 @@ export class ClubFormComponent implements OnInit, OnDestroy {
             country: club.address.country,
           },
         });
+        if (club.badgeUrl) {
+          this.badgePreviewUrl = club.badgeUrl;
+          this.clubService.getClubBadgeAsBlob(club.clubId).subscribe({
+            next: (blob) => {
+              this.clubForm.get('badge')?.setValue(blob);
+            },
+            error: (err) => console.error('Error fetching badge as blob:', err)
+          });
+        }
       });
     }
 
@@ -211,11 +220,9 @@ export class ClubFormComponent implements OnInit, OnDestroy {
   }
 
   private updateClubRequest(formValue: Partial<ClubForm>): UpdateClubRequest {
-    const badgeValue = this.clubForm.get('badge')?.value;
-    
     return {
       name: this.extractValue(formValue.name, ''),
-      badge: badgeValue ?? null,
+      badge: this.clubForm.get('badge')?.value ?? null,
       ownerId: this.currentUserId,
       foundedYear: this.extractValue(formValue.foundedYear, 0),
       stadiumName: this.extractValue(formValue.stadiumName, ''),
