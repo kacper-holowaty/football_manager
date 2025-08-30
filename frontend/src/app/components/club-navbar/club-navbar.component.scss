@@ -70,3 +70,53 @@ a.active {
 a:hover {
   color: rgb(210, 202, 202);
 }
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 20px;
+  }
+
+  .left-container {
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .back-button {
+    margin-left: 0;
+    min-width: unset;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+    margin-right: 0;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-size: 1rem;
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-container span {
+    font-size: 1rem;
+  }
+
+  .back-button {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+    padding: 3px 8px;
+  }
+}

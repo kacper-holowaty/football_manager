@@ -1,211 +1,226 @@
 <button class="btn" (click)="goBack()">Go back</button>
 <div class="club-form">
-  <h1>{{ editing ? 'Edit your club' : 'Create a club' }}</h1>
+  <h1 class="form-title">{{ editing ? 'Edit your club' : 'Create a club' }}</h1>
   <form [formGroup]="clubForm" (ngSubmit)="onSubmit()">
-    <div class="file-input-group">
-      <label for="badge" class="file-label"><mat-icon>file_upload</mat-icon>Choose club badge </label>
-      <input id="badge" type="file" (change)="onBadgeSelected($event)" accept="image/*"/>
-      @if (badgePreviewUrl || (club?.badgeUrl && !badgeRemoved)) {
-        <div class="badge-preview">
-          <p class="badge-preview-text">Selected badge:</p>
-          <img class="badge-image" [src]="badgePreviewUrl || club?.badgeUrl" alt="Selected badge" />
-          <button type="button" mat-raised-button color="warn" (click)="removePhoto()">Remove badge</button>
+    <div class="form-content">
+      <div class="badge-section">
+        <div class="badge-upload-area" [class.has-badge]="badgePreviewUrl || (club?.badgeUrl && !badgeRemoved)" (click)="fileInput.click()" (keydown.enter)="fileInput.click()" tabindex="0">
+          @if (badgePreviewUrl || (club?.badgeUrl && !badgeRemoved)) {
+            <img class="badge-image-preview" [src]="badgePreviewUrl || club?.badgeUrl" alt="Club Badge" />
+            <button type="button" mat-mini-fab color="warn" class="remove-badge-button" (click)="removePhoto(); $event.stopPropagation()">
+              <mat-icon>close</mat-icon>
+            </button>
+          } @else {
+            <mat-icon class="upload-icon">cloud_upload</mat-icon>
+            <p>Upload Club Badge</p>
+          }
+          <input hidden type="file" #fileInput id="badge" (change)="onBadgeSelected($event)" accept="image/*" />
         </div>
-      }
-    </div>
-
-    <div>
-      <mat-form-field appearance="fill">
-        <mat-label>Club name</mat-label>
-        <input matInput id="name" formControlName="name" type="text" required />
-      </mat-form-field>
-      @if (clubForm.get('name')?.invalid && clubForm.get('name')?.touched) {
-        @if (clubForm.get('name')?.errors?.['required']) {
-          <div class="error-msg-form">Club name is required.</div>
-        }
-        @if (clubForm.get('name')?.errors?.['minlength']) {
-          <div class="error-msg-form">Club name is too short.</div>
-        }
-        @if (clubForm.get('name')?.errors?.['maxlength']) {
-          <div class="error-msg-form">Club name is too long.</div>
-        }
-        @if (clubForm.get('name')?.errors?.['pattern']) {
-          <div class="error-msg-form">Invalid club name.</div>
-        }
-      }
-    </div>
-
-    <div>
-      <mat-form-field appearance="fill">
-        <mat-label>Founded year</mat-label>
-        <input matInput id="foundedYear" formControlName="foundedYear" type="number" required />
-      </mat-form-field>
-      @if (clubForm.get('foundedYear')?.invalid && clubForm.get('foundedYear')?.touched) {
-        @if (clubForm.get('foundedYear')?.errors?.['required']) {
-          <div class="error-msg-form">Founded year is required.</div>
-        }
-        @if (clubForm.get('foundedYear')?.errors?.['min']) {
-          <div class="error-msg-form">The club was founded before football was invented? Nice, but that's not allowed.</div>
-        }
-        @if (clubForm.get('foundedYear')?.errors?.['max']) {
-          <div class="error-msg-form">Founded year cannot be later than the current year.</div>
-        }
-      }      
-    </div>
-
-    <div>
-      <mat-form-field appearance="fill">
-        <mat-label>Stadium name</mat-label>
-        <input matInput id="stadiumName" formControlName="stadiumName" type="text" required />
-      </mat-form-field>
-      @if (clubForm.get('stadiumName')?.invalid && clubForm.get('stadiumName')?.touched) {
-        @if (clubForm.get('stadiumName')?.errors?.['required']) {
-          <div class="error-msg-form">Stadium name is required.</div>
-        }
-        @if (clubForm.get('stadiumName')?.errors?.['minlength']) {
-          <div class="error-msg-form">Stadium name is too short.</div>
-        }
-        @if (clubForm.get('stadiumName')?.errors?.['maxlength']) {
-          <div class="error-msg-form">Stadium name is too long.</div>
-        }
-        @if (clubForm.get('stadiumName')?.errors?.['pattern']) {
-          <div class="error-msg-form">Invalid stadium name.</div>
-        }
-      }
-    </div>
-
-    <div>
-      <mat-form-field appearance="fill">
-        <mat-label>Stadium capacity</mat-label>
-        <input matInput id="stadiumCapacity" formControlName="stadiumCapacity" type="number" />
-      </mat-form-field>
-      @if (clubForm.get('stadiumCapacity')?.invalid && clubForm.get('stadiumCapacity')?.touched) {
-        @if (clubForm.get('stadiumCapacity')?.errors?.['required']) {
-          <div class="error-msg-form">Stadium capacity is required.</div>
-        }
-        @if (clubForm.get('stadiumCapacity')?.errors?.['min']) {
-          <div class="error-msg-form">Stadium capacity cannot be less than 0.</div>
-        }
-        @if (clubForm.get('stadiumCapacity')?.errors?.['max']) {
-          <div class="error-msg-form">Stadium capacity cannot exceed 250,000.</div>
-        }
-      }
-    </div>
-
-    <div class="address" formGroupName="address">
-      <h3>Address</h3>
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Street</mat-label>
-          <input matInput id="street" formControlName="street" type="text" />
-        </mat-form-field>
-        @if (clubForm.get('address.street')?.invalid && clubForm.get('address.street')?.touched) {
-          @if (clubForm.get('address.street')?.errors?.['required']) {
-            <div class="error-msg-form">Street name is required.</div>
-          }
-          @if (clubForm.get('address.street')?.errors?.['minlength']) {
-            <div class="error-msg-form">Street name is too short.</div>
-          }
-          @if (clubForm.get('address.street')?.errors?.['maxlength']) {
-            <div class="error-msg-form">Street name is too long.</div>
-          }
-          @if (clubForm.get('address.street')?.errors?.['pattern']) {
-            <div class="error-msg-form">Invalid street name.</div>
-          }
-        }
       </div>
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>House number</mat-label>
-          <input matInput id="houseNumber" formControlName="houseNumber" type="text" />
-        </mat-form-field>
-        @if (clubForm.get('address.houseNumber')?.invalid && clubForm.get('address.houseNumber')?.touched) {
-          <div class="error-msg-form">Invalid house number.</div>
-        }
-      </div>
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Apartment number</mat-label>
-          <input matInput id="apartmentNumber" formControlName="apartmentNumber" type="text" />
-        </mat-form-field>
-        @if (clubForm.get('address.apartmentNumber')?.invalid && clubForm.get('address.apartmentNumber')?.touched) {
-          <div class="error-msg-form">Apartment number is invalid.</div>
-        }
-      </div>
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Postal code</mat-label>
-          <input matInput id="postalCode" formControlName="postalCode" type="text" />
-        </mat-form-field>
-        @if (clubForm.get('address.postalCode')?.invalid && clubForm.get('address.postalCode')?.touched) {
-          @if (clubForm.get('address.postalCode')?.errors?.['required']) {
-            <div class="error-msg-form">Postal code is required.</div>
-          }
-          @if (clubForm.get('address.postalCode')?.errors?.['minlength']) {
-            <div class="error-msg-form">Postal code must be at least 4 characters long.</div>
-          }
-          @if (clubForm.get('address.postalCode')?.errors?.['maxlength']) {
-            <div class="error-msg-form">Postal code cannot exceed 6 characters.</div>
-          }
-          @if (clubForm.get('address.postalCode')?.errors?.['pattern']) {
-            <div class="error-msg-form">Invalid postal code format.</div>
-          }
-        }
-      </div>
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>City</mat-label>
-          <input matInput id="city" formControlName="city" type="text" />
-        </mat-form-field>
-        @if (clubForm.get('address.city')?.invalid && clubForm.get('address.city')?.touched) {
-          @if (clubForm.get('address.city')?.errors?.['required']) {
-            <div class="error-msg-form">City name is required.</div>
-          }
-          @if (clubForm.get('address.city')?.errors?.['minlength']) {
-            <div class="error-msg-form">City name is too short.</div>
-          }
-          @if (clubForm.get('address.city')?.errors?.['maxlength']) {
-            <div class="error-msg-form">City name is too long.</div>
-          }
-          @if (clubForm.get('address.city')?.errors?.['pattern']) {
-            <div class="error-msg-form">Invalid city name.</div>
-          }
-        }
-      </div>
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Select country</mat-label>
-          <input 
-            type="text" 
-            matInput 
-            formControlName="country" 
-            [matAutocomplete]="auto" 
-            placeholder="Enter country name">
-          <mat-autocomplete #auto="matAutocomplete">
-            @for (countryElem of filteredCountries | async; track $index) {
-              <mat-option  
-                [value]="countryElem.country">
-                <span class="fi" [class]="'fi-' + countryElem.code"></span>
-                {{ countryElem.country }}
-              </mat-option>
+
+      <div class="club-details-section">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Club name</mat-label>
+            <input matInput id="name" formControlName="name" type="text" required />
+          </mat-form-field>
+          @if (clubForm.get('name')?.invalid && clubForm.get('name')?.touched) {
+            @if (clubForm.get('name')?.errors?.['required']) {
+              <div class="error-msg-form">Club name is required.</div>
             }
-          </mat-autocomplete>
-        </mat-form-field>
-      
-        @if (clubForm.get('address.country')?.invalid && clubForm.get('address.country')?.touched) {
-          @if (clubForm.get('address.country')?.errors?.['required']) {
-            <div class="error-msg-form">Country is required.</div>
+            @if (clubForm.get('name')?.errors?.['minlength']) {
+              <div class="error-msg-form">Club name is too short.</div>
+            }
+            @if (clubForm.get('name')?.errors?.['maxlength']) {
+              <div class="error-msg-form">Club name is too long.</div>
+            }
+            @if (clubForm.get('name')?.errors?.['pattern']) {
+              <div class="error-msg-form">Invalid club name.</div>
+            }
           }
-          @if (clubForm.get('address.country')?.errors?.['invalidCountry']) {
-            <div class="error-msg-form">Please select a valid country.</div>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Founded year</mat-label>
+            <input matInput id="foundedYear" formControlName="foundedYear" type="number" required />
+          </mat-form-field>
+          @if (clubForm.get('foundedYear')?.invalid && clubForm.get('foundedYear')?.touched) {
+            @if (clubForm.get('foundedYear')?.errors?.['required']) {
+              <div class="error-msg-form">Founded year is required.</div>
+            }
+            @if (clubForm.get('foundedYear')?.errors?.['min']) {
+              <div class="error-msg-form">The club was founded before football was invented? Nice, but that's not allowed.</div>
+            }
+            @if (clubForm.get('foundedYear')?.errors?.['max']) {
+              <div class="error-msg-form">Founded year cannot be later than the current year.</div>
+            }
           }
-        }
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Stadium name</mat-label>
+            <input matInput id="stadiumName" formControlName="stadiumName" type="text" required />
+          </mat-form-field>
+          @if (clubForm.get('stadiumName')?.invalid && clubForm.get('stadiumName')?.touched) {
+            @if (clubForm.get('stadiumName')?.errors?.['required']) {
+              <div class="error-msg-form">Stadium name is required.</div>
+            }
+            @if (clubForm.get('stadiumName')?.errors?.['minlength']) {
+              <div class="error-msg-form">Stadium name is too short.</div>
+            }
+            @if (clubForm.get('stadiumName')?.errors?.['maxlength']) {
+              <div class="error-msg-form">Stadium name is too long.</div>
+            }
+            @if (clubForm.get('stadiumName')?.errors?.['pattern']) {
+              <div class="error-msg-form">Invalid stadium name.</div>
+            }
+          }
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Stadium capacity</mat-label>
+            <input matInput id="stadiumCapacity" formControlName="stadiumCapacity" type="number" />
+          </mat-form-field>
+          @if (clubForm.get('stadiumCapacity')?.invalid && clubForm.get('stadiumCapacity')?.touched) {
+            @if (clubForm.get('stadiumCapacity')?.errors?.['required']) {
+              <div class="error-msg-form">Stadium capacity is required.</div>
+            }
+            @if (clubForm.get('stadiumCapacity')?.errors?.['min']) {
+              <div class="error-msg-form">Stadium capacity cannot be less than 0.</div>
+            }
+            @if (clubForm.get('stadiumCapacity')?.errors?.['max']) {
+              <div class="error-msg-form">Stadium capacity cannot exceed 250,000.</div>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="address-section">
+        <h3>Address</h3>
+        <div class="address-group" formGroupName="address">
+          <div class="address-row-top">
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>City</mat-label>
+                <input matInput id="city" formControlName="city" type="text" />
+              </mat-form-field>
+              @if (clubForm.get('address.city')?.invalid && clubForm.get('address.city')?.touched) {
+                @if (clubForm.get('address.city')?.errors?.['required']) {
+                  <div class="error-msg-form">City name is required.</div>
+                }
+                @if (clubForm.get('address.city')?.errors?.['minlength']) {
+                  <div class="error-msg-form">City name is too short.</div>
+                }
+                @if (clubForm.get('address.city')?.errors?.['maxlength']) {
+                  <div class="error-msg-form">City name is too long.</div>
+                }
+                @if (clubForm.get('address.city')?.errors?.['pattern']) {
+                  <div class="error-msg-form">Invalid city name.</div>
+                }
+              }
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Select country</mat-label>
+                <input
+                  type="text"
+                  matInput
+                  formControlName="country"
+                  [matAutocomplete]="auto"
+                  placeholder="Enter country name">
+                <mat-autocomplete #auto="matAutocomplete">
+                  @for (countryElem of filteredCountries | async; track $index) {
+                    <mat-option
+                      [value]="countryElem.country">
+                      <span class="fi" [class]="'fi-' + countryElem.code"></span>
+                      {{ countryElem.country }}
+                    </mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            
+              @if (clubForm.get('address.country')?.invalid && clubForm.get('address.country')?.touched) {
+                @if (clubForm.get('address.country')?.errors?.['required']) {
+                  <div class="error-msg-form">Country is required.</div>
+                }
+                @if (clubForm.get('address.country')?.errors?.['invalidCountry']) {
+                  <div class="error-msg-form">Please select a valid country.</div>
+                }
+              }
+            </div>
+          </div>
+          <div class="address-row-middle">
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Postal code</mat-label>
+                <input matInput id="postalCode" formControlName="postalCode" type="text" />
+              </mat-form-field>
+              @if (clubForm.get('address.postalCode')?.invalid && clubForm.get('address.postalCode')?.touched) {
+                @if (clubForm.get('address.postalCode')?.errors?.['required']) {
+                  <div class="error-msg-form">Postal code is required.</div>
+                }
+                @if (clubForm.get('address.postalCode')?.errors?.['minlength']) {
+                  <div class="error-msg-form">Postal code must be at least 4 characters long.</div>
+                }
+                @if (clubForm.get('address.postalCode')?.errors?.['maxlength']) {
+                  <div class="error-msg-form">Postal code cannot exceed 6 characters.</div>
+                }
+                @if (clubForm.get('address.postalCode')?.errors?.['pattern']) {
+                  <div class="error-msg-form">Invalid postal code format.</div>
+                }
+              }
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Street</mat-label>
+                <input matInput id="street" formControlName="street" type="text" />
+              </mat-form-field>
+              @if (clubForm.get('address.street')?.invalid && clubForm.get('address.street')?.touched) {
+                @if (clubForm.get('address.street')?.errors?.['required']) {
+                  <div class="error-msg-form">Street name is required.</div>
+                }
+                @if (clubForm.get('address.street')?.errors?.['minlength']) {
+                  <div class="error-msg-form">Street name is too short.</div>
+                }
+                @if (clubForm.get('address.street')?.errors?.['maxlength']) {
+                  <div class="error-msg-form">Street name is too long.</div>
+                }
+                @if (clubForm.get('address.street')?.errors?.['pattern']) {
+                  <div class="error-msg-form">Invalid street name.</div>
+                }
+              }
+            </div>
+          </div>
+          <div class="address-row-bottom">
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>House number</mat-label>
+                <input matInput id="houseNumber" formControlName="houseNumber" type="text" />
+              </mat-form-field>
+              @if (clubForm.get('address.houseNumber')?.invalid && clubForm.get('address.houseNumber')?.touched) {
+                <div class="error-msg-form">Invalid house number.</div>
+              }
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Apartment number</mat-label>
+                <input matInput id="apartmentNumber" formControlName="apartmentNumber" type="text" />
+              </mat-form-field>
+              @if (clubForm.get('address.apartmentNumber')?.invalid && clubForm.get('address.apartmentNumber')?.touched) {
+                <div class="error-msg-form">Apartment number is invalid.</div>
+              }
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <button mat-raised-button [disabled]="clubForm.invalid">
       {{ editing ? 'Update club information' : 'Create club' }}
-    </button>  
+    </button>
   </form>
   @if (errorMessage) {
     <div class="error-message">
