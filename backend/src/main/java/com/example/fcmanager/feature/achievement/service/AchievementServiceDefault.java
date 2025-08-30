@@ -9,10 +9,12 @@ import com.example.fcmanager.feature.achievement.dto.AchievementResponseDto;
 import com.example.fcmanager.feature.achievement.mapper.AchievementMapper;
 import com.example.fcmanager.feature.achievement.repository.AchievementRepository;
 import com.example.fcmanager.feature.club.repository.ClubRepository;
+import com.example.fcmanager.shared.exception.InvalidAchievementDateException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,9 +37,13 @@ public class AchievementServiceDefault implements AchievementService {
     @Override
     @Transactional
     public AchievementResponseDto createAchievement(UUID clubId, AchievementRequestDto achievementRequestDto) {
-        Achievement achievement = achievementMapper.achievementRequestDtoToAchievement(achievementRequestDto);
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new ClubNotFoundException(clubId.toString()));
+
+        validateAchievementDate(club, achievementRequestDto.getDate());
+
+        Achievement achievement = achievementMapper.achievementRequestDtoToAchievement(achievementRequestDto);
+
         achievement.setClub(club);
         Achievement savedAchievement = achievementRepository.save(achievement);
         return achievementMapper.toAchievementDto(savedAchievement);
@@ -48,6 +54,8 @@ public class AchievementServiceDefault implements AchievementService {
     public AchievementResponseDto updateAchievement(UUID achievementId, AchievementRequestDto dto) {
         Achievement achievement = achievementRepository.findById(achievementId)
                 .orElseThrow(() -> new AchievementNotFoundException(achievementId.toString()));
+
+        validateAchievementDate(achievement.getClub(), dto.getDate());
 
         achievement.setName(dto.getName());
         achievement.setDescription(dto.getDescription());
@@ -63,5 +71,14 @@ public class AchievementServiceDefault implements AchievementService {
         Achievement achievement = achievementRepository.findById(achievementId)
                 .orElseThrow(() -> new AchievementNotFoundException(achievementId.toString()));
         achievementRepository.delete(achievement);
+    }
+
+    private void validateAchievementDate(Club club, LocalDate achievementDate) {
+        if (club.getFoundedYear() != null && achievementDate != null) {
+            int achievementYear = achievementDate.getYear();
+            if (achievementYear < club.getFoundedYear()) {
+                throw new InvalidAchievementDateException(achievementYear, club.getFoundedYear());
+            }
+        }
     }
 }

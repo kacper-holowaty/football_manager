@@ -110,6 +110,15 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.notFound(ex.getMessage()));
     }
 
+    @ExceptionHandler(InvalidAchievementDateException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidAchievementDate(
+            InvalidAchievementDateException ex, WebRequest request) {
+        log.warn("Invalid achievement date for request: {} - {}",
+                request.getDescription(false), ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.badRequest(ex.getMessage()));
+    }
+
     @ExceptionHandler(ClubNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleClubNotFound(
             UserNotFoundException ex, WebRequest request) {
