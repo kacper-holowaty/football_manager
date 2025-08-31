@@ -30,9 +30,9 @@
               <h3>{{ player.name }}</h3>
               <span class="fi" [class]="'fi-'+ getCountryCode(player.nationality)"></span>
             </div>
-            <p>Position: {{ player.positions[0].charAt(0).toUpperCase() + player.positions[0].slice(1) }}
-              @if (player.positions.length > 1) {
-                (+{{ player.positions.length - 1 }} more)
+            <p>Positions:
+              @for (position of player.positions; track $index) {
+                {{ position.charAt(0).toUpperCase() + position.slice(1) }}@if (!$last){, }
               }
             </p>
             <p>Age: {{ player.birthDate | calculateAge }}</p>

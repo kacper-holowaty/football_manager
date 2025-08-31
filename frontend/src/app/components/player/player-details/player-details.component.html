@@ -11,16 +11,33 @@
       </div>
       
       <div class="content">
-        <p><mat-icon>calendar_today</mat-icon> Age: {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})</p>
-        <p><mat-icon>sports_soccer</mat-icon> Position: {{ player.positions[0].charAt(0).toUpperCase() + player.positions[0].slice(1) }}
-          @if (player.positions.length > 1) {
-            (+{{ player.positions.length - 1 }} more)
+        <div class="detail-item">
+          <mat-icon>cake</mat-icon>
+          <span>Age:</span> {{ player.birthDate | calculateAge }} ({{player.birthDate | formatDate}})
+        </div>
+        <div class="detail-item">
+          <mat-icon>format_list_numbered</mat-icon>
+          <span>Positions:</span>
+          @for (position of player.positions; track $index) {
+            {{ position.charAt(0).toUpperCase() + position.slice(1) }}@if (!$last){, }
           }
-        </p>
-        <p><mat-icon>tag</mat-icon> Shirt number: {{ player.shirtNumber }}</p>
-        <p><mat-icon>flag</mat-icon> Nationality: {{ player.nationality }}</p>
-        <p><mat-icon>assignment</mat-icon> {{ player.contractUntil | contractLeft}}</p>
-        <p><mat-icon>attach_money</mat-icon> Salary (per week): {{player.salary | numberWithSpaces}} &euro;</p>
+        </div>
+        <div class="detail-item">
+          <mat-icon>looks_one</mat-icon>
+          <span>Shirt number:</span> {{ player.shirtNumber }}
+        </div>
+        <div class="detail-item">
+          <mat-icon>public</mat-icon>
+          <span>Nationality:</span> {{ player.nationality }}
+        </div>
+        <div class="detail-item">
+          <mat-icon>event_note</mat-icon>
+          <span>Contract:</span> {{ player.contractUntil | contractLeft}}
+        </div>
+        <div class="detail-item">
+          <mat-icon>payments</mat-icon>
+          <span>Salary (per week):</span> {{player.salary | numberWithSpaces}} &euro;
+        </div>
       </div>
     </div>
 
