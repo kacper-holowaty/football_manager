@@ -1,10 +1,12 @@
 <div class="achievements-container">
-  <h3><mat-icon>emoji_events</mat-icon> Achievements</h3>
-  @if (isUserLoggedIn && currentUserId === clubOwnerId) {
-    <button mat-raised-button color="primary" (click)="openAddAchievementForm()">
-      <mat-icon>add</mat-icon> Add Achievement
-    </button>
-  }
+  <div class="header-content">
+    <h3>Achievements</h3>
+    @if (isUserLoggedIn && currentUserId === clubOwnerId) {
+      <button mat-raised-button color="primary" (click)="openAddAchievementForm()" class="add-achievement-button">
+        <mat-icon>add</mat-icon> Add new achievement
+      </button>
+    }
+  </div>
 
   @if (paginatedAchievements.length > 0) {
     <mat-paginator 
@@ -17,11 +19,13 @@
     <div class="achievements-list">
       @for (achievement of paginatedAchievements; track achievement.achievementId) {
         <div class="achievement-card">
-          <mat-icon class="trophy-icon">emoji_events</mat-icon>
-          <div class="achievement-details">
-            <p>{{ achievement.date | date:'mediumDate' }}</p>
+          <div class="achievement-header">
+            <mat-icon class="trophy-icon">emoji_events</mat-icon>
+            <p class="achievement-date">{{ achievement.date | date:'mediumDate' }}</p>
+          </div>
+          <div class="achievement-content">
             <p class="achievement-name">{{ achievement.name }}</p>
-            <p>{{ achievement.description }}</p>
+            <p class="achievement-description">{{ achievement.description }}</p>
           </div>
           @if (isUserLoggedIn && currentUserId === clubOwnerId) {
             <div class="achievement-actions">

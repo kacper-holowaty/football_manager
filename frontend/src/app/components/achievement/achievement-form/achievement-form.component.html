@@ -62,6 +62,6 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-stroked-button color="accent" (click)="onCancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="achievementForm.invalid">{{ editing ? 'Update' : 'Add' }}</button>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="achievementForm.invalid">{{ editing ? 'Update' : 'Add' }}</button>
 </mat-dialog-actions>

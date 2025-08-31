@@ -22,6 +22,7 @@ public class Achievement {
 
     private LocalDate date;
 
+    @Column(length = 500)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

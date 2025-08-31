@@ -7,7 +7,10 @@
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 5px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 
   h3 {
     display: flex;
@@ -17,27 +20,60 @@
     margin-bottom: 10px;
   }
 
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .add-achievement-button {
+    margin-left: auto;
+  }
+
   .achievements-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
     justify-content: center;
+    gap: 15px;
   }
 
   .achievement-card {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
     background: rgba(255, 255, 255, 0.15);
-    padding: 10px;
-    border-radius: 8px;
+    padding: 15px;
+    border-radius: 12px;
     width: 100%;
     max-width: 400px;
+    transition: transform 0.2s ease-in-out;
+    position: relative;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+
+  .achievement-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    width: 100%;
+    margin-bottom: -17px;
   }
 
   .trophy-icon {
     color: gold;
-    font-size: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .achievement-date {
+    font-size: 0.9rem;
+    color: #ccc;
+  }
+
+  .achievement-content {
+    width: 100%;
   }
 
   .achievement-details {
@@ -45,7 +81,7 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
-    max-width: calc(100% - 80px); /* Adjust based on icon and button width */
+    width: 100%;
 
     p {
       margin: 0;
@@ -53,13 +89,25 @@
   }
 
   .achievement-name {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: bold;
+    margin-bottom: 10px;
+    word-break: break-word;
+  }
+
+  .achievement-description {
+    font-size: 1rem;
+    color: #e0e0e0;
+    line-height: 1.4;
+    word-break: break-word;
   }
 
   .achievement-actions {
     display: flex;
     gap: 5px;
+    margin-top: auto;
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .achievements-paginator {

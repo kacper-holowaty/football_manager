@@ -1,12 +1,13 @@
-.mat-dialog-content {
+mat-dialog-content {
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.mat-form-field {
+mat-form-field {
   width: 100%;
+  display: block;
 }
 
 .error-message {

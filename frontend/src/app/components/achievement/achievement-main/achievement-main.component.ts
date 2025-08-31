@@ -28,7 +28,7 @@ export class AchievementMainComponent implements OnInit {
   protected achievements: Achievement[] = [];
   protected sortedAchievements: Achievement[] = [];
   protected paginatedAchievements: Achievement[] = [];
-  protected pageSize: number = 2;
+  protected pageSize: number = 3;
   protected currentPage: number = 0;
   protected totalAchievements: number = 0;
   protected currentUserId: string = '';
