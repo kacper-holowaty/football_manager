@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { ToastService } from '../../../services/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Location } from '@angular/common';
 
 export interface PlayerForm {
   readonly photo: FormControl<Blob | null>;
@@ -69,7 +70,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
   }
 
-  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService, private toastService: ToastService) {
+  public constructor(private route: ActivatedRoute, private playerService: PlayerService, private router: Router, private countryService: CountryService, private authService: AuthService, private toastService: ToastService, private location: Location) {
     this.playerForm = new FormGroup<PlayerForm>({
       photo: new FormControl(null),
       name: new FormControl('', [
@@ -303,6 +304,10 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     const day = date.getDate().toString().padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+  }
+
+  protected goBack(): void {
+    this.location.back();
   }
 }
 
