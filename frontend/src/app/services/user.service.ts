@@ -1,0 +1,30 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { User } from '../models/user.model';
+import { Response } from '../models/response.type';
+import { ToastService } from './toast.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+
+  private apiUrl = 'http://localhost:8080/api';
+
+  public constructor(private httpClient: HttpClient, private toastService: ToastService) { }
+
+  public updateUser(userId: string, user: Partial<User>): Observable<User> {
+    return this.httpClient.patch<Response<User>>(`${this.apiUrl}/users/${userId}`, user)
+      .pipe(
+        map((res: Response<User>) => res.data),
+        catchError((err: HttpErrorResponse) => {
+          console.error('Error updating user:', err);
+          this.toastService.showToast('Failed to update user data.');
+
+          return throwError(() => err);
+        })
+      );
+  }
+}

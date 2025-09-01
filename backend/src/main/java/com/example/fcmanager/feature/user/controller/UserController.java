@@ -3,16 +3,14 @@ package com.example.fcmanager.feature.user.controller;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.fcmanager.feature.user.dto.UserResponseDto;
+import com.example.fcmanager.feature.user.dto.UserUpdateRequestDto;
 import com.example.fcmanager.feature.user.service.UserService;
 import com.example.fcmanager.shared.dto.ApiResponse;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,6 +25,14 @@ public class UserController {
         UserResponseDto user = userService.getUserById(id);
         return ResponseEntity.ok(
             ApiResponse.success(user, "User fetched successfully")
+        );
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserResponseDto>> updateUser(@PathVariable UUID id, @Valid @RequestBody UserUpdateRequestDto userRequest) {
+        UserResponseDto updatedUser = userService.updateUser(id, userRequest);
+        return ResponseEntity.ok(
+            ApiResponse.success(updatedUser, "User updated successfully")
         );
     }
 

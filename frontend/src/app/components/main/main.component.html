@@ -1,4 +1,16 @@
-<button class="btn" routerLink="/">Log out</button>
+<button class="btn logout-button" routerLink="/">Log out</button>
+
+<div class="header-actions">
+  <button mat-icon-button [matMenuTriggerFor]="settingsMenu" aria-label="Settings">
+    <mat-icon>settings</mat-icon>
+  </button>
+  <mat-menu #settingsMenu="matMenu">
+    <button mat-menu-item (click)="openEditUserDialog()">
+      <mat-icon>edit</mat-icon>
+      <span>Edit user data</span>
+    </button>
+  </mat-menu>
+</div>
 <div class="button-container">
   <h2>Hello {{currentUserName}}! Here are your clubs!</h2>
   @if (clubs.length > 0) {

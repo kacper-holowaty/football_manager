@@ -1,9 +1,10 @@
 package com.example.fcmanager.feature.user.mapper;
 
+import org.mapstruct.Mapper;
+
 import com.example.fcmanager.feature.user.domain.User;
 import com.example.fcmanager.feature.user.dto.AuthenticatedUserResponseDto;
 import com.example.fcmanager.feature.user.dto.UserResponseDto;
-import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

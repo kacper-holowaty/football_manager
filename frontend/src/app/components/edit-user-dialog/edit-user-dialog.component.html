@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>Edit User Data</h2>
+<mat-dialog-content [formGroup]="editUserForm">
+  <div class="form-group">
+    <mat-form-field appearance="fill">
+      <mat-label>First name</mat-label>
+      <input matInput id="firstName" type="text" formControlName="firstName">
+    </mat-form-field>
+    @if (editUserForm.get('firstName')?.invalid && editUserForm.get('firstName')?.touched) {
+      @if (editUserForm.get('firstName')?.errors?.['required']) {
+        <div class="error-msg-form">First name is required.</div>
+      }
+      @else if (editUserForm.get('firstName')?.errors?.['minlength']) {
+        <div class="error-msg-form">First name must be at least 2 characters long.</div>
+      }
+      @else if (editUserForm.get('firstName')?.errors?.['maxlength']) {
+        <div class="error-msg-form">First name cannot be more than 40 characters long.</div>
+      }
+      @else if (editUserForm.get('firstName')?.errors?.['pattern']) {
+        <div class="error-msg-form">First name must start with a capital letter, contain only letters, spaces or '-', and not end with space or '-'.</div>
+      }
+    }
+  </div>
+
+  <div class="form-group">
+    <mat-form-field appearance="fill">
+      <mat-label>Last name</mat-label>
+      <input matInput id="lastName" type="text" formControlName="lastName">
+    </mat-form-field>
+    @if (editUserForm.get('lastName')?.invalid && editUserForm.get('lastName')?.touched) {
+      @if (editUserForm.get('lastName')?.errors?.['required']) {
+        <div class="error-msg-form">Last name is required.</div>
+      }
+      @else if (editUserForm.get('lastName')?.errors?.['minlength']) {
+        <div class="error-msg-form">Last name must be at least 2 characters long.</div>
+      }
+      @else if (editUserForm.get('lastName')?.errors?.['maxlength']) {
+        <div class="error-msg-form">Last name cannot be more than 40 characters long.</div>
+      }
+      @else if (editUserForm.get('lastName')?.errors?.['pattern']) {
+        <div class="error-msg-form">Last name cannot start with space or '-', must contain only letters, spaces or '-', and cannot end with space or '-'.</div>
+      }
+    }
+  </div>
+
+  <div class="form-group">
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput id="email" type="email" formControlName="email">
+    </mat-form-field>
+    @if (editUserForm.get('email')?.invalid && editUserForm.get('email')?.touched) {
+      <div class="error-msg-form">Invalid email address.</div>
+    }
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="editUserForm.invalid">Save</button>
+</mat-dialog-actions>
