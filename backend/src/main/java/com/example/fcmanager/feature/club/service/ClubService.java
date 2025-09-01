@@ -3,12 +3,15 @@ package com.example.fcmanager.feature.club.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.fcmanager.feature.club.dto.ClubResponseDto;
 import com.example.fcmanager.feature.club.dto.CreateClubRequestDto;
 import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
 
 public interface ClubService {
-    List<ClubResponseDto> getAllClubs();
+    Page<ClubResponseDto> getAllClubs(Pageable pageable);
 
     ClubResponseDto getClubById(UUID id);
 

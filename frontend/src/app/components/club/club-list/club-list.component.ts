@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ClubService } from '../../../services/club.service';
 import { Router } from '@angular/router';
 import { Club } from '../../../models/club.model';
+import { Page } from '../../../models/pagination.model';
 import { CountryService } from '../../../services/country.service';
 import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,9 +20,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   styleUrl: './club-list.component.scss'
 })
 export class ClubListComponent implements OnInit {
-  protected clubs?: Club[];
-  protected filteredClubs: Club[] = [];
-  protected paginatedClubs: Club[] = [];
+  protected clubs: Club[] = [];
+  protected totalClubs: number = 0;
   protected defaultBadgeUrl: string = "assets/images/empty_badge.png";
   protected countryCodes: Record<string, string> = {};
   protected availableCountries: string[] = [];
@@ -37,17 +37,19 @@ export class ClubListComponent implements OnInit {
   public constructor(private router: Router, private clubService: ClubService, private countryService: CountryService, private location: Location) {}
 
   public ngOnInit(): void {
-    this.clubService.getAllClubs().subscribe({
-      next: (clubs: Club[]) => {
-        this.clubs = clubs;
-        this.filteredClubs = [...this.clubs];
+    this.fetchClubs();
+  }
+
+  private fetchClubs(): void {
+    this.clubService.getAllClubs(this.pageIndex, this.pageSize, 'name,asc').subscribe({
+      next: (response: { data: Page<Club> }) => {
+        this.clubs = response.data.content;
+        this.totalClubs = response.data.totalElements;
 
         if (this.clubs.length > 0) {
           this.loadCountryFlags(this.clubs);
           this.availableCountries = [...new Set(this.clubs.map((club) => club.address.country))];
         }
-
-        this.updatePaginatedClubs();
       },
       error: (error) => {
         console.error('Error fetching clubs:', error);
@@ -86,26 +88,13 @@ export class ClubListComponent implements OnInit {
   }
 
   protected filterClubs(): void {
-    const filtered = this.clubs?.filter((club) =>
-      club.name.toLowerCase().includes(this.searchName.toLowerCase()) &&
-      (this.selectedCountry ? club.address.country === this.selectedCountry : true) &&
-      (!this.onlyWithBadge || club.badgeUrl)
-    ) || [];
-
-    this.filteredClubs = filtered;
     this.pageIndex = 0;
-    this.updatePaginatedClubs();
-  }
-
-  protected updatePaginatedClubs(): void {
-    const startIndex = this.pageIndex * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.paginatedClubs = this.filteredClubs.slice(startIndex, endIndex);
+    this.fetchClubs();
   }
 
   protected onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.updatePaginatedClubs();
+    this.fetchClubs();
   }
 }

@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.example.fcmanager.shared.exception.UserClubLimitExceededException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.fcmanager.feature.address.domain.Address;
@@ -21,6 +23,7 @@ import com.example.fcmanager.feature.user.domain.User;
 import com.example.fcmanager.feature.user.repository.UserRepository;
 import com.example.fcmanager.shared.exception.ClubAlreadyExistsException;
 import com.example.fcmanager.shared.exception.ClubNotFoundException;
+import com.example.fcmanager.shared.exception.UserClubLimitExceededException;
 import com.example.fcmanager.shared.exception.UserNotFoundWithIdException;
 
 import jakarta.transaction.Transactional;
@@ -37,10 +40,12 @@ public class ClubServiceDefault implements ClubService {
     private final AddressMapper addressMapper;
 
     @Override
-    public List<ClubResponseDto> getAllClubs() {
-        return clubRepository.findAll().stream()
+    public Page<ClubResponseDto> getAllClubs(Pageable pageable) {
+        Page<Club> clubPage = clubRepository.findAll(pageable);
+        List<ClubResponseDto> clubResponseDtos = clubPage.getContent().stream()
                 .map(clubMapper::toClubDto)
                 .collect(Collectors.toList());
+        return new PageImpl<>(clubResponseDtos, pageable, clubPage.getTotalElements());
     }
 
     @Override

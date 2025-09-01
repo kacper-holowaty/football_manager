@@ -4,13 +4,20 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-import com.example.fcmanager.feature.club.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.fcmanager.feature.club.dto.ClubResponseDto;
+import com.example.fcmanager.feature.club.dto.CreateClubMultipartRequestDto;
+import com.example.fcmanager.feature.club.dto.CreateClubRequestDto;
+import com.example.fcmanager.feature.club.dto.UpdateClubMultipartRequestDto;
+import com.example.fcmanager.feature.club.dto.UpdateClubRequestDto;
 import com.example.fcmanager.feature.club.service.ClubService;
 import com.example.fcmanager.shared.dto.ApiResponse;
 
@@ -25,8 +32,8 @@ public class ClubController {
     private final ClubService clubService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ClubResponseDto>>> getAllClubs() {
-        List<ClubResponseDto> clubs = clubService.getAllClubs();
+    public ResponseEntity<ApiResponse<Page<ClubResponseDto>>> getAllClubs(@PageableDefault(size = 20) Pageable pageable) {
+        Page<ClubResponseDto> clubs = clubService.getAllClubs(pageable);
         return ResponseEntity.ok(ApiResponse.success(clubs, "Clubs fetched successfully"));
     }
 

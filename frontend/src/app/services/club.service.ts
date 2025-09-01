@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Club, ClubRequest, UpdateClubRequest } from '../models/club.model';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Response } from '../models/response.type';
+import { Page } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -105,17 +106,24 @@ export class ClubService {
       );
   }
 
-  public getAllClubs(): Observable<Club[]> {
-    return this.httpClient.get<Response<Club[]>>(this.apiUrl)
-      .pipe(
-        map((res: Response<Club[]>) =>  {
-          const response = res.data;
-          const clubs = response.map((club) => ({
-            ...club,
-            badgeUrl: club.hasBadge ? `${this.apiUrl}/${club.clubId}/badge` : undefined
-          }));
+  public getAllClubs(page: number, size: number, sort: string): Observable<Response<Page<Club>>> {
+    let params = new HttpParams();
+    params = params.append('page', page.toString());
+    params = params.append('size', size.toString());
+    params = params.append('sort', sort);
 
-          return clubs;
+    return this.httpClient.get<Response<Page<Club>>>(this.apiUrl, { params })
+      .pipe(
+        map((res: Response<Page<Club>>) => {
+          const paginatedClubs = {
+            ...res.data,
+            content: res.data.content.map((club) => ({
+              ...club,
+              badgeUrl: club.hasBadge ? `${this.apiUrl}/${club.clubId}/badge` : undefined
+            }))
+          };
+          
+          return { ...res, data: paginatedClubs };
         }),
         catchError((err: HttpErrorResponse) => {
           return throwError(() => err);

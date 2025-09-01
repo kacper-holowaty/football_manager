@@ -4,7 +4,7 @@
       <img [src]="logoUrl" alt="Logo" class="logo" />
       <span>{{ applicationName }}</span>
     </div>
-    <button class="back-button" (click)="goBack()">{{isOwner ? 'My clubs' : 'All clubs'}}</button>
+    <button class="back-button" (click)="goBack()">{{isAuthenticated ? 'My clubs' : 'All clubs'}}</button>
   </div>   
   <div class="nav-links">
     <a [routerLink]="['/club', clubId, 'main']" routerLinkActive="active">Main</a>

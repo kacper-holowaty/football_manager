@@ -15,31 +15,25 @@ export class ClubNavbarComponent implements OnInit {
   protected clubId: string = '';
   protected logoUrl: string = "assets/images/gold_logo.png";
   protected applicationName: string = "FC Manager";
-  protected isOwner: boolean = false;
+  protected isAuthenticated: boolean = false;
 
   public constructor( private router: Router, private clubService: ClubService, private authService: AuthService) {}
 
   public ngOnInit(): void {
     this.clubService.navbarClubId$.subscribe((id) => {
       this.clubId = id;
-      this.checkOwnership(id);
     }); 
+    this.checkAuthentication();
   }
 
-  private checkOwnership(clubId: string): void {
-    this.clubService.getClubById(clubId).subscribe((club) => {
-      this.authService.getAuthenticatedUserId().subscribe((currentUserId) => {
-        if (club.ownerId === currentUserId) {
-          this.isOwner = true;
-        } else {
-          this.isOwner = false;
-        }
-      });
-    });
+  private checkAuthentication(): void {
+    if (this.authService.isAuthenticated()) {
+      this.isAuthenticated = true;
+    }
   }
 
   public goBack(): void {
-    if (this.isOwner) {
+    if (this.isAuthenticated) {
       this.router.navigate([`/main`]);
     } else {
       this.router.navigate(['/club/list']);

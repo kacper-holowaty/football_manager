@@ -29,9 +29,9 @@
       </mat-checkbox>
     </div>
   
-    @if (filteredClubs.length > 0) {
-      <mat-paginator 
-        [length]="filteredClubs.length"
+    @if (clubs.length > 0) {
+      <mat-paginator
+        [length]="totalClubs"
         [pageSize]="pageSize"
         [pageIndex]="pageIndex"
         [pageSizeOptions]="pageSizeOptions"
@@ -40,17 +40,17 @@
       </mat-paginator>
 
       <div class="club-list">
-        @for (club of paginatedClubs; track $index) {
-          <div 
+        @for (club of clubs; track $index) {
+          <div
             class="club-item"
-            tabindex="0" 
+            tabindex="0"
             (click)="viewClubDetails(club.clubId)"
-            (keydown.enter)="viewClubDetails(club.clubId)" 
+            (keydown.enter)="viewClubDetails(club.clubId)"
             (keydown.space)="viewClubDetails(club.clubId)"
             >
             <div class="club-info">
               <h3>{{ club.name }}</h3>
-              <span class="fi" [class]="'fi-'+getCountryCode(club.address.country)"></span> 
+              <span class="fi" [class]="'fi-'+getCountryCode(club.address.country)"></span>
             </div>
             <div class="club-badge-wrapper">
               <img [src]="club.badgeUrl || defaultBadgeUrl" [alt]="club.name + 'Badge'" class="club-badge"/>
