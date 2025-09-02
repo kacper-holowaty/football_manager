@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Player, PlayerRequest } from '../models/player.model';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -8,7 +9,7 @@ import { Response } from '../models/response.type';
   providedIn: 'root'
 })
 export class PlayerService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiUrl;
 
   public constructor(private httpClient: HttpClient) {}
 

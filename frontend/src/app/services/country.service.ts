@@ -1,4 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Country } from '../models/country.model';
@@ -8,7 +9,7 @@ import { Response } from '../models/response.type';
   providedIn: 'root'
 })
 export class CountryService {
-  private apiUrl = 'http://localhost:8080/api/countries';
+  private apiUrl = `${environment.apiUrl}/countries`;
 
   public constructor(private httpClient: HttpClient) { }
 

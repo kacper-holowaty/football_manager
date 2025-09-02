@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, EMPTY, map, Observable, tap, throwError } from 'rxjs';
 import { ToastService } from './toast.service';
@@ -12,7 +13,7 @@ import { TokenService } from './token.service';
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiUrl;
 
   public constructor(
     private httpClient: HttpClient,

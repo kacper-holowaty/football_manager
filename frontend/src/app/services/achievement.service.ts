@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Achievement, AchievementRequest } from '../models/achievement.model';
@@ -8,7 +9,7 @@ import { Response } from '../models/response.type';
   providedIn: 'root'
 })
 export class AchievementService {
-  private readonly apiUrl = 'http://localhost:8080/api';
+  private readonly apiUrl = environment.apiUrl;
 
   public constructor(private readonly http: HttpClient) { }
 

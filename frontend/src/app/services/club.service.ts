@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Club, ClubRequest, UpdateClubRequest } from '../models/club.model';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
@@ -9,7 +10,7 @@ import { Page } from '../models/pagination.model';
   providedIn: 'root'
 })
 export class ClubService {
-  private apiUrl = "http://localhost:8080/api/clubs";
+  private apiUrl = `${environment.apiUrl}/clubs`;
 
   public constructor(private httpClient: HttpClient) {}
 
