@@ -119,6 +119,15 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.badRequest(ex.getMessage()));
     }
 
+    @ExceptionHandler(InvalidOldPasswordException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidOldPassword(
+            InvalidOldPasswordException ex, WebRequest request) {
+        log.warn("Invalid old password for request: {} - {}",
+                request.getDescription(false), ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.badRequest(ex.getMessage()));
+    }
+
     @ExceptionHandler(ClubNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleClubNotFound(
             UserNotFoundException ex, WebRequest request) {

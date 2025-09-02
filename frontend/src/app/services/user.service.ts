@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { User } from '../models/user.model';
+import { ChangePasswordRequest } from '../models/change-password-request.model';
 import { Response } from '../models/response.type';
 import { ToastService } from './toast.service';
 
@@ -20,9 +21,15 @@ export class UserService {
       .pipe(
         map((res: Response<User>) => res.data),
         catchError((err: HttpErrorResponse) => {
-          console.error('Error updating user:', err);
-          this.toastService.showToast('Failed to update user data.');
+          return throwError(() => err);
+        })
+      );
+  }
 
+  public changePassword(userId: string, request: ChangePasswordRequest): Observable<void> {
+    return this.httpClient.patch<void>(`${this.apiUrl}/users/${userId}/password`, request)
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
           return throwError(() => err);
         })
       );

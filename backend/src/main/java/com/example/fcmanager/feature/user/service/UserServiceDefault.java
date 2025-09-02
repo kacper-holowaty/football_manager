@@ -2,13 +2,16 @@ package com.example.fcmanager.feature.user.service;
 
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.fcmanager.feature.user.domain.User;
+import com.example.fcmanager.feature.user.dto.ChangePasswordRequestDto;
 import com.example.fcmanager.feature.user.dto.UserResponseDto;
 import com.example.fcmanager.feature.user.dto.UserUpdateRequestDto;
 import com.example.fcmanager.feature.user.mapper.UserMapper;
 import com.example.fcmanager.feature.user.repository.UserRepository;
+import com.example.fcmanager.shared.exception.InvalidOldPasswordException;
 import com.example.fcmanager.shared.exception.UserNotFoundWithIdException;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceDefault implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDto getUserById(UUID id) {
@@ -45,5 +49,18 @@ public class UserServiceDefault implements UserService {
             throw new UserNotFoundWithIdException(id.toString());
         }
         userRepository.deleteById(id);
+    }
+    @Override
+    public UserResponseDto changePassword(UUID id, ChangePasswordRequestDto request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundWithIdException(id.toString()));
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new InvalidOldPasswordException("Current password is incorrect.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        User updatedUser = userRepository.save(user);
+        return userMapper.toUserDto(updatedUser);
     }
 }

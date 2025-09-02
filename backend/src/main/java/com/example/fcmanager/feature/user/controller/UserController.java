@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.fcmanager.feature.user.dto.ChangePasswordRequestDto;
 import com.example.fcmanager.feature.user.dto.UserResponseDto;
 import com.example.fcmanager.feature.user.dto.UserUpdateRequestDto;
 import com.example.fcmanager.feature.user.service.UserService;
@@ -41,6 +42,13 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok(
             ApiResponse.success(null, "User deleted successfully")
+        );
+    }
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<ApiResponse<UserResponseDto>> changePassword(@PathVariable UUID id, @Valid @RequestBody ChangePasswordRequestDto request) {
+        UserResponseDto updatedUser = userService.changePassword(id, request);
+        return ResponseEntity.ok(
+            ApiResponse.success(updatedUser, "Password changed successfully")
         );
     }
 }

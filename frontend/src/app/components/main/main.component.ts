@@ -11,7 +11,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditUserDialogComponent } from '../edit-user-dialog/edit-user-dialog.component';
+import { EditPasswordDialogComponent } from '../edit-password-dialog/edit-password-dialog.component';
 import { ToastService } from '../../services/toast.service';
+import { ChangePasswordRequest } from '../../models/change-password-request.model';
 
 @Component({
   selector: 'app-main',
@@ -122,7 +124,40 @@ export class MainComponent implements OnInit {
           },
           error: (err: HttpErrorResponse) => {
             console.error('Error updating user:', err);
-            this.toastService.showToast('Failed to update user data.');
+            if (err.error && typeof err.error === 'object' && 'message' in err.error) {
+              this.toastService.showToast((err.error as { message: string }).message);
+            } else {
+              this.toastService.showToast('Failed to update user data.');
+            }
+          }
+        });
+      }
+    });
+  }
+
+  protected openEditPasswordDialog(): void {
+    if (!this.currentUser) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(EditPasswordDialogComponent, {
+      width: '400px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe((result: ChangePasswordRequest | undefined) => {
+      if (result) {
+        this.userService.changePassword(this.currentUserId, result).subscribe({
+          next: () => {
+            this.toastService.showToast('Password updated successfully!');
+          },
+          error: (err: HttpErrorResponse) => {
+            console.error('Error changing password:', err);
+            if (err.error && typeof err.error === 'object' && 'message' in err.error) {
+              this.toastService.showToast((err.error as { message: string }).message);
+            } else {
+              this.toastService.showToast('Failed to change password.');
+            }
           }
         });
       }
