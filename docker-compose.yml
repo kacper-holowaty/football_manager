@@ -1,0 +1,74 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/package.json
+        - action: sync
+          path: ./frontend
+          target: /app
+          ignore:
+            - node_modules
+    ports:
+      - '4200:4200'
+    depends_on:
+      - backend
+    networks:
+      - fc-manager-client-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    environment:
+      - SPRING_DATASOURCE_URL=${DATABASE_URL}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FRONTEND_URL=${FRONTEND_URL}
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend/pom.xml
+        - action: sync+restart
+          path: ./backend
+          target: /app
+          ignore:
+            - .mvn/
+            - target/
+    ports:
+      - '8080:8080'
+    volumes:
+      - fc-manager-maven-repo:/root/.m2
+      - ./database/data.sql:/app/database/data.sql
+    networks:
+      - fc-manager-client-network
+      - fc-manager-server-network
+    depends_on:
+      - database
+
+  database:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - '5432:5432'
+    volumes:
+      - fc-manager-postgresql-data:/var/lib/postgresql/data
+    networks:
+      - fc-manager-server-network
+
+networks:
+  fc-manager-client-network:
+  fc-manager-server-network:
+
+volumes:
+  fc-manager-postgresql-data:
+  fc-manager-maven-repo:
