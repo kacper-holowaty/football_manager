@@ -12,7 +12,7 @@ Football club management application for managing clubs, players and club achiev
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=for-the-badge&logo=sass&logoColor=white)
 ![JUnit 5](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=JUnit5&logoColor=white)
-
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
 ## Run locally
 
@@ -40,6 +40,18 @@ The application will ba available on: **http://localhost:4200**
 To stop application and remove containers and networks use:
 ```bash
 docker compose -f docker-compose.yml down
+```
+
+### Run API tests - Postman
+
+At first, install Newman (Postman CLI runner): 
+```bash
+npm install -g newman
+```
+
+Run all tests:
+```bash
+newman run backend/src/test/resources/postman/api-tests.json
 ```
 
 ## Preview

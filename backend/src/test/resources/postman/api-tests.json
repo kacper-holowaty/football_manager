@@ -1,0 +1,2211 @@
+{
+	"info": {
+		"_postman_id": "e5ada7d5-839f-4210-b9ae-6a642d1c3cf6",
+		"name": "fcmanager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32495630"
+	},
+	"item": [
+		{
+			"name": "clubs",
+			"item": [
+				{
+					"name": "/clubs",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"clubId\", responseJson.data.clubId);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "FC Barcelona",
+									"type": "text"
+								},
+								{
+									"key": "badge",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "foundedYear",
+									"value": "1899",
+									"type": "text"
+								},
+								{
+									"key": "stadiumName",
+									"value": "Spotify Camp Nou",
+									"type": "text"
+								},
+								{
+									"key": "stadiumCapacity",
+									"value": "98872",
+									"type": "text"
+								},
+								{
+									"key": "addressStreet",
+									"value": "Artístides Maillol",
+									"type": "text"
+								},
+								{
+									"key": "addressHouseNumber",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "addressApartmentNumber",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "addressPostalCode",
+									"value": "08028",
+									"type": "text"
+								},
+								{
+									"key": "addressCity",
+									"value": "Barcelona",
+									"type": "text"
+								},
+								{
+									"key": "addressCountry",
+									"value": "Spain",
+									"type": "text"
+								},
+								{
+									"key": "ownerId",
+									"value": "{{ownerId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/clubs/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "FC Barcelona",
+									"type": "text"
+								},
+								{
+									"key": "badge",
+									"type": "file",
+									"src": "postman-cloud:///1f0858e9-8431-49f0-975f-2a55885597bc"
+								},
+								{
+									"key": "foundedYear",
+									"value": "1899",
+									"type": "text"
+								},
+								{
+									"key": "stadiumName",
+									"value": "Spotify Camp Nou",
+									"type": "text"
+								},
+								{
+									"key": "stadiumCapacity",
+									"value": "98872",
+									"type": "text"
+								},
+								{
+									"key": "addressStreet",
+									"value": "Artístides Maillol",
+									"type": "text"
+								},
+								{
+									"key": "addressHouseNumber",
+									"value": "10a",
+									"type": "text"
+								},
+								{
+									"key": "addressApartmentNumber",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "addressPostalCode",
+									"value": "08028",
+									"type": "text"
+								},
+								{
+									"key": "addressCity",
+									"value": "Barcelona",
+									"type": "text"
+								},
+								{
+									"key": "addressCountry",
+									"value": "Spain",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/clubs/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/clubs",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/clubs/user/:ownerId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/user/{{ownerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"user",
+								"{{ownerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/clubs/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/clubs/:id/badge",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/badge",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"badge"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "players",
+			"item": [
+				{
+					"name": "/players",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"playerId\", responseJson.data.playerId);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "Wojciech Szczęsny",
+									"type": "text"
+								},
+								{
+									"key": "birthDate",
+									"value": "1990-04-18",
+									"type": "text"
+								},
+								{
+									"key": "nationality",
+									"value": "Poland",
+									"type": "text"
+								},
+								{
+									"key": "positions",
+									"value": "GK",
+									"type": "text"
+								},
+								{
+									"key": "shirtNumber",
+									"value": "13",
+									"type": "text"
+								},
+								{
+									"key": "contractUntil",
+									"value": "2027-06-30",
+									"type": "text"
+								},
+								{
+									"key": "salary",
+									"value": "50000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/players",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"players"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/players/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "postman-cloud:///1f0858ee-a582-41e0-88d9-58e6185ba1df"
+								},
+								{
+									"key": "name",
+									"value": "Wojciech Szczęsny",
+									"type": "text"
+								},
+								{
+									"key": "birthDate",
+									"value": "1990-04-18",
+									"type": "text"
+								},
+								{
+									"key": "nationality",
+									"value": "Poland",
+									"type": "text"
+								},
+								{
+									"key": "positions",
+									"value": "GK",
+									"type": "text"
+								},
+								{
+									"key": "shirtNumber",
+									"value": "13",
+									"type": "text"
+								},
+								{
+									"key": "contractUntil",
+									"value": "2028-06-30",
+									"type": "text"
+								},
+								{
+									"key": "salary",
+									"value": "60000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/players/{{playerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"players",
+								"{{playerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/players",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/players",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"players"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/players/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/players/{{playerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"players",
+								"{{playerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/players/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/players/{{playerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"players",
+								"{{playerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/players/:id/photo",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/players/{{playerId}}/photo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"players",
+								"{{playerId}}",
+								"photo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "auth/register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"accessToken\", responseJson.data.accessToken);\r",
+									"    pm.environment.set(\"refreshToken\", responseJson.data.refreshToken);\r",
+									"    pm.environment.set(\"ownerId\", responseJson.data.user.userId);\r",
+									"\r",
+									"    console.log(\"Tokens saved!\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Joan\",\r\n    \"lastName\": \"Laporta\",\r\n    \"username\": \"jlaporta\",\r\n    \"email\": \"jlaporta@barca.org\",\r\n    \"password\": \"Barca1899!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth/authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"accessToken\", responseJson.data.accessToken);\r",
+									"    pm.environment.set(\"refreshToken\", responseJson.data.refreshToken);\r",
+									"    pm.environment.set(\"ownerId\", responseJson.data.user.userId);\r",
+									"    \r",
+									"    console.log(\"Tokens saved!\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"jlaporta\",\r\n    \"password\": \"Barca1899!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth/refresh-token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/refresh-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "achievements",
+			"item": [
+				{
+					"name": "/achievements",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"achievementId\", responseJson.data.achievementId);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Champions League\",\r\n    \"date\": \"2015-05-30\",\r\n    \"description\": \"We are the Champions!!! FC Barcelona 3 - 0 Juventus. Rakitić, Suarez, Neymar Jr\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/achievements",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"achievements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/achievements/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Champions League\",\r\n    \"date\": \"2015-06-01\",\r\n    \"description\": \"We are the Champions!!! FC Barcelona 3 - 0 Juventus. Goals: Rakitić, Suarez, Neymar Jr\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/achievements/{{achievementId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"achievements",
+								"{{achievementId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/achievements",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/achievements",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"achievements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/achievements/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/achievements/{{achievementId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"achievements",
+								"{{achievementId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "/users/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/{{ownerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"{{ownerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/{{ownerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"{{ownerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Joan\",\r\n    \"lastName\": \"Laporta\",\r\n    \"email\": \"joan.laporta@barca.org\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/{{ownerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"{{ownerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id/password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"Barca1899!\",\r\n    \"newPassword\": \"1qazXSW@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/{{ownerId}}/password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"{{ownerId}}",
+								"password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "countries",
+			"item": [
+				{
+					"name": "/countries",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/countries",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/countries/:country",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/countries/poland",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"countries",
+								"poland"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/countries/codes",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"countries\": [\"Japan\", \"France\", \"Chile\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/countries/codes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"countries",
+								"codes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "create-and-update-data-tests",
+			"item": [
+				{
+					"name": "/clubs",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"clubId\", responseJson.data.clubId);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "FC Barcelona",
+									"type": "text"
+								},
+								{
+									"key": "badge",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "foundedYear",
+									"value": "1899",
+									"type": "text"
+								},
+								{
+									"key": "stadiumName",
+									"value": "Spotify Camp Nou",
+									"type": "text"
+								},
+								{
+									"key": "stadiumCapacity",
+									"value": "98872",
+									"type": "text"
+								},
+								{
+									"key": "addressStreet",
+									"value": "Artístides Maillol",
+									"type": "text"
+								},
+								{
+									"key": "addressHouseNumber",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "addressApartmentNumber",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "addressPostalCode",
+									"value": "08028",
+									"type": "text"
+								},
+								{
+									"key": "addressCity",
+									"value": "Barcelona",
+									"type": "text"
+								},
+								{
+									"key": "addressCountry",
+									"value": "Spain",
+									"type": "text"
+								},
+								{
+									"key": "ownerId",
+									"value": "{{ownerId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/clubs/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "FC Barcelona",
+									"type": "text"
+								},
+								{
+									"key": "badge",
+									"type": "file",
+									"src": "postman-cloud:///1f0858e9-8431-49f0-975f-2a55885597bc"
+								},
+								{
+									"key": "foundedYear",
+									"value": "1899",
+									"type": "text"
+								},
+								{
+									"key": "stadiumName",
+									"value": "Spotify Camp Nou",
+									"type": "text"
+								},
+								{
+									"key": "stadiumCapacity",
+									"value": "98872",
+									"type": "text"
+								},
+								{
+									"key": "addressStreet",
+									"value": "Artístides Maillol",
+									"type": "text"
+								},
+								{
+									"key": "addressHouseNumber",
+									"value": "10a",
+									"type": "text"
+								},
+								{
+									"key": "addressApartmentNumber",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "addressPostalCode",
+									"value": "08028",
+									"type": "text"
+								},
+								{
+									"key": "addressCity",
+									"value": "Barcelona",
+									"type": "text"
+								},
+								{
+									"key": "addressCountry",
+									"value": "Spain",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/players",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"playerId\", responseJson.data.playerId);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "Wojciech Szczęsny",
+									"type": "text"
+								},
+								{
+									"key": "birthDate",
+									"value": "1990-04-18",
+									"type": "text"
+								},
+								{
+									"key": "nationality",
+									"value": "Poland",
+									"type": "text"
+								},
+								{
+									"key": "positions",
+									"value": "GK",
+									"type": "text"
+								},
+								{
+									"key": "shirtNumber",
+									"value": "13",
+									"type": "text"
+								},
+								{
+									"key": "contractUntil",
+									"value": "2027-06-30",
+									"type": "text"
+								},
+								{
+									"key": "salary",
+									"value": "50000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/players",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"players"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/players/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "postman-cloud:///1f0858ee-a582-41e0-88d9-58e6185ba1df"
+								},
+								{
+									"key": "name",
+									"value": "Wojciech Szczęsny",
+									"type": "text"
+								},
+								{
+									"key": "birthDate",
+									"value": "1990-04-18",
+									"type": "text"
+								},
+								{
+									"key": "nationality",
+									"value": "Poland",
+									"type": "text"
+								},
+								{
+									"key": "positions",
+									"value": "GK",
+									"type": "text"
+								},
+								{
+									"key": "shirtNumber",
+									"value": "13",
+									"type": "text"
+								},
+								{
+									"key": "contractUntil",
+									"value": "2028-06-30",
+									"type": "text"
+								},
+								{
+									"key": "salary",
+									"value": "60000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/players/{{playerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"players",
+								"{{playerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/achievements",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"achievementId\", responseJson.data.achievementId);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Champions League\",\r\n    \"date\": \"2015-05-30\",\r\n    \"description\": \"We are the Champions!!! FC Barcelona 3 - 0 Juventus. Rakitić, Suarez, Neymar Jr\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/achievements",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"achievements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/achievements/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: 'Authorization',\r",
+									"    value: 'Bearer ' + pm.environment.get(\"accessToken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Champions League\",\r\n    \"date\": \"2015-06-01\",\r\n    \"description\": \"We are the Champions!!! FC Barcelona 3 - 0 Juventus. Goals: Rakitić, Suarez, Neymar Jr\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/clubs/{{clubId}}/achievements/{{achievementId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clubs",
+								"{{clubId}}",
+								"achievements",
+								"{{achievementId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get-endpoints-tests",
+			"item": []
+		},
+		{
+			"name": "delete-tests",
+			"item": []
+		}
+	]
+}
