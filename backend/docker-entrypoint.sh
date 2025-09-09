@@ -15,15 +15,10 @@ until PGPASSWORD="${SPRING_DATASOURCE_PASSWORD}" pg_isready -h "${DB_HOST}" -p "
 done
 echo "PostgreSQL is up - executing command"
 
-# Build the application if not already built
-if [ ! -f /app/target/*.jar ]; then
-    echo "Building application..."
-    mvn clean package -DskipTests
-fi
+# Run application in dev mode
+echo "Starting Spring Boot (dev mode)..."
+./mvnw spring-boot:run
 
-# Start the Spring Boot application in the background
-echo "Starting Spring Boot application..."
-java -jar /app/target/*.jar &
 SPRING_PID=$!
 
 # Give Hibernate some time to create the schema
